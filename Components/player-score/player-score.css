@@ -1,0 +1,20 @@
+@keyframes score-diff-fade {
+  from {
+    left: 0;
+    opacity: 1;
+
+  }
+  to {
+    left: 200;
+    opacity: 0;
+  }
+}
+
+#player-score-container {
+  position: relative;
+}
+
+.player-score-diff {
+  position: absolute;
+  animation: score-diff-fade 2s linear 0s;
+}

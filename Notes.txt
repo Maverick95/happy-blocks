@@ -1,0 +1,47 @@
+Aim of this project is to create a Tetris knock-off using web components.
+
+Just a fun little project, maybe in time I can create the same thing in
+React and compare the two methods.
+
+Beginning notes - (as there will be a lot to do)
+
+Player's area contains a Tetris grid X wide and Y tall.
+Pieces fill up this area.
+If a new piece is added, couple of checks,
+a) are any rows fully occupied? If so, remove the row(s),
+moving all the existing rows down by the # rows removed,
+add the appropriate score to the player's total.
+KEY POINT - could you make this cumulative, i.e. parts will move downwards as
+far as possible in their column space?
+This btw isn't the behaviour in standard Tetris, everything just moves down by 1.
+b) does the piece extend above the top of the playing area?
+If so, GAME OVER BUDDY!
+
+The pieces.
+At start-up, choose a random piece from the list of pieces allowed.
+This is the 'next' piece.
+At points, a new piece is required.
+When this happens, 
+a) return the piece in the 'next' place,
+b) generate a new random piece, and put this in the 'next' place.
+
+The score.
+This will need resetting on game start, incrementing by a value whenever rows are
+removed.
+
+Playing the game
+There are a maximum of 5 controls in the game,
+left
+right
+down
+spin left
+spin right
+
+Where to start, given that I also don't know that much about web components?
+Or tbh if I even should be using them.
+How about something simple to start off with, like for example a score component?
+
+
+
+
+
