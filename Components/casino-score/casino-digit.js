@@ -1,9 +1,3 @@
-const getDigit = (score, power) => {
-  const upperDiv = Math.pow(10, power + 1);
-  const lowerDiv = Math.pow(10, power);
-  return Math.floor((score % upperDiv) / lowerDiv);
-}
-
 class CasinoDigitElement extends HTMLElement {
 
   static get observedAttributes() {
@@ -16,9 +10,12 @@ class CasinoDigitElement extends HTMLElement {
 
     super();
     this.power = parseInt(this.getAttribute('power'));
-    this.score = parseInt(this.getAttribute('score'));
+    this.score = this.displayScore = parseInt(this.getAttribute('score'));
+    this.displayDigit = Math.floor(
+      (this.displayScore % Math.pow(10, this.power + 1)) /
+      Math.pow(10, this.power));
 
-    const digit = getDigit(this.score, this.power);
+    this.interval = 0;
 
     this.attachShadow({ mode: 'open' });
 
@@ -30,9 +27,9 @@ class CasinoDigitElement extends HTMLElement {
     const content = document.getElementById('casino-digit').content.cloneNode(true);
 
     const changes = [
-      { digit: (digit + 1) % 10, className: 'digit-next' },
-      { digit: digit, className: 'digit-current' },
-      { digit: (digit + 9) % 10, className: 'digit-previous' },
+      { digit: (this.displayDigit + 1) % 10, className: 'digit-next' },
+      { digit: this.displayDigit, className: 'digit-current' },
+      { digit: (this.displayDigit + 9) % 10, className: 'digit-previous' },
     ];
 
     changes.forEach(change => {
@@ -49,24 +46,29 @@ class CasinoDigitElement extends HTMLElement {
     switch (attrName) {
       case 'score': {
         const score = parseInt(newVal);
-        if (score !== this.score) {
-          if (score !== this.score + 1) {
-            throw new Error('Functionality currently not avaiable.');
-          }
-          const digitCurrent = getDigit(this.score, this.power);
-          const digitNew = getDigit(score, this.power);
+        if (isNaN(score) || score < 0) {
+          throw new Error('Incorrect score attribute');
+        }
+        this.score = score;
+        if (this.interval === 0) {
+          this.interval = setInterval(() => {
+            if (this.score === this.displayScore) {
+              clearInterval(this.interval);
+              this.interval = 0;
+              return;
+            }
 
-          this.score = score;
+            if ((++this.displayScore) % Math.pow(10, this.power) === 0) {
+              this.shadowRoot.getElementById(`digit-${(this.displayDigit + 9) % 10}`).classList.replace('digit-previous', 'digit-hidden');
+              this.shadowRoot.getElementById(`digit-${this.displayDigit}`).classList.replace('digit-current', 'digit-previous');
+              this.shadowRoot.getElementById(`digit-${(this.displayDigit + 1) % 10}`).classList.replace('digit-next', 'digit-current');
+              this.shadowRoot.getElementById(`digit-${(this.displayDigit + 2) % 10}`).classList.replace('digit-hidden', 'digit-next');
+              this.displayDigit = (this.displayDigit + 1) % 10;
+            }
 
-          if (digitNew !== digitCurrent) {
-            this.shadowRoot.getElementById(`digit-${(digitCurrent + 9) % 10}`).classList.replace('digit-previous', 'digit-hidden');
-            this.shadowRoot.getElementById(`digit-${digitCurrent}`).classList.replace('digit-current', 'digit-previous');
-            this.shadowRoot.getElementById(`digit-${(digitCurrent + 1) % 10}`).classList.replace('digit-next', 'digit-current');
-            this.shadowRoot.getElementById(`digit-${(digitCurrent + 2) % 10}`).classList.replace('digit-hidden', 'digit-next');
-          }
+          }, 75);
         }
       }
-
         break;
 
       default:

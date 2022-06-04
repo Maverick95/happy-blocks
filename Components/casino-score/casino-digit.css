@@ -34,5 +34,5 @@
 }
 
 .digit-next, .digit-current, .digit-previous {
-  transition: top 0.25s linear, clip 0.25s linear;
+  transition: top 0.075s linear, clip 0.075s linear;
 }

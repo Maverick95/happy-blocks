@@ -91,20 +91,23 @@ Only problem I can see is, changing the score in this way seems like the incorre
 Eventually, you'll have to reset the score as well.
 Oh wait, that's just triggered by the parent. Fair enough.
 
-For now focus on the rolling digit functionality. How will this work in HTML terms?
-
-I'm sure there is a way of displaying a subset of a region.
-
 I think we'll have to start-off very simply, by rolling something up "one" value at a time.
 
-Now try adding in top / clips.
+Now then. 
 
-First need to edit some layouts so that the numbers will appear correct.
-Each number now needs to be its own little box, with the text aligned center in each.
+How do we roll up by a number of values?
 
-How to do this again?
+And also, eventually, roll down??
 
-Within a box, how do you vertically / horizontally align an element?
+Your idea works okay. There's probably a few optimizations in here though.
 
+Also need to fix a bug, again this method only works for the right-most digit.
 
+But also probably a neater way of doing the digit calculations.
+
+A few restrictions here -
+
+a) create web components programmatically, you can't set initial attributes.
+
+So you have to guard against these cases.
 

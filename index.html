@@ -3,6 +3,7 @@
     <title>Happy Blocks</title>
     <script defer src="./Components/player-score/player-score.js"></script>
     <script defer src="./Components/casino-score/casino-digit.js"></script>
+    <script defer src="./Components/casino-score/casino-score.js"></script>
   </head>
   <body>
 
@@ -20,6 +21,15 @@
         <div id="digit-9" class="digit digit-hidden">9</div>
       </div>
     </template>
+
+    <template id="casino-score">
+      <casino-digit score="0" power="5"></casino-digit>
+      <casino-digit score="0" power="4"></casino-digit>
+      <casino-digit score="0" power="3"></casino-digit>
+      <casino-digit score="0" power="2"></casino-digit>
+      <casino-digit score="0" power="1"></casino-digit>
+      <casino-digit score="0" power="0"></casino-digit>
+    </template>
     
     <div id="test-area-1">
       <player-score id="my-first-player-score"></player-score>
@@ -27,12 +37,21 @@
     </div>
 
     <div id="test-area-2">
-      <casino-digit id="my-first-casino-digit" score="79657" power="0"></casino-digit>
-      <input type="button" value="Increase score by 1" onClick="
-      const digit = document.getElementById('my-first-casino-digit');
-      const score = parseInt(digit.getAttribute('score'));
-      digit.setAttribute('score', score + 1);"
-      />
+      <casino-digit id="my-first-casino-digit" score="79657" power="1"></casino-digit>
+      <input type="button" value="Increase score by 1" onClick="{
+        const digit = document.getElementById('my-first-casino-digit');
+        const score = parseInt(digit.getAttribute('score'));
+        digit.setAttribute('score', score + 25);
+      }" />
+    </div>
+
+    <div id="test-area-3">
+      <casino-score id="my-first-casino-score" score="0"></casino-score>
+      <input type="button" value="Increase score" onClick="{
+        const digit = document.getElementById('my-first-casino-score');
+        const score = parseInt(digit.getAttribute('score')) || 0;
+        digit.setAttribute('score', score + 226);
+      }" />
     </div>
 
   </body>
