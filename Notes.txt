@@ -41,7 +41,64 @@ Where to start, given that I also don't know that much about web components?
 Or tbh if I even should be using them.
 How about something simple to start off with, like for example a score component?
 
+Weird first start.
+So I think you have the web components down.
+The thing to remember is that they are entirely encapsulated.
+
+Now can you try putting your score component inside a larger component?
 
 
 
+Where to begin?
 
+I'd like to make a "slot machine" style scoring element.
+
+So all the numbers on the score are different elements, and they "roll" up or down as required
+to show the new score.
+
+But they will roll through EACH OF THE NUMBERS IN BETWEEN.
+
+So for example, if I had score 179, and I added 180 onto this,
+I would see the right-hand number roll upwards, whenever it hit 0, the next number would roll upwards,
+and so on, until you reached the number in question.
+
+This raises an interesting question about control flow.
+
+Need to read up a bit on events first and the shadow DOM.
+
+Interesting problem, because part of me says the event flow should work like -
+
+a) right-hand-most spinner increases until reaches 0,
+b) event is fired upwards that tells the next spinner to increase,
+c) etc.
+
+But this seems like a strange way to do it, because...
+
+a) Right-hand-most spinner would be exempt from event flow, thus no consistent pattern,
+b) Transforming one value to another known value in a roundabout manner.
+
+Another easier method is to have each spinner "roll" upwards at the same time.
+This makes more sense really. Yeah go for this one.
+
+Should probably use templates, it looks a lot neater.
+
+Hmm, templates and slots seem to be different from attributes.
+
+You'll want a score attribute instead, this is what will change.
+
+Only problem I can see is, changing the score in this way seems like the incorrect use.
+
+Eventually, you'll have to reset the score as well.
+Oh wait, that's just triggered by the parent. Fair enough.
+
+For now focus on the rolling digit functionality. How will this work in HTML terms?
+
+I'm sure there is a way of displaying a subset of a region.
+
+I think we'll have to start-off very simply, by rolling something up "one" value at a time.
+
+Now how to achieve what we want?
+
+Probably a few steps to achieve this, but the main points are...
+
+a) 
