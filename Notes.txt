@@ -97,8 +97,14 @@ I'm sure there is a way of displaying a subset of a region.
 
 I think we'll have to start-off very simply, by rolling something up "one" value at a time.
 
-Now how to achieve what we want?
+Now try adding in top / clips.
 
-Probably a few steps to achieve this, but the main points are...
+First need to edit some layouts so that the numbers will appear correct.
+Each number now needs to be its own little box, with the text aligned center in each.
 
-a) 
+How to do this again?
+
+Within a box, how do you vertically / horizontally align an element?
+
+
+

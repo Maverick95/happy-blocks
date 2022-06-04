@@ -8,16 +8,16 @@
 
     <template id="casino-digit">
       <div class="digit-container">
-        <span id="digit-0" class="digit digit-hidden">0</span>
-        <span id="digit-1" class="digit digit-hidden">1</span>
-        <span id="digit-2" class="digit digit-hidden">2</span>
-        <span id="digit-3" class="digit digit-hidden">3</span>
-        <span id="digit-4" class="digit digit-hidden">4</span>
-        <span id="digit-5" class="digit digit-hidden">5</span>
-        <span id="digit-6" class="digit digit-hidden">6</span>
-        <span id="digit-7" class="digit digit-hidden">7</span>
-        <span id="digit-8" class="digit digit-hidden">8</span>
-        <span id="digit-9" class="digit digit-hidden">9</span>
+        <div id="digit-0" class="digit digit-hidden">0</div>
+        <div id="digit-1" class="digit digit-hidden">1</div>
+        <div id="digit-2" class="digit digit-hidden">2</div>
+        <div id="digit-3" class="digit digit-hidden">3</div>
+        <div id="digit-4" class="digit digit-hidden">4</div>
+        <div id="digit-5" class="digit digit-hidden">5</div>
+        <div id="digit-6" class="digit digit-hidden">6</div>
+        <div id="digit-7" class="digit digit-hidden">7</div>
+        <div id="digit-8" class="digit digit-hidden">8</div>
+        <div id="digit-9" class="digit digit-hidden">9</div>
       </div>
     </template>
     
@@ -27,7 +27,7 @@
     </div>
 
     <div id="test-area-2">
-      <casino-digit id="my-first-casino-digit" score="79657" power="3"></casino-digit>
+      <casino-digit id="my-first-casino-digit" score="79657" power="0"></casino-digit>
       <input type="button" value="Increase score by 1" onClick="
       const digit = document.getElementById('my-first-casino-digit');
       const score = parseInt(digit.getAttribute('score'));
