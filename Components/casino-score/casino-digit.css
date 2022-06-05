@@ -36,10 +36,10 @@
 .digit-next, .digit-current, .digit-previous {
   border-left-style: dashed;
   border-right-style: dashed;
-  background-image: linear-gradient(rgb(216, 126, 224), rgb(200, 200, 200) 20%, white 50%, rgb(200, 200, 200) 80%, rgb(216, 126, 224) 100%);
+  background-image: linear-gradient(#d87ee0, #c8c8c8 20%, white 50%, #c8c8c8 80%, #d87ee0 100%);
   border-width: 5px;
   transition: top 0.25s linear, clip 0.25s linear;
   font-size: 5rem;
   font-weight: bold;
-  color: rgb(84, 22, 84);
+  color: #541654;
 }
