@@ -45,6 +45,7 @@ class CasinoDigitElement extends HTMLElement {
               this.shadowRoot.getElementById(`digit-${this.displayDigit}`).classList.replace('digit-current', 'digit-previous');
               this.shadowRoot.getElementById(`digit-${(this.displayDigit + 1) % 10}`).classList.replace('digit-next', 'digit-current');
               this.shadowRoot.getElementById(`digit-${(this.displayDigit + 2) % 10}`).classList.replace('digit-hidden', 'digit-next');
+
               this.displayDigit = (this.displayDigit + 1) % 10;
             }
 
@@ -56,17 +57,10 @@ class CasinoDigitElement extends HTMLElement {
         this.displayDigit = Math.floor(
           (this.displayScore % Math.pow(10, this.power + 1)) /
           Math.pow(10, this.power));
-        
-        const changes = [
-          { digit: (this.displayDigit + 1) % 10, className: 'digit-next' },
-          { digit: this.displayDigit, className: 'digit-current' },
-          { digit: (this.displayDigit + 9) % 10, className: 'digit-previous' },
-        ];
-    
-        changes.forEach(change => {
-          const element = this.shadowRoot.getElementById(`digit-${change.digit}`);
-          element.classList.replace('digit-hidden', change.className);
-        });
+
+        this.shadowRoot.getElementById(`digit-${(this.displayDigit + 1) % 10}`).classList.replace('digit-hidden', 'digit-next');
+        this.shadowRoot.getElementById(`digit-${this.displayDigit}`).classList.replace('digit-hidden', 'digit-current');
+        this.shadowRoot.getElementById(`digit-${(this.displayDigit + 9) % 10}`).classList.replace('digit-hidden', 'digit-previous');
       }
 
     }
@@ -94,9 +88,9 @@ class CasinoDigitElement extends HTMLElement {
 
       this.updateDigits(oldVal !== null);
 
-   }
-   else {
-     throw new Error('attrName not found.');
+    }
+    else {
+      throw new Error('attrName not found.');
     }
 
   }
