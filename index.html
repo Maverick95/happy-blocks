@@ -31,21 +31,12 @@
       <input type="button" value="Player Score = 10" onClick="document.getElementById('my-first-player-score').setAttribute('score', 10);" />
     </div>
 
-    <div id="test-area-2">
-      <casino-digit id="my-first-casino-digit" score="79657" power="1"></casino-digit>
-      <input type="button" value="Increase score by 1" onClick="{
-        const digit = document.getElementById('my-first-casino-digit');
-        const score = parseInt(digit.getAttribute('score'));
-        digit.setAttribute('score', score + 25);
-      }" />
-    </div>
-
     <div id="test-area-3">
       <casino-score id="my-first-casino-score" score="0" max-power="2"></casino-score>
       <input type="button" value="Increase score" onClick="{
         const digit = document.getElementById('my-first-casino-score');
         const score = parseInt(digit.getAttribute('score')) || 0;
-        digit.setAttribute('score', score + 226);
+        digit.setAttribute('score', score + 15);
       }" />
     </div>
 

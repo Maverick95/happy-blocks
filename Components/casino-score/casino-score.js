@@ -12,6 +12,12 @@ class CasinoScoreElement extends HTMLElement {
     this.score = this.maxPower = null;
 
     this.attachShadow({ mode: 'open' });
+
+    const styles = document.createElement('link');
+    styles.setAttribute('rel', 'stylesheet');
+    styles.setAttribute('href', './Components/casino-score/casino-score.css');
+    this.shadowRoot.appendChild(styles);
+
     const content = document.getElementById('casino-score').content.cloneNode(true);
     this.shadowRoot.appendChild(content);
   }

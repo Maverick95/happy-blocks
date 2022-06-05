@@ -44,7 +44,7 @@ class CasinoDigitElement extends HTMLElement {
 
               this.displayDigit = (this.displayDigit + 1) % 10;
             }
-          }, 75);
+          }, 250);
         }
       }
       else {
