@@ -8,7 +8,6 @@ class CasinoDigitElement extends HTMLElement {
   }
 
   constructor() {
-
     super();
 
     this.interval = 0;
@@ -24,13 +23,10 @@ class CasinoDigitElement extends HTMLElement {
     const content = document.getElementById('casino-digit').content.cloneNode(true);
 
     this.shadowRoot.appendChild(content);
-
   }
 
   updateDigits(isOldValDefined) {
-
     if (this.score !== null && this.power !== null) {
-
       if (isOldValDefined) {
         if (this.interval === 0) {
           this.interval = setInterval(() => {
@@ -48,7 +44,6 @@ class CasinoDigitElement extends HTMLElement {
 
               this.displayDigit = (this.displayDigit + 1) % 10;
             }
-
           }, 75);
         }
       }
@@ -62,37 +57,30 @@ class CasinoDigitElement extends HTMLElement {
         this.shadowRoot.getElementById(`digit-${this.displayDigit}`).classList.replace('digit-hidden', 'digit-current');
         this.shadowRoot.getElementById(`digit-${(this.displayDigit + 9) % 10}`).classList.replace('digit-hidden', 'digit-previous');
       }
-
     }
-
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
-
-    if (['score', 'power'].includes(attrName)) {
-
-      if (attrName === 'score') {
+    switch (attrName) {
+      case 'score': {
         const score = parseInt(newVal);
         if (isNaN(score) || score < 0) {
-          throw new Error('Incorrect score attribute');
+          throw new Error('Incorrect attribute');
         }
         this.score = score;
       }
-      else if (attrName === 'power') {
+      break;
+      case 'power': {
         const power = parseInt(newVal);
         if (isNaN(power) || power < 0) {
-          throw new Error('Incorrect score attribute');
+          throw new Error('Incorrect attribute');
         }
         this.power = power;
       }
-
-      this.updateDigits(oldVal !== null);
-
+      break;
     }
-    else {
-      throw new Error('attrName not found.');
-    }
-
+    
+    this.updateDigits(oldVal !== null);
   }
 
 };

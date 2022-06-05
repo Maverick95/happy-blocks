@@ -109,6 +109,14 @@ A few restrictions here -
 
 a) create web components programmatically, you can't set initial attributes.
 
-So you have to guard against these cases.
+Now that you can create this programatically and set attributes,
+try changing casino-score to take instead the max-power param.
+
+And then also do the thing where the difference appears in a nice bubble
+and fades away.
+
+But after sorting out formatting.
+
+
 
 
