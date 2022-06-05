@@ -3,19 +3,16 @@ class CasinoDigitElement extends HTMLElement {
   static get observedAttributes() {
     return [
       'score',
+      'power',
     ];
   }
 
   constructor() {
 
     super();
-    this.power = parseInt(this.getAttribute('power'));
-    this.score = this.displayScore = parseInt(this.getAttribute('score'));
-    this.displayDigit = Math.floor(
-      (this.displayScore % Math.pow(10, this.power + 1)) /
-      Math.pow(10, this.power));
 
     this.interval = 0;
+    this.power = this.score = this.displayScore = this.displayDigit = null;
 
     this.attachShadow({ mode: 'open' });
 
@@ -26,30 +23,15 @@ class CasinoDigitElement extends HTMLElement {
 
     const content = document.getElementById('casino-digit').content.cloneNode(true);
 
-    const changes = [
-      { digit: (this.displayDigit + 1) % 10, className: 'digit-next' },
-      { digit: this.displayDigit, className: 'digit-current' },
-      { digit: (this.displayDigit + 9) % 10, className: 'digit-previous' },
-    ];
-
-    changes.forEach(change => {
-      const element = content.getElementById(`digit-${change.digit}`);
-      element.classList.replace('digit-hidden', change.className);
-    });
-
     this.shadowRoot.appendChild(content);
 
   }
 
-  attributeChangedCallback(attrName, _, newVal) {
+  updateDigits(isOldValDefined) {
 
-    switch (attrName) {
-      case 'score': {
-        const score = parseInt(newVal);
-        if (isNaN(score) || score < 0) {
-          throw new Error('Incorrect score attribute');
-        }
-        this.score = score;
+    if (this.score !== null && this.power !== null) {
+
+      if (isOldValDefined) {
         if (this.interval === 0) {
           this.interval = setInterval(() => {
             if (this.score === this.displayScore) {
@@ -69,10 +51,52 @@ class CasinoDigitElement extends HTMLElement {
           }, 75);
         }
       }
-        break;
+      else {
+        this.displayScore = this.score;
+        this.displayDigit = Math.floor(
+          (this.displayScore % Math.pow(10, this.power + 1)) /
+          Math.pow(10, this.power));
+        
+        const changes = [
+          { digit: (this.displayDigit + 1) % 10, className: 'digit-next' },
+          { digit: this.displayDigit, className: 'digit-current' },
+          { digit: (this.displayDigit + 9) % 10, className: 'digit-previous' },
+        ];
+    
+        changes.forEach(change => {
+          const element = this.shadowRoot.getElementById(`digit-${change.digit}`);
+          element.classList.replace('digit-hidden', change.className);
+        });
+      }
 
-      default:
-        throw new Error('attrName not found.');
+    }
+
+  }
+
+  attributeChangedCallback(attrName, oldVal, newVal) {
+
+    if (['score', 'power'].includes(attrName)) {
+
+      if (attrName === 'score') {
+        const score = parseInt(newVal);
+        if (isNaN(score) || score < 0) {
+          throw new Error('Incorrect score attribute');
+        }
+        this.score = score;
+      }
+      else if (attrName === 'power') {
+        const power = parseInt(newVal);
+        if (isNaN(power) || power < 0) {
+          throw new Error('Incorrect score attribute');
+        }
+        this.power = power;
+      }
+
+      this.updateDigits(oldVal !== null);
+
+   }
+   else {
+     throw new Error('attrName not found.');
     }
 
   }
