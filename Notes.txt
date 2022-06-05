@@ -121,7 +121,72 @@ Formatting should be fairly easy.
 
 Put in a flex and justify to middle.
 
+So now what's next?
 
+I guess having a more general think of the layout of the game.
 
+Or the main game board?
 
+Remember learnings from React, truth flows downward.
+
+i.e. information is stored in the main Game class, the happy-blocks component.
+
+Remember one simple truth - the main grid is merely a DISPLAY of information.
+There might be a really simple way of displaying the grid.
+i.e. with a GRID.
+
+Hmm these are for rectangular areas.
+
+May have to go with SVGs?
+
+The method you choose to display the pieces needs to take into account -
+
+a) pieces will change position,
+b) rotation is possible.
+
+Rotations would be easier if the whole grid display were down to a CSS grid.
+Idea is that the CSS grid uses grid-template-areas.
+But looking at it this doesn't seem fit-for-purpose either.
+As in the areas define points to insert elements into.
+This isn't really what I'm looking for.
+So another idea is to put the behaviour of the pieces in a sub-component.
+
+But this may be a minefield as well.
+
+Because I don't want to split up the logic, I don't think the display pieces
+should have separate logic in them to display the pieces. Or duplicated.
+
+In other words they should just directly translate attributes.
+
+This is fine, why not?
+
+Hmm this is what's weird.
+
+Because in the game component, the logical wheel-house, it will be determined
+here which spaces the piece will fill. Because it needs this to determine logic
+for things like, when the piece hits the bottom, its current position, whether it
+can move left and right, etc.
+
+Moving display logic down to the component means you'll duplicate this.
+
+So the solution would be to move common logic down to a happyblocks general object,
+as you did before with the chess stuff.
+
+Well it's either modules, node, or this. And modules aren't allowed if you are using local
+files. And you don't want to use node and webpack etc.
+
+Yeah so I guess you're moving towards a shared module.
+
+And in here, this will be the shared logic.
+
+Which is, what exactly?
+
+Well for starters we need some sort of lookup based on the pieces.
+
+So there are 7 pieces, O S Z T L J I
+
+Each piece requires -
+
+a) an initial setup, and,
+b) a method of rotation.
 
