@@ -262,6 +262,22 @@ So append styles instead.
 
 This means against each piece type, storing some style props.
 
+So what's the next step here?
+
+Well, you need now to store an active piece somehow against the grid.
+So there is the concept of the active piece.
+This piece needs to store quite a bit of info.
+Needs to have the list of piece ids.
+But it's more just the list of piece coordinates really.
+
+a) piece main coordinate x and y,
+b) list of relative pieces, each with x,y, id.
+
+Should be quite easily to set the active piece, and then add individual pieces as ids.
+
+The easy part as well is, all you do is just stop referencing the active piece.
+
+Yay!
 
 
 
