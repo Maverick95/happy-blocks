@@ -1,0 +1,14 @@
+#grid-container {
+  position: relative;
+  background-color: black;
+  border-style: none solid solid;
+  border-color: white;
+  border-width: 5px;
+}
+
+.game-piece {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  box-sizing: border-box;
+}

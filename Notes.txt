@@ -190,3 +190,78 @@ Each piece requires -
 a) an initial setup, and,
 b) a method of rotation.
 
+The initial setup is fine, just an array of coords.
+The rotation is also fine, you just need the one coord to rotate around. (the origin)
+
+This is rotation around 90 degrees as well, so...
+
+x -> -y -> -x ->  y -> x
+y ->  x -> -y -> -x -> y
+
+Easy.
+
+For each piece, you just store then...
+
+a) coordinates of origin,
+b) coordinates of each piece relative to origin.
+
+In this sense, working out collisions is pretty easy.
+
+Each piece should also have an id, this will be used to generate the HTML id.
+
+We will have to hold data in a grid array structure.
+
+Because Tetris only moves one space at a time, collision detection is fairly easy.
+
+What's not so easy is.
+
+Remember that in Tetris, whenever a row is filled, the row needs to vanish.
+
+This is actually making me think, that you should draw each individual square
+of a Tetrimino as a separate entity.
+
+Because when you delete certain rows, this is just deleting some entities.
+
+I think you should start off with something definitely simple.
+
+Tricky to think about a first slice here.
+
+I guess there is no first slice.
+
+In that case just build the damn thing.
+
+As a web component, the only key props are width and height.
+
+And maybe other key settings (TBD).
+
+Visually, the grid needs to display its contents. So start off with this.
+
+At the very least, you'll probably need to store, in each grid element,
+
+a) id of the element,
+b) this looks up to a type,
+c) both these things denote the style on an element.
+
+Should be noted, the chances of you actually changing the grid size mid-game is... none.
+
+So drawing the grid is a formality really.
+
+When I think about it... drawing the grid??? As in, updating the styles of EVERY piece element
+every time?? You don't need to do that surely.
+
+Think about it. This is a discrete game.
+But also remember what you've learnt so far. Optimize when you have problems.
+You could cut off a lot of possibilities here.
+So you SHOULD be drawing as if from nothing.
+
+Keep this in mind with this project. See if things work out better.
+
+So for each piece, you should search for element. If it exists, update the style.
+Don't use CSS classes for this, the searching / removing options for DOMTokenList is limited.
+So append styles instead.
+
+This means against each piece type, storing some style props.
+
+
+
+
