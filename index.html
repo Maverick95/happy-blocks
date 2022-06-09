@@ -4,6 +4,8 @@
     <script defer src="./Components/player-score/player-score.js"></script>
     <script defer src="./Components/casino-score/casino-digit.js"></script>
     <script defer src="./Components/casino-score/casino-score.js"></script>
+    <script defer src="./Components/game-grid/game-grid.js"></script>
+    <script defer src="./Components/common/common.js"></script>
   </head>
   <body>
 
@@ -25,6 +27,10 @@
     <template id="casino-score">
       <div id="score-container"></div>
     </template>
+
+    <template id="game-grid">
+      <div id="grid-container"></div>
+    </template>
     
     <div id="test-area-1">
       <player-score id="my-first-player-score"></player-score>
@@ -38,6 +44,10 @@
         const score = parseInt(digit.getAttribute('score')) || 0;
         digit.setAttribute('score', score + 15);
       }" />
+    </div>
+
+    <div id="test-area-4">
+      <game-grid width="5" height="15"></game-grid>
     </div>
 
   </body>
