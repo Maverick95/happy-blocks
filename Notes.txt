@@ -302,7 +302,10 @@ GOAL
 Start off simple.
 Set up npm / webpack and have it build ES js into browser js.
 
+First question is...
 
-
+a) what will be in my webpack output?
+b) what will it do? (action) or what will it define? (vanilla JS backing)
+c) how does Webpack work around this?
 
 

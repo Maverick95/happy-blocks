@@ -1,0 +1,1 @@
+(()=>{"use strict";var t="string"==typeof"Nick Emmerson"?"Nick Emmerson".length:NaN,e=e||{};e.testFunctions={myTestStringLength:t}})();
