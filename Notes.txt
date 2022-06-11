@@ -281,57 +281,7 @@ Yay!
 
 Next big step is in working out things like piece rotations and movements one in each direction.
 
-And at this point I'm at a cross-roads.
+This is where the webpack / unit testing comes in.
 
-Reason - this stuff is going to be hella tricky without unit testing.
-But unit testing => Jest = npm => node => dealing with modules
-And currently I'm dealing in pure JS.
-And also ideally, should put Typescript in the mix.
-Webpack, babel, etc.
-This is kind of what you wanted to work against tbh.
+So now I have a way of 
 
-Would be interesting to look at a different sort of webpack build though.
-
-Sigh. Fair enough.
-
-It would mean I can begin moving out some parts into unit-testing land.
-Would make a large difference.
-
-GOAL
-
-Start off simple.
-Set up npm / webpack and have it build ES js into browser js.
-
-First question is...
-
-a) what will be in my webpack output?
-b) what will it do? (action) or what will it define? (vanilla JS backing)
-c) how does Webpack work around this?
-
-It appears in webpack, what you are building is, the execution of an action.
-
-Maybe read a bit through webpack concepts.
-
-There is an option to disable iife (immediately-invoked function expression),
-when set to false,
-this does work, BUT it also could be a nightmare for name collision.
-Remember, the only global variable in existence will be happyblocks!
-So you need to be careful about how you write your index.
-
-I feel like the issue I am trying to solve is a very specific one.
-And to answer it, you need to trawl through various webpack options.
-
-What are you TRYING to do?
-
-Test this actually works?
-It does! And you have your answer.
-You can use webpack to generate your happyblocks global object.
-Then build, publish, and then the rest is history.
-
-So I guess it might be a good idea to formalize this somewhat.
-
-Also just the general file structure of the thing.
-
-Because you're working in a dist generally
-
-1) Move index.html to the top level.
