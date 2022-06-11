@@ -287,6 +287,9 @@ So now I have a way of assigning a happyblocks global object.
 
 And this is set within npm.
 
+This is a weird combination of technologies that I haven't used before.
+Maybe I've not quite done it in the right way... but we'll see how it fares for now.
+
 So we are looking for a very generic method that performs a rotate action.
 
 The method will return (if rotation is possible) a new piece with the coordinates, o/w null.
@@ -300,7 +303,44 @@ c) the current grid, this is the array saying which spaces are occupied and whic
 d) the piece id of your current piece. Important to discern from c), when determining occupied/un-occupied
 spaces you wouldn't include yourself.
 
-I mean right away I am stepping into typescript land.
-And typescript implies babel. Urggg.
+Start off by defining all your types.
+
+Block
+Rotation direction
+The piece id
+The current grid
+
+The current grid is an interesting one.
+Because you could give it the array of arrays.
+Why don't you want to do this?
+I think the issue is,
+by giving grid parameters (array of arrays, width, height),
+you are opening up your method to having bad arguments dropped in with weird behaviour.
+Hmm that's not really it.
+Yeah that is kind of it.
+It's that now you have parameters that can make no sense next to each other,
+but are independent of each other and are absolutely required.
+Well in that case, you'd have the Grid as a class object, with its own internal behaviour.
+Then you'd KNOW that the Grid couldn't be mangled with openly.
+
+The problem I can foresee is that here you're going to be moving more and more crap into NPM, and this slowly
+becomes a webpack solution.
+
+Well is that really a problem?
+
+Not really. It adds into the useful part of code as well.
+
+For the grid, you probably should add these things -
+
+a) getwidth/height
+b) setwidth/height
+c) setspace
+d) getspace
+e) clearspace
+
+Congratulations, now you have a grid.
+
+Maybe try manoveuring it into your main code?
+
 
 

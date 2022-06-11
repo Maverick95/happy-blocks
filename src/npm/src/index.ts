@@ -1,10 +1,6 @@
-import FirstModel from './models/FirstModel';
+import Grid from './classes/Grid';
 
-const firstModel: FirstModel = {
-  firstProp: 'Nicholas',
-  secondProp: 'Charles',
-  thirdProp: 'Emmerson',
-};
+const grid = (): Grid => new Grid(0, 0);
 
 const common = (() => ({
   blocks: {
@@ -75,6 +71,6 @@ const common = (() => ({
 }))();
 
 export {
-  firstModel,
   common,
+  grid,
 };

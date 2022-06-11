@@ -12,8 +12,7 @@ class GameGridElement extends HTMLElement {
     super();
     this.block = null;
     this.pieces = {};
-    this.width = this.height = 0;
-    this.grid = [];
+    this.grid = happyblocks.grid();
     this.id = 0;
 
     this.attachShadow({ mode: 'open' });
@@ -31,9 +30,6 @@ class GameGridElement extends HTMLElement {
       this.setNewBlock(1, 1, 'T');
       this.drawGrid();
     }, 5000);
-
-    console.log(`${happyblocks.firstModel.firstProp} ${happyblocks.firstModel.secondProp} ${happyblocks.firstModel.thirdProp}`);
-
   }
 
   setNewBlock(x, y, type) {
@@ -48,11 +44,11 @@ class GameGridElement extends HTMLElement {
         y: y + coordinate.y,
       };
       // Throw error if out-of-bounds of grid, or if space is populated.
-      if (piece.x < 0 || piece.x >= this.width || piece.y < 0 || piece.y >= this.height || this.grid[piece.x][piece.y]) {
+      if (piece.x < 0 || piece.x >= this.grid.getWidth() || piece.y < 0 || piece.y >= this.grid.getHeight() || this.grid.getSpace(piece.x, piece.y)) {
         throw new Error('Invalid grid coordinate');
       }
       // Add id to grid.
-      this.grid[piece.x][piece.y] = coordinate.id;
+      this.grid.setSpace(coordinate.id, piece.x, piece.y);
       // Add to pieces.
       this.pieces[coordinate.id] = piece;
     });
@@ -63,8 +59,8 @@ class GameGridElement extends HTMLElement {
     // NOTE - does not delete pieces that have been removed.
     // Just adds new / draws existing.
     const container = this.shadowRoot.getElementById('grid-container');
-    container.style.width = `${this.width * 25}px`;
-    container.style.height = `${this.height * 25}px`;
+    container.style.width = `${this.grid.getWidth() * 25}px`;
+    container.style.height = `${this.grid.getHeight() * 25}px`;
     for (var piece_id of Object.keys(this.pieces)) {
       const piece = this.pieces[piece_id];
       let grid_piece = this.shadowRoot.getElementById(`game-piece-${piece_id}`);
@@ -87,8 +83,6 @@ class GameGridElement extends HTMLElement {
 
   attributeChangedCallback(attrName, _, newVal) {
 
-    let redraw;
-
     switch (attrName) {
       case 'width': {
         // If width increases, expand. If width decreases, shrink.
@@ -96,19 +90,7 @@ class GameGridElement extends HTMLElement {
         if (isNaN(width) || width < 1 || width > 10) {
           throw new Error('Incorrect attribute');
         }
-        if (width !== this.width) {
-          redraw = true;
-          if (width < this.width) {
-            this.grid.forEach(row => row.splice(width));
-          }
-          else if (width > this.width) {
-            this.grid.forEach(row => row.splice(
-              this.width, 0,
-              ...new Array(width - this.width).fill(0)
-            ));
-          }
-          this.width = width;
-        }
+        this.grid.setWidth(width);
       }
         break;
       case 'height': {
@@ -116,23 +98,12 @@ class GameGridElement extends HTMLElement {
         if (isNaN(height) || height < 1 || height > 20) {
           throw new Error('Incorrect attribute');
         }
-        if (height !== this.height) {
-          redraw = true;
-          if (height < this.height) {
-            this.grid.splice(height);
-          }
-          else if (height > this.height) {
-            for (let i=0; i < height - this.height; i++) {
-              this.grid.push(new Array(this.width).fill(0));
-            }
-          }
-          this.height = height;
-        }
+        this.grid.setHeight(height);
       }
         break;
     }
-
-    redraw && this.drawGrid();
+    
+    this.drawGrid();
 
   }
 

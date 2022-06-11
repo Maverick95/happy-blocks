@@ -3,6 +3,9 @@ const path = require('path');
 module.exports = {
   entry: './src/index.ts',
   mode: 'production',
+  resolve: {
+    extensions: ['.js', '.json', '.wasm', '.ts'],
+  },
   module: {
     rules: [
       {
