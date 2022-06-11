@@ -279,5 +279,26 @@ The easy part as well is, all you do is just stop referencing the active piece.
 
 Yay!
 
+Next big step is in working out things like piece rotations and movements one in each direction.
+
+And at this point I'm at a cross-roads.
+
+Reason - this stuff is going to be hella tricky without unit testing.
+But unit testing => Jest = npm => node => dealing with modules
+And currently I'm dealing in pure JS.
+And also ideally, should put Typescript in the mix.
+Webpack, babel, etc.
+This is kind of what you wanted to work against tbh.
+
+Would be interesting to look at a different sort of webpack build though.
+
+Sigh. Fair enough.
+
+It would mean I can begin moving out some parts into unit-testing land.
+Would make a large difference.
+
+
+
+
 
 
