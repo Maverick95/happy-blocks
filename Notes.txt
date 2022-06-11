@@ -283,5 +283,24 @@ Next big step is in working out things like piece rotations and movements one in
 
 This is where the webpack / unit testing comes in.
 
-So now I have a way of 
+So now I have a way of assigning a happyblocks global object.
+
+And this is set within npm.
+
+So we are looking for a very generic method that performs a rotate action.
+
+The method will return (if rotation is possible) a new piece with the coordinates, o/w null.
+The last part is an important get-out clause.
+
+Inputs -
+
+a) the current piece as defined via coordinates,
+b) rotation is always 90 degrees around origin, but can be clockwise or counter-clockwise,
+c) the current grid, this is the array saying which spaces are occupied and which aren't,
+d) the piece id of your current piece. Important to discern from c), when determining occupied/un-occupied
+spaces you wouldn't include yourself.
+
+I mean right away I am stepping into typescript land.
+And typescript implies babel. Urggg.
+
 

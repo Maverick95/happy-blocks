@@ -1,3 +1,11 @@
+import FirstModel from './models/FirstModel';
+
+const firstModel: FirstModel = {
+  firstProp: 'Nicholas',
+  secondProp: 'Charles',
+  thirdProp: 'Emmerson',
+};
+
 const common = (() => ({
   blocks: {
     'O': {
@@ -67,5 +75,6 @@ const common = (() => ({
 }))();
 
 export {
+  firstModel,
   common,
 };

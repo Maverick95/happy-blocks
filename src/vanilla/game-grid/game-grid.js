@@ -32,6 +32,8 @@ class GameGridElement extends HTMLElement {
       this.drawGrid();
     }, 5000);
 
+    console.log(`${happyblocks.firstModel.firstProp} ${happyblocks.firstModel.secondProp} ${happyblocks.firstModel.thirdProp}`);
+
   }
 
   setNewBlock(x, y, type) {
