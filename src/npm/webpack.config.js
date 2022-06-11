@@ -5,7 +5,7 @@ module.exports = {
   mode: 'production',
   output: {
     library: 'happyblocks',
-    filename: 'index.js',
+    filename: 'global.happyblocks.js',
     path: path.resolve(__dirname, 'dist'),
   },
 };

@@ -327,3 +327,11 @@ Test this actually works?
 It does! And you have your answer.
 You can use webpack to generate your happyblocks global object.
 Then build, publish, and then the rest is history.
+
+So I guess it might be a good idea to formalize this somewhat.
+
+Also just the general file structure of the thing.
+
+Because you're working in a dist generally
+
+1) Move index.html to the top level.

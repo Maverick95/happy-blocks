@@ -2,7 +2,6 @@
   "name": "happy-blocks",
   "version": "1.0.0",
   "description": "The NPM side of happy-blocks",
-  "main": "./dist/index.js",
   "scripts": {
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"

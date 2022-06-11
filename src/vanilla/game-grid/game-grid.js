@@ -20,7 +20,7 @@ class GameGridElement extends HTMLElement {
 
     const styles = document.createElement('link');
     styles.setAttribute('rel', 'stylesheet');
-    styles.setAttribute('href', './Components/game-grid/game-grid.css');
+    styles.setAttribute('href', './src/vanilla/game-grid/game-grid.css');
     this.shadowRoot.appendChild(styles);
 
     const content = document.getElementById('game-grid').content.cloneNode(true);
@@ -28,7 +28,7 @@ class GameGridElement extends HTMLElement {
 
     // Test lines
     setTimeout(() => {
-      this.setNewBlock(1, 1, 'I');
+      this.setNewBlock(1, 1, 'T');
       this.drawGrid();
     }, 5000);
 

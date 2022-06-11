@@ -14,7 +14,7 @@ class PlayerScoreElement extends HTMLElement
     
     const styles = document.createElement('link');
     styles.setAttribute('rel', 'stylesheet');
-    styles.setAttribute('href', './Components/player-score/player-score.css');
+    styles.setAttribute('href', './src/vanilla/player-score/player-score.css');
     this.shadowRoot.appendChild(styles);
     
     const div = document.createElement('div');

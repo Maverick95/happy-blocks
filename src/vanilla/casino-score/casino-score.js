@@ -15,7 +15,7 @@ class CasinoScoreElement extends HTMLElement {
 
     const styles = document.createElement('link');
     styles.setAttribute('rel', 'stylesheet');
-    styles.setAttribute('href', './Components/casino-score/casino-score.css');
+    styles.setAttribute('href', './src/vanilla/casino-score/casino-score.css');
     this.shadowRoot.appendChild(styles);
 
     const content = document.getElementById('casino-score').content.cloneNode(true);

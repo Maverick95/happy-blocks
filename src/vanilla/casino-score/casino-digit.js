@@ -17,7 +17,7 @@ class CasinoDigitElement extends HTMLElement {
 
     const styles = document.createElement('link');
     styles.setAttribute('rel', 'stylesheet');
-    styles.setAttribute('href', './Components/casino-score/casino-digit.css');
+    styles.setAttribute('href', './src/vanilla/casino-score/casino-digit.css');
     this.shadowRoot.appendChild(styles);
 
     const content = document.getElementById('casino-digit').content.cloneNode(true);
