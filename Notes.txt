@@ -308,4 +308,22 @@ a) what will be in my webpack output?
 b) what will it do? (action) or what will it define? (vanilla JS backing)
 c) how does Webpack work around this?
 
+It appears in webpack, what you are building is, the execution of an action.
 
+Maybe read a bit through webpack concepts.
+
+There is an option to disable iife (immediately-invoked function expression),
+when set to false,
+this does work, BUT it also could be a nightmare for name collision.
+Remember, the only global variable in existence will be happyblocks!
+So you need to be careful about how you write your index.
+
+I feel like the issue I am trying to solve is a very specific one.
+And to answer it, you need to trawl through various webpack options.
+
+What are you TRYING to do?
+
+Test this actually works?
+It does! And you have your answer.
+You can use webpack to generate your happyblocks global object.
+Then build, publish, and then the rest is history.
