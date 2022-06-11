@@ -297,6 +297,10 @@ Sigh. Fair enough.
 It would mean I can begin moving out some parts into unit-testing land.
 Would make a large difference.
 
+GOAL
+
+Start off simple.
+Set up npm / webpack and have it build ES js into browser js.
 
 
 
