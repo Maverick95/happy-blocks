@@ -1,10 +1,9 @@
-import Grid from 'classes/Grid';
+import TetrominoType from 'models/TetrominoType';
+import Tetromino from 'models/Tetromino';
 
-const grid = (): Grid => new Grid(0, 0);
-
-const common = (() => ({
-  blocks: {
-    'O': {
+const tetrominos = (): Record<TetrominoType, Tetromino> => ({
+  
+  [TetrominoType.O]: {
       color: '#00ff00',
       coordinates: [
         {x: 0, y: 0},
@@ -13,7 +12,7 @@ const common = (() => ({
         {x: 1, y: 1},
       ],
     },
-    'S': {
+    [TetrominoType.S] : {
       color: '#00ffff',
       coordinates: [
         {x: 0, y: 1},
@@ -22,7 +21,7 @@ const common = (() => ({
         {x: 2, y: 0},
       ],
     },
-    'Z': {
+    [TetrominoType.Z]: {
       color: '#400000',
       coordinates: [
         {x: 0, y: 0},
@@ -31,7 +30,7 @@ const common = (() => ({
         {x: 2, y: 1},
       ],
     },
-    'T': {
+    [TetrominoType.T]: {
       color: '#8000ff',
       coordinates: [
         {x: 0, y: 0},
@@ -40,7 +39,7 @@ const common = (() => ({
         {x: 2, y: 0},
       ],
     },
-    'L': {
+    [TetrominoType.L]: {
       color: '#0000ff',
       coordinates: [
         {x: 0, y: 0},
@@ -49,7 +48,7 @@ const common = (() => ({
         {x: 2, y: 0},
       ],
     },
-    'J': {
+    [TetrominoType.J]: {
       color: '#ff00ff',
       coordinates: [
         {x: 0, y: 0},
@@ -58,7 +57,7 @@ const common = (() => ({
         {x: 2, y: 1},
       ],
     },
-    'I': {
+    [TetrominoType.I]: {
       color: '#ffff00',
       coordinates: [
         {x: 0, y: 0},
@@ -67,10 +66,6 @@ const common = (() => ({
         {x: 3, y: 0},
       ],
     },
-  }
-}))();
+  });
 
-export {
-  common,
-  grid,
-};
+  const getTetromino = (type: TetrominoType): Tetromino => tetrominos()[type];

@@ -5,6 +5,7 @@ module.exports = {
   mode: 'production',
   resolve: {
     extensions: ['.js', '.json', '.wasm', '.ts'],
+    modules: ['node_modules', 'src'],
   },
   module: {
     rules: [
