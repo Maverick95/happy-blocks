@@ -322,6 +322,69 @@ NOTE - for later on, helpful to have Tetromino functions such as -
 a) returning an array of all the types,
 b) returning an array RANDOMLY SORTED of all the types.
 
-Okay
+Okay so finally can start thinking about this main function.
+
+Inputs -
+
+block: Block,
+rotation: Rotation,
+id: number,
+grid: Grid,
+
+The most basic idea is to -
+
+a) apply the rotation,
+b) calculate the smallest number of manhattan moves until the piece is available to be placed without collisions,
+with some priority, e.g. vertical over horizontal.
+
+I think this is a fairly complete attempt.
+I'm sure there are other methods as well.
+
+How do you approach this problem?
+
+To be honest, I don't think it's really that complicated.
+
+Choose a dominant heirarchy and direction for each, e.g.
+horizontal over vertical
+left over right
+up over down
+
+There is the absolute brute-force approach - according to these hierarchies,
+expand out one space at a time, each time checking for collisions.
+
+A quick view at this would consider this quite inefficient - lots of duplicate checks for
+whether particular spaces are occupied.
+
+Ideally you want to minimize the number of collision checks.
+
+More the idea of an occupied space eliminating POSSIBILITIES, rather than the
+other way round.
+
+The simplest way IS just the brute force approach...
+
+Okay so follow your first idea though.
+How does an occupied space reduce possibilities?
+
+Maybe choose an example.
+
+No, I think I'm going for the brute-force option.
+
+Why did I append the id? onto coordinate again?
+
+OMF face-palm, remember, the ids are for PIECES, not the block! There is no such thing as a Block ID!
+
+Well this isn't that tough to work-around.
+
+Remember a key thing here... DO NOT UPDATE THE GRID OBJECT ITSELF!!
+Leave that logic inside the web component, there are other moving parts.
+
+For now, within the rotateBlock() function, assume that all coordinates have a piece id.
+Or you can just check for it...
+
+
+
+
+
+
 
 
