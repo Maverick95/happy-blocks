@@ -8,20 +8,20 @@ const getNextCoordinateDefault = (): CoordinateGenerator => {
   return ({
     next: (): Coordinate => {
       const result: Coordinate = { ...next };
-      if (next.x >= 0 && next.y > 0) {
-        next.x++; next.y--;
+      if (next.x >= 0 && next.y < 0) {
+        next.x++; next.y++;
       }
-      else if (next.x > 0 && next.y <= 0) {
-        next.x--; next.y--;
-      }
-      else if (next.x <= 0 && next.y < 0) {
+      else if (next.x > 0 && next.y >= 0) {
         next.x--; next.y++;
       }
-      else if (next.x < 0 && next.y >= 0) {
-        next.y += (++next.x === 0 ? 2 : 1);
+      else if (next.x <= 0 && next.y > 0) {
+        next.x--; next.y--;
+      }
+      else if (next.x < 0 && next.y <= 0) {
+        next.y -= (++next.x === 0 ? 2 : 1);
       }
       else {
-        next.y++;
+        next.y--;
       }
       return result;
     },
