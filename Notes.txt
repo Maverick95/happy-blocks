@@ -384,6 +384,11 @@ Or you can just check for it...
 
 
 
+Nice! You have a handy generator function.
+
+
+
+
 
 
 

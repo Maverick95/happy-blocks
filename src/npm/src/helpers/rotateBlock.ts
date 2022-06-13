@@ -1,30 +1,22 @@
 import Block from 'models/Block';
 import Rotation from 'models/Rotation';
 import Grid from 'classes/Grid';
+import Coordinate from 'models/Coordinate';
+import CoordinateGenerator from 'models/CoordinateGenerator';
+import { getNextCoordinateDefault } from './CoordinateGenerators';
 
 const rotateBlock = (
   block: Block,
-  rotation: Rotation,
   grid: Grid,
+  rotation: Rotation = Rotation.CLOCKWISE,
+  getNextCoordinate: CoordinateGenerator = getNextCoordinateDefault(),
 ): Block => {
-
-  /*
-  // Outline major steps -
-  // a) create new Block object,
-  // b) apply rotation,
-  // c) begin main algorithm.
-  This is, using dominant / negative options...
-  Move each individual piece
-  Check whether piece is...
-  1) Off-screen to left/right/down (up is only exception)
-  2) Occupied by piece that is NOT the id provided (very important)
-  */
 
   /* Assumption - each coordinate of block has id > 0. */
 
   /* List of ids from block required to do lookups without altering grid */
 
-  const ids = block.coordinates.map(coordinate => coordinate.id);
+  const ids = [0, ...block.coordinates.map(coordinate => coordinate.id)];
 
   /* Returned Block object needs to be deep-copy of original */
 
@@ -34,44 +26,47 @@ const rotateBlock = (
     coordinates: block.coordinates.map(coordinate => ({...coordinate})),
   };
 
+  /* Basic rotation around origin coordinate is simple mapping. */
+
   result.coordinates.forEach(coordinate => {
     const x = coordinate.x, y = coordinate.y;
-    coordinate.x = -y;
-    coordinate.y = x;
+    if (rotation === Rotation.CLOCKWISE) {
+      coordinate.x = (y === 0 ? 0 : -y);
+      coordinate.y = x;
+    }
+    else {
+      coordinate.x = y;
+      coordinate.y = (x === 0 ? 0 : -x);
+    }
   });
 
-  /*
-  Okay so how do we do this?
-  Well there is an order to the relative movement we perform.
-  Need to order things from minimal move / maximal move.
-  There's really no preference.
-  So we will try...
-  a) axis - max horizontal, min vertical
-  b) vertical direction - max down, min up (duh)
-  c) horizontal direction  max left, min right
-  So wtf does this mean exactly??
-  Well, start off ordering the squares. There is a definite order.
-  (0, 0)
-  vertical is first
-  Godammit!
-  This is manhattan distance.
-  So...
-        3
-      3 2 3
-    3 2 1 2 3
-  3 2 1 0 1 2 3
-    3 2 1 2 3
-      3 2 3
-        3
-  
-  0 - 1 element
-  1 - 4 elements
-  2 - 8 elements
-  3 - 12 elements
-  */
+  let offset: Coordinate = null;
+  getNextCoordinate.reset();
 
+  while (offset === null) {
+    const next = getNextCoordinate.next();
+    let isValid = true;
+    for (var coordinate of result.coordinates) {
+      const
+        x = result.x + next.x + coordinate.x,
+        y = result.y + next.y + coordinate.y;
+
+      /* Normal check on y < 0 excluded so that rotations can allow parts of pieces to plot above the top of the grid (possible in Tetris). */
+      /* Last condition is slightly nuanced, grid check is enforced to be inside boundaries so that certain grid behaviour is catered for. */
+      
+      if (x < 0 || x >= grid.getWidth() || y >= grid.getHeight() || (y >= 0 && !ids.includes(grid.getSpace(x, y)))) {
+        isValid = false;
+        break;
+      }
+    }
+    if (isValid) {
+      offset = {...next};
+    }
+  }
+
+  result.x += offset.x;
+  result.y += offset.y;
   return result;
-
 };
 
 export default rotateBlock;

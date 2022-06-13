@@ -39,7 +39,7 @@ class Grid {
     value <= 0 || x < 0 || x >= this.#width || y < 0 || y >= this.#height) {
       throw new Error('Incorrect attribute');
     }
-    this.#grid[x][y] = value;
+    this.#grid[y][x] = value;
   }
 
   getSpace = (x: number, y: number): number => {
@@ -49,14 +49,14 @@ class Grid {
     if (x < 0 || x >= this.#width || y < 0 || y >= this.#height) {
       return undefined;
     } 
-    return this.#grid[x][y];
+    return this.#grid[y][x];
   }
 
   clearSpace = (x: number, y: number): void => {
     if (!Number.isInteger(x) || !Number.isInteger(y) || x < 0 || x >= this.#width || y < 0 || y >= this.#height) {
       throw new Error('Incorrect attribute');
     }
-    this.#grid[x][y] = 0;
+    this.#grid[y][x] = 0;
   }
 
   #updateGridDimensions = (): void => {
