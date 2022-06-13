@@ -33,10 +33,10 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
     [TetrominoType.T]: {
       color: '#8000ff',
       coordinates: [
-        {x: 0, y: 0},
-        {x: 1, y: 0},
-        {x: 1, y: 1},
-        {x: 2, y: 0},
+        {x: -1, y: 0},
+        {x:  0, y: 0},
+        {x:  0, y: 1},
+        {x:  1, y: 0},
       ],
     },
     [TetrominoType.L]: {
@@ -69,3 +69,5 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
   });
 
   const getTetromino = (type: TetrominoType): Tetromino => tetrominos()[type];
+
+  export default getTetromino;

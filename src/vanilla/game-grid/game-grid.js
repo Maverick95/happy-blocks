@@ -27,13 +27,35 @@ class GameGridElement extends HTMLElement {
 
     // Test lines
     setTimeout(() => {
-      this.setNewBlock(1, 1, 'T');
+      this.setNewBlock(1, 1, 'I');
       this.drawGrid();
     }, 5000);
+
+    const input = document.createElement('input');
+    input.setAttribute('type', 'button');
+    input.setAttribute('value', 'Click here');
+    input.addEventListener('click', () => {
+      if (this.block !== null) {
+        const rotated = happyblocks.rotate(this.block, this.grid);
+        // update this.grid
+        this.block.coordinates.forEach(coordinate => 
+          this.grid.clearSpace(rotated.x + coordinate.x, rotated.y + coordinate.y));
+        rotated.coordinates.forEach(coordinate => {
+          this.grid.setSpace(coordinate.id, rotated.x + coordinate.x, rotated.y + coordinate.y);
+          // update this.pieces
+          this.pieces[coordinate.id].x = rotated.x + coordinate.x;
+          this.pieces[coordinate.id].y = rotated.y + coordinate.y;
+        });
+        // set this.block
+        this.block = rotated;
+        this.drawGrid();
+      }
+    });
+    this.shadowRoot.appendChild(input);
   }
 
   setNewBlock(x, y, type) {
-    const coordinates = happyblocks.common.blocks[type].coordinates;
+    const coordinates = happyblocks.tetromino(type).coordinates;
     coordinates.forEach(coordinate => {
       // Set new id.
       coordinate.id = ++this.id;
@@ -65,17 +87,19 @@ class GameGridElement extends HTMLElement {
       const piece = this.pieces[piece_id];
       let grid_piece = this.shadowRoot.getElementById(`game-piece-${piece_id}`);
       if (grid_piece) {
-        grid_piece.style.backgroundColor = happyblocks.common.blocks[piece.type].color;
+        grid_piece.style.backgroundColor = happyblocks.tetromino(piece.type).color;
         grid_piece.style.left = `${piece.x * 25}px`;
-        grid_piece.style.top = `${piece.y * 25}px`; 
+        grid_piece.style.top = `${piece.y * 25}px`;
+        grid_piece.style.visibility = piece.y >= 0 ? 'visible' : 'hidden'; 
       }
       else {
         grid_piece = document.createElement('div');
         grid_piece.id = `game-piece-${piece_id}`;
         grid_piece.classList.add('game-piece');
-        grid_piece.style.backgroundColor = happyblocks.common.blocks[piece.type].color;
+        grid_piece.style.backgroundColor = happyblocks.tetromino(piece.type).color;
         grid_piece.style.left = `${piece.x * 25}px`;
-        grid_piece.style.top = `${piece.y * 25}px`; 
+        grid_piece.style.top = `${piece.y * 25}px`;
+        grid_piece.style.visibility = piece.y >= 0 ? 'visible' : 'hidden';
         container.appendChild(grid_piece);
       }
     }
