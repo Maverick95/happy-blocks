@@ -27,7 +27,7 @@ class GameGridElement extends HTMLElement {
 
     // Test lines
     setTimeout(() => {
-      this.setNewBlock(1, 1, 'I');
+      this.setNewBlock(3, 3, 'I');
       this.drawGrid();
     }, 5000);
 
