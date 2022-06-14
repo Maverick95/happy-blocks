@@ -327,21 +327,14 @@ Erm, I think that's it!
 
 Okay, so...
 
-Set up the main game loop.
-Try putting this in... the attribute changed method.
-At the end, detect whether all attributes are properly set.
-If they are, then you need to clear/set an interval to update the game loop.
+Next part is the randomizer!
+And this is a method I can put into npm.
+It's fairly simple. Just generate the next piece type.
 
 
-Whenever an attribute changes, check all the attributes are properly set at the end.
-If they are, then...
-a) was the attribute changed, the "time interval"? if so, clear the previous interval if present, set the new interval.
-b) if not, add the interval ONLY if it doesn't exist. If it does, leave it.
-
-
-TODO : add loads of tests for moveBlock!
+TODO : add loads of tests for moveBlock! and randomizer!
 
 TODO : something something clear Intervals when web components detached
 
-Next need buttons to move left and right.
+
 

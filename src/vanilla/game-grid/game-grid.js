@@ -15,6 +15,7 @@ class GameGridElement extends HTMLElement {
     this.pieces = {};
     this.grid = happyblocks.grid();
     this.id = this.period = this.interval = 0;
+    this.randomizer = happyblocks.randomizer();
 
     this.attachShadow({ mode: 'open' });
 
@@ -195,7 +196,8 @@ class GameGridElement extends HTMLElement {
       }
     }
     else {
-      this.setNewBlock(3, 3, 'I');
+      const next = this.randomizer.next();
+      this.setNewBlock(3, 3, next);
     }
 
     this.drawGrid();
