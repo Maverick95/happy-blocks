@@ -289,107 +289,56 @@ And this is set within npm.
 
 This is a weird combination of technologies that I haven't used before.
 Maybe I've not quite done it in the right way... but we'll see how it fares for now.
-
-So we are looking for a very generic method that performs a rotate action.
-
-The method will return (if rotation is possible) a new piece with the coordinates, o/w null.
-The last part is an important get-out clause.
-
-Inputs -
-
-a) the current piece as defined via coordinates,
-b) rotation is always 90 degrees around origin, but can be clockwise or counter-clockwise,
-c) the current grid, this is the array saying which spaces are occupied and which aren't,
-d) the piece id of your current piece. Important to discern from c), when determining occupied/un-occupied
-spaces you wouldn't include yourself.
-
-Start off by defining all your types.
-
-Block
-Rotation direction
-The piece id
-The current grid
-
-Oh yeah rewrite common to use types.
-
-I'm starting to have a small crisis of confidence regarding how I am storing Blocks.
-The idea of a coordinate as the 0 point, combined with the relative points?
-Yeah but it's fine in the sense that IT DOESN'T MEAN ANYTHING, its all relative!
-
-The coordinates of the block on their own don't MEAN anything!
-
-NOTE - for later on, helpful to have Tetromino functions such as -
-a) returning an array of all the types,
-b) returning an array RANDOMLY SORTED of all the types.
-
-Okay so finally can start thinking about this main function.
-
-Inputs -
-
-block: Block,
-rotation: Rotation,
-id: number,
-grid: Grid,
-
-The most basic idea is to -
-
-a) apply the rotation,
-b) calculate the smallest number of manhattan moves until the piece is available to be placed without collisions,
-with some priority, e.g. vertical over horizontal.
-
-I think this is a fairly complete attempt.
-I'm sure there are other methods as well.
-
-How do you approach this problem?
-
-To be honest, I don't think it's really that complicated.
-
-Choose a dominant heirarchy and direction for each, e.g.
-horizontal over vertical
-left over right
-up over down
-
-There is the absolute brute-force approach - according to these hierarchies,
-expand out one space at a time, each time checking for collisions.
-
-A quick view at this would consider this quite inefficient - lots of duplicate checks for
-whether particular spaces are occupied.
-
-Ideally you want to minimize the number of collision checks.
-
-More the idea of an occupied space eliminating POSSIBILITIES, rather than the
-other way round.
-
-The simplest way IS just the brute force approach...
-
-Okay so follow your first idea though.
-How does an occupied space reduce possibilities?
-
-Maybe choose an example.
-
-No, I think I'm going for the brute-force option.
-
-Why did I append the id? onto coordinate again?
-
-OMF face-palm, remember, the ids are for PIECES, not the block! There is no such thing as a Block ID!
-
-Well this isn't that tough to work-around.
-
-Remember a key thing here... DO NOT UPDATE THE GRID OBJECT ITSELF!!
-Leave that logic inside the web component, there are other moving parts.
-
-For now, within the rotateBlock() function, assume that all coordinates have a piece id.
-Or you can just check for it...
+I think its okay so long as you don't keep the functionality that coupled.
+i.e. using the global space as a data silo is BAAAD.
+In my head, I know what I am thinking, probably somebody else would be able to say it better in words.
+The happyblocks global object is like a SERVICE.
+For example, in your rotate method, this didn't alter the input objects, it just returned a result.
 
 
 
+Rotation is done, so the next big thing I want to do is, I want to get the main game flow going.
 
-Nice! You have a handy generator function.
+Write out in words what happens -
+
+1) Game start, grid is empty, current block is null
+2) First step is to have a method that randomly selects a piece. (fix to standard)
+NOTE - same method also knows which is the NEXT piece to display.
+(this is maybe something to do)
+3) Game has an "event period" - time until the next "event" is triggered.
+4) Event is triggered, decision process is...
+
+a) Is current block null? If yes, initiate next piece with some way of determining start position
+at the top of the game area. Set current block to this, add to grid, etc, blah blah blah...
+(for now fix to standard)
+
+b) Current block is not null -
+this means piece is prompted to move down one slot
+Ask the question, "can the piece be moved downward?"
+If yes, then move downward.
+If no, then... erm, what exactly?
+Piece has stopped moving.
+[ INSERT PART THAT CHECKS THAT ROWS ARE COMPLETE AND REMOVES THEM AND INCREASES SCORE!!! ]
+Then check if piece is out-of-bounds.
+If yes, game over!
+If no, then block is null. Detaches.
+
+Erm, I think that's it!
+
+Okay, so...
+
+Set up the main game loop.
+Try putting this in... the attribute changed method.
+At the end, detect whether all attributes are properly set.
+If they are, then you need to clear/set an interval to update the game loop.
 
 
+Whenever an attribute changes, check all the attributes are properly set at the end.
+If they are, then...
+a) was the attribute changed, the "time interval"? if so, clear the previous interval if present, set the new interval.
+b) if not, add the interval ONLY if it doesn't exist. If it does, leave it.
 
 
+TODO : add loads of tests for moveBlock!
 
-
-
-
+TODO : something something clear Intervals when web components detached 

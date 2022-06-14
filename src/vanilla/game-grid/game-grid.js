@@ -4,6 +4,7 @@ class GameGridElement extends HTMLElement {
     return [
       'width',
       'height',
+      'period',
     ];
   }
 
@@ -13,7 +14,7 @@ class GameGridElement extends HTMLElement {
     this.block = null;
     this.pieces = {};
     this.grid = happyblocks.grid();
-    this.id = 0;
+    this.id = this.period = this.interval = 0;
 
     this.attachShadow({ mode: 'open' });
 
@@ -26,10 +27,12 @@ class GameGridElement extends HTMLElement {
     this.shadowRoot.appendChild(content);
 
     // Test lines
+    /*
     setTimeout(() => {
       this.setNewBlock(3, 3, 'I');
       this.drawGrid();
-    }, 5000);
+    }, 2500);
+    */
 
     const input = document.createElement('input');
     input.setAttribute('type', 'button');
@@ -38,8 +41,8 @@ class GameGridElement extends HTMLElement {
       if (this.block !== null) {
         const rotated = happyblocks.rotate(this.block, this.grid);
         // update this.grid
-        this.block.coordinates.forEach(coordinate => 
-          this.grid.clearSpace(rotated.x + coordinate.x, rotated.y + coordinate.y));
+        this.block.coordinates.forEach(coordinate =>
+          this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
         rotated.coordinates.forEach(coordinate => {
           this.grid.setSpace(coordinate.id, rotated.x + coordinate.x, rotated.y + coordinate.y);
           // update this.pieces
@@ -90,7 +93,7 @@ class GameGridElement extends HTMLElement {
         grid_piece.style.backgroundColor = happyblocks.tetromino(piece.type).color;
         grid_piece.style.left = `${piece.x * 25}px`;
         grid_piece.style.top = `${piece.y * 25}px`;
-        grid_piece.style.visibility = piece.y >= 0 ? 'visible' : 'hidden'; 
+        grid_piece.style.visibility = piece.y >= 0 ? 'visible' : 'hidden';
       }
       else {
         grid_piece = document.createElement('div');
@@ -125,8 +128,60 @@ class GameGridElement extends HTMLElement {
         this.grid.setHeight(height);
       }
         break;
+      case 'period': {
+        const period = parseInt(newVal);
+        if (isNaN(period) || period < 100) {
+          throw new Error('Incorrect attribute');
+        }
+        this.period = period;
+      }
     }
-    
+
+    this.drawGrid();
+
+    if (this.period > 0 && this.grid.getWidth() > 0 && this.grid.getHeight() > 0) {
+      if (attrName === 'period') {
+        if (this.interval !== 0) {
+          clearInterval(this.interval);
+        }
+        this.interval = setInterval(() => this.gameEvent(), this.period);
+      }
+      else if (this.interval === 0) {
+        this.interval = setInterval(() => this.gameEvent(), this.period);
+      }
+    }
+    else if (this.interval !== 0) {
+      clearInterval(this.interval);
+      this.interval = 0;
+    }
+
+  }
+
+  gameEvent() {
+
+    if (this.block !== null) {
+      const moved = happyblocks.move(this.block, this.grid, 'down');
+      if (moved !== null) {
+        // update this.grid
+        this.block.coordinates.forEach(coordinate =>
+          this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
+          moved.coordinates.forEach(coordinate => {
+          this.grid.setSpace(coordinate.id, moved.x + coordinate.x, moved.y + coordinate.y);
+          // update this.pieces
+          this.pieces[coordinate.id].x = moved.x + coordinate.x;
+          this.pieces[coordinate.id].y = moved.y + coordinate.y;
+        });
+        // set this.block
+        this.block = moved;
+      }
+      else {
+        this.block = null;
+      }
+    }
+    else {
+      this.setNewBlock(3, 3, 'I');
+    }
+
     this.drawGrid();
 
   }
