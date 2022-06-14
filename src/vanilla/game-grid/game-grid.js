@@ -26,35 +26,42 @@ class GameGridElement extends HTMLElement {
     const content = document.getElementById('game-grid').content.cloneNode(true);
     this.shadowRoot.appendChild(content);
 
-    // Test lines
-    /*
-    setTimeout(() => {
-      this.setNewBlock(3, 3, 'I');
-      this.drawGrid();
-    }, 2500);
-    */
+    const input_left = document.createElement('input');
+    input_left.setAttribute('type', 'button');
+    input_left.setAttribute('value', '<');
+    input_left.addEventListener('click', () => this.moveBlock('left'));
+    
+    const input_rotate = document.createElement('input');
+    input_rotate.setAttribute('type', 'button');
+    input_rotate.setAttribute('value', 'R');
+    input_rotate.addEventListener('click', () => this.rotateBlock());
 
-    const input = document.createElement('input');
-    input.setAttribute('type', 'button');
-    input.setAttribute('value', 'Click here');
-    input.addEventListener('click', () => {
-      if (this.block !== null) {
-        const rotated = happyblocks.rotate(this.block, this.grid);
-        // update this.grid
-        this.block.coordinates.forEach(coordinate =>
-          this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
-        rotated.coordinates.forEach(coordinate => {
-          this.grid.setSpace(coordinate.id, rotated.x + coordinate.x, rotated.y + coordinate.y);
-          // update this.pieces
-          this.pieces[coordinate.id].x = rotated.x + coordinate.x;
-          this.pieces[coordinate.id].y = rotated.y + coordinate.y;
-        });
-        // set this.block
-        this.block = rotated;
-        this.drawGrid();
-      }
-    });
-    this.shadowRoot.appendChild(input);
+    const input_right = document.createElement('input');
+    input_right.setAttribute('type', 'button');
+    input_right.setAttribute('value', '>');
+    input_right.addEventListener('click', () => this.moveBlock('right'))
+    
+    this.shadowRoot.appendChild(input_left);
+    this.shadowRoot.appendChild(input_rotate);
+    this.shadowRoot.appendChild(input_right);
+  }
+
+  rotateBlock() {
+    if (this.block !== null) {
+      const rotated = happyblocks.rotate(this.block, this.grid);
+      // update this.grid
+      this.block.coordinates.forEach(coordinate =>
+        this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
+      rotated.coordinates.forEach(coordinate => {
+        this.grid.setSpace(coordinate.id, rotated.x + coordinate.x, rotated.y + coordinate.y);
+        // update this.pieces
+        this.pieces[coordinate.id].x = rotated.x + coordinate.x;
+        this.pieces[coordinate.id].y = rotated.y + coordinate.y;
+      });
+      // set this.block
+      this.block = rotated;
+      this.drawGrid();
+    }
   }
 
   setNewBlock(x, y, type) {
@@ -157,10 +164,9 @@ class GameGridElement extends HTMLElement {
 
   }
 
-  gameEvent() {
-
+  moveBlock(direction) {
     if (this.block !== null) {
-      const moved = happyblocks.move(this.block, this.grid, 'down');
+      const moved = happyblocks.move(this.block, this.grid, direction);
       if (moved !== null) {
         // update this.grid
         this.block.coordinates.forEach(coordinate =>
@@ -173,8 +179,18 @@ class GameGridElement extends HTMLElement {
         });
         // set this.block
         this.block = moved;
+        this.drawGrid();
       }
       else {
+        return true;
+      }
+    }
+  }
+
+  gameEvent() {
+
+    if (this.block !== null) {
+      if (this.moveBlock('down')) {
         this.block = null;
       }
     }

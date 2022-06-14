@@ -341,4 +341,7 @@ b) if not, add the interval ONLY if it doesn't exist. If it does, leave it.
 
 TODO : add loads of tests for moveBlock!
 
-TODO : something something clear Intervals when web components detached 
+TODO : something something clear Intervals when web components detached
+
+Next need buttons to move left and right.
+
