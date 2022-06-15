@@ -336,5 +336,10 @@ TODO : add loads of tests for moveBlock! and randomizer!
 
 TODO : something something clear Intervals when web components detached
 
+To get thinnest slice, need to...
+
+a) Initial piece location needs to be clear,
+b) Game end needs handling,
+c) Complete rows mean rows disappear with cool animation, adjusts overall score.
 
 
