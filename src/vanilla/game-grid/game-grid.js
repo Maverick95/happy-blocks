@@ -65,19 +65,19 @@ class GameGridElement extends HTMLElement {
     }
   }
 
-  setNewBlock(x, y, type) {
-    const coordinates = happyblocks.tetromino(type).coordinates;
-    coordinates.forEach(coordinate => {
+  setNewBlock(type) {
+    const block = happyblocks.new(type, this.grid);
+    block.coordinates.forEach(coordinate => {
       // Set new id.
       coordinate.id = ++this.id;
       // Create new piece.
       const piece = {
         type,
-        x: x + coordinate.x,
-        y: y + coordinate.y,
+        x: block.x + coordinate.x,
+        y: block.y + coordinate.y,
       };
       // Throw error if out-of-bounds of grid, or if space is populated.
-      if (piece.x < 0 || piece.x >= this.grid.getWidth() || piece.y < 0 || piece.y >= this.grid.getHeight() || this.grid.getSpace(piece.x, piece.y)) {
+      if (piece.x < 0 || piece.x >= this.grid.getWidth() || piece.y >= this.grid.getHeight() || (piece.y >= 0 && this.grid.getSpace(piece.x, piece.y))) {
         throw new Error('Invalid grid coordinate');
       }
       // Add id to grid.
@@ -85,7 +85,7 @@ class GameGridElement extends HTMLElement {
       // Add to pieces.
       this.pieces[coordinate.id] = piece;
     });
-    this.block = { x, y, coordinates };
+    this.block = block;
   }
 
   drawGrid() {
@@ -197,7 +197,7 @@ class GameGridElement extends HTMLElement {
     }
     else {
       const next = this.randomizer.next();
-      this.setNewBlock(3, 3, next);
+      this.setNewBlock(next);
     }
 
     this.drawGrid();

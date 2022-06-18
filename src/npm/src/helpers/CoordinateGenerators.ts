@@ -1,5 +1,8 @@
+import Grid from 'classes/Grid';
 import Coordinate from 'models/Coordinate';
 import CoordinateGenerator from 'models/CoordinateGenerator';
+import TetrominoType from 'models/TetrominoType';
+import random from './random';
 
 const getNextOffsetCoordinateDefault = (): CoordinateGenerator => {
 
@@ -36,7 +39,25 @@ const offsetCoordinateGenerators: Record<string, () => CoordinateGenerator> = {
   'default': getNextOffsetCoordinateDefault,
 };
 
+const getNextStartCoordinateDefault = (_: TetrominoType, grid: Grid): CoordinateGenerator => {
+
+  return ({
+    next: (): Coordinate => ({
+      x: Math.floor(random() * grid.getWidth()),
+      y: 0
+    }),
+    reset: (): void => { },
+  });
+
+};
+
+const startCoordinateGenerators: Record<string, (type: TetrominoType, grid: Grid) => CoordinateGenerator> = {
+  'default': getNextStartCoordinateDefault,
+};
+
 export {
   offsetCoordinateGenerators,
   getNextOffsetCoordinateDefault,
+  startCoordinateGenerators,
+  getNextStartCoordinateDefault,
 };

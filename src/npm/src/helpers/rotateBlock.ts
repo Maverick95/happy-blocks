@@ -13,10 +13,6 @@ const rotateBlock = (
 
   /* Assumption - each coordinate of block has id > 0. */
 
-  /* List of ids from block required to do lookups without altering grid */
-
-  const ids = [0, ...block.coordinates.map(coordinate => coordinate.id)];
-
   /* Returned Block object needs to be deep-copy of original */
 
   const result: Block = {

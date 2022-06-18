@@ -382,9 +382,15 @@ In a couple of key ways, the happyblocks object is a bit of a black-box.
 
 Have a look at this first before proceeding.
 
-When rotating a block, there's no way to override the default coordinate generator from outside the library.
+And now, you have your new method you can address!
 
+Takes in a Tetromino type, and a grid.
 
+And then some method of selecting a starting block, given a Grid?
+
+TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators.
+
+Okay so you've been forced to add testing.
 
 
 

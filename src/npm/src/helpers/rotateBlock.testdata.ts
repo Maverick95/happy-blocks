@@ -2,7 +2,6 @@
 
 import Block from 'models/Block';
 import Coordinate from 'models/Coordinate';
-import rotateBlock from './rotateBlock';
 
 interface RotateBlockDefaultTestData {
   block: Block,
