@@ -32,6 +32,11 @@ const getNextOffsetCoordinateDefault = (): CoordinateGenerator => {
 
 };
 
+const offsetCoordinateGenerators: Record<string, () => CoordinateGenerator> = {
+  'default': getNextOffsetCoordinateDefault,
+};
+
 export {
+  offsetCoordinateGenerators,
   getNextOffsetCoordinateDefault,
 };

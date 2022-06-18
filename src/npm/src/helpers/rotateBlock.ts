@@ -1,15 +1,14 @@
 import Block from 'models/Block';
 import Rotation from 'models/Rotation';
 import Grid from 'classes/Grid';
-import CoordinateGenerator from 'models/CoordinateGenerator';
-import { getNextOffsetCoordinateDefault } from './CoordinateGenerators';
+import { offsetCoordinateGenerators } from './CoordinateGenerators';
 import getBlockOffsetWithNoOverlap from './getBlockOffsetWithNoOverlap';
 
 const rotateBlock = (
   block: Block,
   grid: Grid,
   rotation: Rotation = Rotation.CLOCKWISE,
-  getNextOffsetCoordinate: CoordinateGenerator = getNextOffsetCoordinateDefault(),
+  offsetCoordinateGenerator: string = 'default',
 ): Block => {
 
   /* Assumption - each coordinate of block has id > 0. */
@@ -39,6 +38,8 @@ const rotateBlock = (
       coordinate.y = (x === 0 ? 0 : -x);
     }
   });
+
+  const getNextOffsetCoordinate = offsetCoordinateGenerators[offsetCoordinateGenerator](); 
 
   const offset = getBlockOffsetWithNoOverlap(result, grid, getNextOffsetCoordinate);
   result.x += offset.x;

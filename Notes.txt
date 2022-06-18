@@ -382,8 +382,7 @@ In a couple of key ways, the happyblocks object is a bit of a black-box.
 
 Have a look at this first before proceeding.
 
-When rotating a block, there's no way to override the default from outside the library.
-
+When rotating a block, there's no way to override the default coordinate generator from outside the library.
 
 
 
