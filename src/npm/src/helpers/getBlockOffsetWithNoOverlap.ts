@@ -2,12 +2,12 @@ import Block from 'models/Block';
 import Grid from 'classes/Grid';
 import CoordinateGenerator from 'models/CoordinateGenerator';
 import Coordinate from 'models/Coordinate';
-import { getNextCoordinateDefault } from './CoordinateGenerators';
+import { getNextOffsetCoordinateDefault } from './CoordinateGenerators';
 
 const getBlockOffsetWithNoOverlap = (
   block: Block,
   grid: Grid,
-  getNextCoordinate: CoordinateGenerator = getNextCoordinateDefault()
+  getNextOffsetCoordinate: CoordinateGenerator = getNextOffsetCoordinateDefault()
 ): Coordinate => {
 
   /* Assumption - each coordinate of block has id > 0. */
@@ -17,10 +17,10 @@ const getBlockOffsetWithNoOverlap = (
   const ids = [0, ...block.coordinates.map(coordinate => coordinate.id)];
 
   let offset: Coordinate = null;
-  getNextCoordinate.reset();
+  getNextOffsetCoordinate.reset();
 
   while (offset === null) {
-    const next = getNextCoordinate.next();
+    const next = getNextOffsetCoordinate.next();
     let isValid = true;
     for (var coordinate of block.coordinates) {
       const

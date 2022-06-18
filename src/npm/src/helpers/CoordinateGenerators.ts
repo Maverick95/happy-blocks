@@ -1,7 +1,7 @@
 import Coordinate from 'models/Coordinate';
 import CoordinateGenerator from 'models/CoordinateGenerator';
 
-const getNextCoordinateDefault = (): CoordinateGenerator => {
+const getNextOffsetCoordinateDefault = (): CoordinateGenerator => {
 
   const next: Coordinate = { x: 0, y: 0 };
 
@@ -33,5 +33,5 @@ const getNextCoordinateDefault = (): CoordinateGenerator => {
 };
 
 export {
-  getNextCoordinateDefault,
+  getNextOffsetCoordinateDefault,
 };

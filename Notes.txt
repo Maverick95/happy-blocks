@@ -356,4 +356,7 @@ and a block and a grid to find the next available space in a grid.
 
 TODO - add testing for getBlockOffsetWithNoOverlap
 
+This is a fairly easy calculation, but you do need to set a method of finding the starting point,
+given a block and a grid.
+
 
