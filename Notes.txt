@@ -341,5 +341,19 @@ To get thinnest slice, need to...
 a) Initial piece location needs to be clear,
 b) Game end needs handling,
 c) Complete rows mean rows disappear with cool animation, adjusts overall score.
+d) Incorporating with game score and the general layout.
+
+They are all important! But no rush. I think just slow down today, and enjoy
+finishing one of them.
+
+a) Initial piece location needs to be clear.
+
+This feels very similar to the rotateBlock part.
+It's the same idea of finding the next available free space.
+
+Part of me thinks that it is maaaaybe a good idea to move out the part that uses a coordinate generator
+and a block and a grid to find the next available space in a grid.
+
+TODO - add testing for getBlockOffsetWithNoOverlap
 
 
