@@ -3,6 +3,7 @@ class Grid {
   #width: number;
   #height: number;
   #grid: number[][];
+  #occupiedByRow: number[];
   
   constructor(width: number, height: number) {
     if (!Number.isInteger(width) || !Number.isInteger(height) || width < 0 || height < 0) {
@@ -11,6 +12,7 @@ class Grid {
     this.#width = width;
     this.#height = height;
     this.#grid = [];
+    this.#occupiedByRow = [];
     this.#updateGridDimensions();
   }
 
@@ -40,6 +42,9 @@ class Grid {
       throw new Error('Incorrect attribute');
     }
     if (y >= 0) {
+      if (!this.#grid[y][x]) {
+        this.#occupiedByRow[y]++;
+      }
       this.#grid[y][x] = value;
     }
   }
@@ -54,12 +59,23 @@ class Grid {
     return this.#grid[y][x];
   }
 
+  getOccupiedForRow = (y: number) => {
+    if (!Number.isInteger(y)) {
+      throw new Error('Incorrect attribute');
+    }
+    if (y < 0 || y >= this.#height) {
+      return undefined;
+    }
+    return this.#occupiedByRow[y];
+  }
+
   clearSpace = (x: number, y: number): void => {
     if (!Number.isInteger(x) || !Number.isInteger(y) || x < 0 || x >= this.#width || y >= this.#height) {
       throw new Error('Incorrect attribute');
     }
-    if (y >= 0) {
+    if (y >= 0 && this.#grid[y][x]) {
       this.#grid[y][x] = 0;
+      this.#occupiedByRow[y]--;
     }
   }
 
@@ -80,11 +96,15 @@ class Grid {
 
     if (this.#height < height) {
       this.#grid.splice(this.#height);
+      this.#occupiedByRow.splice(this.#height);
     }
     else if (this.#height > height) {
       for (let i=0; i < this.#height - height; i++) {
         this.#grid.push(new Array(this.#width).fill(0));
       }
+      this.#occupiedByRow.splice(
+        height, 0,
+        ...new Array(this.#height - height).fill(0));
     }
 
   };

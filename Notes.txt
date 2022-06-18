@@ -330,20 +330,66 @@ TODO : something something clear Intervals when web components detached
 To get thinnest slice, need to...
 
 a) Initial piece location needs to be clear, DONE
-b) Game end needs handling,
+b) Game end needs handling, SORT-OF DONE
 c) Complete rows mean rows disappear with cool animation, adjusts overall score.
 d) Incorporating with game score and the general layout.
+e) The event tree!
 
 They are all important! But no rush. I think just slow down today, and enjoy
 finishing one of them.
 
-TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators.
+TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators, Grid?
 
-b) Game end needs handling.
+c) Complete rows mean rows disappear with cool animation, adjusts overall score.
 
-This is a fairly easy decision I think.
+This is the most fun!
 
-It's when the piece has reached the "bottom", need to check if any of the piece coordinates are outside the grid.
+The calculation may require some extra properties.
 
-Again this you can NPM?
+Two major areas to consider here -
+
+a) computation,
+b) display.
+
+They're both fun!
+
+a)
+Computation handled in the Grid class.
+For each row in the grid, need to hold a total of how many spaces are filled. That's it.
+After piece has finished moving, and computations are updated, need to -
+retrieve the rows associated with the piece
+retrieve the rows from these that are now complete
+this is a set of row indices to remove from the grid
+I think removing the rows could maybe be handled internally in the class?
+This involves shifting values and totals from other rows down.
+
+b)
+This may be the fiddliest one.
+Also because it feeds into another idea that I'm yet to incorporate.
+Currently all the game loops are the same interval apart.
+I think instead, you need to set a timeout for the next event loop?
+What needs to happen when rows are deleted?
+We need to trigger the delete animation, and the delete steps.
+There are a few ways to handle the delete animation, and a few good ideas for display.
+First, I think I should go with for now, is the classic old style "flashing bars" approach,
+followed by the rows disappearing, and the above rows moving downwards slowly.
+There's a fairly good way to simulate this that I didn't consider yet.
+When pieces land, attach a class for css that sets transition for top.
+Then when the rows are removed, and the other rows move down, it will animate!
+
+Steps to take -
+
+1) add logic into Grid to store totals of rows
+
+Add unit tests for Grid NOW.
+
+Also, how is this info going to be public?
+Will need to return value for row.
+
+2) rearrange functionality so that timeouts instead of intervals are used to set next game loop,
+this means you can add delays, etc.
+
+
+
+
 
