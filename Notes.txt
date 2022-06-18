@@ -356,7 +356,34 @@ and a block and a grid to find the next available space in a grid.
 
 TODO - add testing for getBlockOffsetWithNoOverlap
 
-This is a fairly easy calculation, but you do need to set a method of finding the starting point,
-given a block and a grid.
+This is a fairly easy calculation, just need to pick a random spot?
+
+Oh wait, hang on a sec.
+
+What is this function really going to do?
+
+What is its purpose?
+And how do you want to keep things separate from the main program?
+
+const next = this.randomizer.next();
+this.setNewBlock(3, 3, next);
+
+This is interesting, because in other methods, you have returned a new block.
+Which raises the question of why you can't do the same here.
+
+Remember, you're not altering your inputs.
+Your npm section is still very much an information-based library.
+
+So as input, it requires a... hmm.
+
+Just noticed something else.
+
+In a couple of key ways, the happyblocks object is a bit of a black-box.
+
+Have a look at this first before proceeding.
+
+First... you only have one randomizer.
+You really want to export the ability to generate a NEW randomizer, given a matching string.
+
 
 

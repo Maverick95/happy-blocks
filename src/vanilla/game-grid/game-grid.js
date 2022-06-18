@@ -15,7 +15,7 @@ class GameGridElement extends HTMLElement {
     this.pieces = {};
     this.grid = happyblocks.grid();
     this.id = this.period = this.interval = 0;
-    this.randomizer = happyblocks.randomizer();
+    this.randomizer = happyblocks.randomizers['default']();
 
     this.attachShadow({ mode: 'open' });
 
