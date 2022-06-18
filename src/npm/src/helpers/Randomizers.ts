@@ -34,4 +34,11 @@ const getRandomizerDefault = (): Randomizer => {
 
 };
 
-export default getRandomizerDefault;
+const randomizers: Record<string, () => Randomizer> = {
+  'default': getRandomizerDefault,
+};
+
+export {
+  randomizers,
+  getRandomizerDefault,
+};

@@ -1,6 +1,6 @@
 import TetrominoType from '../models/TetrominoType';
 import random from './random';
-import getRandomizerDefault from './Randomizers';
+import { getRandomizerDefault } from './Randomizers';
 
 jest.mock('./random');
 
