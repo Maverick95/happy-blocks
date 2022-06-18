@@ -1,17 +1,17 @@
 import Coordinate from 'models/Coordinate';
 import CoordinateGenerator from 'models/CoordinateGenerator';
-import { getNextCoordinateDefault } from "./CoordinateGenerators";
+import { getNextOffsetCoordinateDefault } from "./CoordinateGenerators";
 
 describe('CoordinateGenerators', () => {
 
-  describe('getNextCoordinateDefault', () => {
+  describe('getNextOffsetCoordinateDefault', () => {
 
     describe('next', () => {
 
       let generator: CoordinateGenerator = null;
 
       beforeAll(() => {
-        generator = getNextCoordinateDefault();
+        generator = getNextOffsetCoordinateDefault();
       });
 
       test.each<Coordinate>([
@@ -37,7 +37,7 @@ describe('CoordinateGenerators', () => {
     });
 
     test('reset', () => {
-      const generator = getNextCoordinateDefault();
+      const generator = getNextOffsetCoordinateDefault();
       for (let x = 0; x < 10; x++) {
         generator.next();
       }
@@ -50,8 +50,8 @@ describe('CoordinateGenerators', () => {
 
     test('should keep generator instances unique', () => {
       const
-        generator_1 = getNextCoordinateDefault(),
-        generator_2 = getNextCoordinateDefault();
+        generator_1 = getNextOffsetCoordinateDefault(),
+        generator_2 = getNextOffsetCoordinateDefault();
       generator_1.next();
       const
         actual_1 = generator_1.next(),
