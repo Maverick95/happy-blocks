@@ -192,6 +192,13 @@ class GameGridElement extends HTMLElement {
 
     if (this.block !== null) {
       if (this.moveBlock('down')) {
+        const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
+        if (gameEnd) {
+          // Game End mechanic here. For now just clear the interval.
+          clearInterval(this.interval);
+          this.interval = 0;
+          console.log('GaMe oVeR!');
+        }
         this.block = null;
       }
     }

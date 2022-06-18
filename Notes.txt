@@ -323,22 +323,13 @@ Then check if piece is out-of-bounds.
 If yes, game over!
 If no, then block is null. Detaches.
 
-Erm, I think that's it!
-
-Okay, so...
-
-Next part is the randomizer!
-And this is a method I can put into npm.
-It's fairly simple. Just generate the next piece type.
-
-
 TODO : add loads of tests for moveBlock! and randomizer!
 
 TODO : something something clear Intervals when web components detached
 
 To get thinnest slice, need to...
 
-a) Initial piece location needs to be clear,
+a) Initial piece location needs to be clear, DONE
 b) Game end needs handling,
 c) Complete rows mean rows disappear with cool animation, adjusts overall score.
 d) Incorporating with game score and the general layout.
@@ -346,51 +337,13 @@ d) Incorporating with game score and the general layout.
 They are all important! But no rush. I think just slow down today, and enjoy
 finishing one of them.
 
-a) Initial piece location needs to be clear.
-
-This feels very similar to the rotateBlock part.
-It's the same idea of finding the next available free space.
-
-Part of me thinks that it is maaaaybe a good idea to move out the part that uses a coordinate generator
-and a block and a grid to find the next available space in a grid.
-
-TODO - add testing for getBlockOffsetWithNoOverlap
-
-This is a fairly easy calculation, just need to pick a random spot?
-
-Oh wait, hang on a sec.
-
-What is this function really going to do?
-
-What is its purpose?
-And how do you want to keep things separate from the main program?
-
-const next = this.randomizer.next();
-this.setNewBlock(3, 3, next);
-
-This is interesting, because in other methods, you have returned a new block.
-Which raises the question of why you can't do the same here.
-
-Remember, you're not altering your inputs.
-Your npm section is still very much an information-based library.
-
-So as input, it requires a... hmm.
-
-Just noticed something else.
-
-In a couple of key ways, the happyblocks object is a bit of a black-box.
-
-Have a look at this first before proceeding.
-
-And now, you have your new method you can address!
-
-Takes in a Tetromino type, and a grid.
-
-And then some method of selecting a starting block, given a Grid?
-
 TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators.
 
-Okay so you've been forced to add testing.
+b) Game end needs handling.
 
+This is a fairly easy decision I think.
 
+It's when the piece has reached the "bottom", need to check if any of the piece coordinates are outside the grid.
+
+Again this you can NPM?
 
