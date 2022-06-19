@@ -74,12 +74,8 @@ class Grid {
       throw new Error('Incorrect attribute');
     }
 
-    const rowsToDelete: number[] = [];
-    [...rows].sort((a, b) => b - a).forEach((value) => {
-      if (rowsToDelete.length === 0 || value !== rowsToDelete[-1]) {
-        rowsToDelete.push(value);
-      }
-    });
+    const rowsToDelete = [...rows].sort((a, b) => b - a)
+      .filter((value, index, array) => index === 0 || value !== array[index - 1]);
 
     const result_delete: Coordinate[] = rowsToDelete.map(y =>
       this.#grid[y].map((id, x) => ({ x, y, id }))

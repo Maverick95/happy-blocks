@@ -13,6 +13,7 @@ class GameGridElement extends HTMLElement {
     super();
     this.block = null;
     this.pieces = {};
+    this.delete = [];
     this.grid = happyblocks.grid();
     this.id = this.period = this.interval = 0;
     this.randomizer = happyblocks.randomizers['default']();
@@ -89,14 +90,17 @@ class GameGridElement extends HTMLElement {
   }
 
   drawGrid() {
-    // NOTE - does not delete pieces that have been removed.
-    // Just adds new / draws existing.
     const container = this.shadowRoot.getElementById('grid-container');
     container.style.width = `${this.grid.getWidth() * 25}px`;
     container.style.height = `${this.grid.getHeight() * 25}px`;
-    for (var piece_id of Object.keys(this.pieces)) {
-      const piece = this.pieces[piece_id];
-      let grid_piece = this.shadowRoot.getElementById(`game-piece-${piece_id}`);
+    for (var id of this.delete) {
+      const grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
+      grid_piece.remove();
+    };
+    this.delete = [];
+    for (var id of Object.keys(this.pieces)) {
+      const piece = this.pieces[id];
+      let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
       if (grid_piece) {
         grid_piece.style.backgroundColor = happyblocks.tetromino(piece.type).color;
         grid_piece.style.left = `${piece.x * 25}px`;
@@ -105,7 +109,7 @@ class GameGridElement extends HTMLElement {
       }
       else {
         grid_piece = document.createElement('div');
-        grid_piece.id = `game-piece-${piece_id}`;
+        grid_piece.id = `game-piece-${id}`;
         grid_piece.classList.add('game-piece');
         grid_piece.style.backgroundColor = happyblocks.tetromino(piece.type).color;
         grid_piece.style.left = `${piece.x * 25}px`;
@@ -196,9 +200,25 @@ class GameGridElement extends HTMLElement {
           .map(coordinate => this.block.y + coordinate.y)
           .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
         if (rowsOccupied.length) {
-          // Need to update grid, but also other class elements.
-          // block, pieces, grid
-          // Would be easier to return some arguments from the function maybe?
+          const result = this.grid.deleteRows(rowsOccupied);
+          result.delete.forEach(value => {
+            delete this.pieces[value.id];
+          });
+          result.update.forEach(value => {
+            this.pieces[value.id].x = value.x;
+            this.pieces[value.id].y = value.y;
+          });
+          this.block.coordinates = this.block.coordinates.filter(coordinate =>
+            !result.delete.includes(coordinate.id)
+          ).map(coordinate => {
+            const update = result.update.find(value => value.id === coordinate.id);
+            if (update) {
+              coordinate.x = update.x;
+              coordinate.y = update.y; 
+            }
+            return coordinate;
+          });
+          this.delete = result.delete.map(value => value.id);
         }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
         if (gameEnd) {
