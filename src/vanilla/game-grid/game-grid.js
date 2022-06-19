@@ -196,7 +196,9 @@ class GameGridElement extends HTMLElement {
           .map(coordinate => this.block.y + coordinate.y)
           .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
         if (rowsOccupied.length) {
-          
+          // Need to update grid, but also other class elements.
+          // block, pieces, grid
+          // Would be easier to return some arguments from the function maybe?
         }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
         if (gameEnd) {
