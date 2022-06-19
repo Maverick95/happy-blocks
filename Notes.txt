@@ -335,10 +335,8 @@ c) Complete rows mean rows disappear with cool animation, adjusts overall score.
 d) Incorporating with game score and the general layout.
 e) The event tree!
 
-They are all important! But no rush. I think just slow down today, and enjoy
-finishing one of them.
 
-TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators, Grid?
+TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators
 
 c) Complete rows mean rows disappear with cool animation, adjusts overall score.
 
@@ -348,20 +346,8 @@ The calculation may require some extra properties.
 
 Two major areas to consider here -
 
-a) computation,
+a) computation, DONE
 b) display.
-
-They're both fun!
-
-a)
-Computation handled in the Grid class.
-For each row in the grid, need to hold a total of how many spaces are filled. That's it.
-After piece has finished moving, and computations are updated, need to -
-retrieve the rows associated with the piece
-retrieve the rows from these that are now complete
-this is a set of row indices to remove from the grid
-I think removing the rows could maybe be handled internally in the class?
-This involves shifting values and totals from other rows down.
 
 b)
 This may be the fiddliest one.
@@ -376,22 +362,6 @@ followed by the rows disappearing, and the above rows moving downwards slowly.
 There's a fairly good way to simulate this that I didn't consider yet.
 When pieces land, attach a class for css that sets transition for top.
 Then when the rows are removed, and the other rows move down, it will animate!
-
-Steps to take -
-
-1) this method internally will alter the Grid object,
-but what else needs updating?
-
-block     maybe
-pieces    definitely
-
-Right.
-So now you have some results. Great.
-So, what to do with these things?
-Delete from block.
-Delete from pieces.
-Update block.
-Update pieces.
 
 2) rearrange functionality so that timeouts instead of intervals are used to set next game loop,
 this means you can add delays, etc.
