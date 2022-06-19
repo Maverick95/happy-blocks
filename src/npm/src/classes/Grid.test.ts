@@ -1,4 +1,4 @@
-import { Grid } from './Grid';
+import { DeleteRowsResult, Grid } from './Grid';
 
 describe('Grid', () => {
   test('initialization leaves empty grid', () => {
@@ -90,9 +90,20 @@ describe('Grid', () => {
       { id:  9, x: 2, y: 6, },
     ];
     const expected_occupied = [ 0, 0, 0, 0, 3, 1, 2 ];
+    const expected_result: DeleteRowsResult = {
+      delete: [
+        { id: 10, x: 0, y: 6 },
+        { id: 11, x: 1, y: 6 },
+        { id: 12, x: 2, y: 6 },
+        { id:  6, x: 1, y: 4 },
+        { id:  7, x: 2, y: 4 },
+        { id:  1, x: 0, y: 1 },
+      ],
+      update: [],
+    };
     // ACT
     input.forEach(({id, x, y}) => grid.setSpace(id, x, y));
-    grid.deleteRows([1, 4, 6]);
+    const actual_result = grid.deleteRows([1, 4, 6]);
     // ASSERT
     new Array(width).map((_, index) => index).forEach(x =>
       new Array(height).map((_, index) => index).forEach(y => {
@@ -107,5 +118,7 @@ describe('Grid', () => {
     ));
     new Array(height).map((_, index) => index).forEach(y =>
       expect(grid.getOccupiedForRow(y)).toEqual(expected_occupied[y]));
+    
+    expect(actual_result).toEqual(expected_result);
   });
 });

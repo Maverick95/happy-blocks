@@ -69,26 +69,35 @@ class Grid {
     return this.#occupiedByRow[y];
   }
 
-  deleteRows(rows: number[]) {
+  deleteRows(rows: number[]): DeleteRowsResult {
     if (rows.some(row => row < 0 || row >= this.#height)) {
       throw new Error('Incorrect attribute');
     }
+
     const rowsToDelete: number[] = [];
     [...rows].sort((a, b) => b - a).forEach((value) => {
       if (rowsToDelete.length === 0 || value !== rowsToDelete[-1]) {
         rowsToDelete.push(value);
       }
     });
-    rowsToDelete.map((value, index, array) => {
+
+    const result_delete: Coordinate[] = rowsToDelete.map(y =>
+      this.#grid[y].map((id, x) => ({ x, y, id }))
+      .filter(coordinate => coordinate.id > 0)
+    ).flat();
+
+    const rowsToUpdate = rowsToDelete.map((value, index, array) => {
       const last = index === array.length - 1;
       const start = last ? 0 : (array[index + 1] + 1);
       return {
-        target: start + index + 1,
+        target: start + (index + 1),
         start,
         end: value,
         last,
       };
-    }).forEach(({target, start, end, last}) => {
+    });
+    
+    rowsToUpdate.forEach(({target, start, end, last}) => {
       this.#grid.copyWithin(target, start, end);
       this.#occupiedByRow.copyWithin(target, start, end);
       if (last) {
@@ -98,6 +107,11 @@ class Grid {
         }
       }
     });
+
+    return {
+      delete: result_delete,
+      update: [],
+    };
   }
 
   clearSpace = (x: number, y: number): void => {
