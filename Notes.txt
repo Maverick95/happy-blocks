@@ -395,7 +395,3 @@ deleted contains ids and the coordinates they were deleted from
 2) rearrange functionality so that timeouts instead of intervals are used to set next game loop,
 this means you can add delays, etc.
 
-
-
-
-

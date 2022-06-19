@@ -95,7 +95,17 @@ class Grid {
         end: value,
         last,
       };
-    });
+    }).filter(value => value.end > value.start);
+
+    const result_update: Coordinate[] = rowsToUpdate.map(rows =>
+      new Array(rows.end - rows.start)
+        .fill(0)
+        .map((_, index) => rows.start + index)
+        .map(y => this.#grid[y]
+          .map((id, x) => ({ x, y: y + rows.target - rows.start, id}))
+          .filter(coordinate => coordinate.id > 0)
+      )
+    ).flat(2)
     
     rowsToUpdate.forEach(({target, start, end, last}) => {
       this.#grid.copyWithin(target, start, end);
@@ -110,7 +120,7 @@ class Grid {
 
     return {
       delete: result_delete,
-      update: [],
+      update: result_update,
     };
   }
 

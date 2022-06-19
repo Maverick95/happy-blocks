@@ -68,13 +68,13 @@ describe('Grid', () => {
     const width = 3, height = 7;
     const grid = new Grid(width, height);
     const input = [
-      { id:  1, x: 0, y: 1, },      //  - - -
-      { id:  2, x: 0, y: 2, },      //  X - -
-      { id:  3, x: 1, y: 2, },      //  X X X    
-      { id:  4, x: 2, y: 2, },      //  X - -
-      { id:  5, x: 0, y: 3, },      //  - X X
-      { id:  6, x: 1, y: 4, },      //  X - X
-      { id:  7, x: 2, y: 4, },      //  X X X
+      { id:  1, x: 0, y: 1, },      //  - - -         - - -
+      { id:  2, x: 0, y: 2, },      //  X - -         - - -
+      { id:  3, x: 1, y: 2, },      //  X X X         - - -
+      { id:  4, x: 2, y: 2, },      //  X - -     ->  - - -
+      { id:  5, x: 0, y: 3, },      //  - X X         X X X
+      { id:  6, x: 1, y: 4, },      //  X - X         X - -
+      { id:  7, x: 2, y: 4, },      //  X X X         X - X
       { id:  8, x: 0, y: 5, },
       { id:  9, x: 2, y: 5, },
       { id: 10, x: 0, y: 6, },
@@ -99,7 +99,14 @@ describe('Grid', () => {
         { id:  7, x: 2, y: 4 },
         { id:  1, x: 0, y: 1 },
       ],
-      update: [],
+      update: [
+        { id:  8, x: 0, y: 6, },
+        { id:  9, x: 2, y: 6, },
+        { id:  2, x: 0, y: 4, },
+        { id:  3, x: 1, y: 4, },
+        { id:  4, x: 2, y: 4, },
+        { id:  5, x: 0, y: 5, },
+      ],
     };
     // ACT
     input.forEach(({id, x, y}) => grid.setSpace(id, x, y));
