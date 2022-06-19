@@ -6,7 +6,7 @@ class Grid {
   #occupiedByRow: number[];
   
   constructor(width: number, height: number) {
-    if (!Number.isInteger(width) || !Number.isInteger(height) || width < 0 || height < 0) {
+    if (width < 0 || height < 0) {
       throw new Error('Invalid arguments');
     }
     this.#width = width;
@@ -21,7 +21,7 @@ class Grid {
   getHeight = (): number => this.#height;
 
   setWidth = (value: number): void => {
-    if (!Number.isInteger(value) || value < 1 || value > 10) {
+    if (value < 1 || value > 10) {
       throw new Error('Incorrect attribute');
     }
     this.#width = value;
@@ -29,7 +29,7 @@ class Grid {
   };
 
   setHeight = (value: number): void => {
-    if (!Number.isInteger(value) || value < 1 || value > 20) {
+    if (value < 1 || value > 20) {
       throw new Error('Incorrect attribute');
     }
     this.#height = value;
@@ -37,8 +37,7 @@ class Grid {
   };
 
   setSpace = (value: number, x: number, y: number): void => {
-    if (!Number.isInteger(value) || !Number.isInteger(x) || !Number.isInteger(y) ||
-    value <= 0 || x < 0 || x >= this.#width || y >= this.#height) {
+    if (value <= 0 || x < 0 || x >= this.#width || y >= this.#height) {
       throw new Error('Incorrect attribute');
     }
     if (y >= 0) {
@@ -50,9 +49,6 @@ class Grid {
   }
 
   getSpace = (x: number, y: number): number => {
-    if (!Number.isInteger(x) || !Number.isInteger(y)) {
-      throw new Error('Incorrect attribute');
-    }
     if (x < 0 || x >= this.#width || y < 0 || y >= this.#height) {
       return undefined;
     } 
@@ -60,17 +56,45 @@ class Grid {
   }
 
   getOccupiedForRow = (y: number) => {
-    if (!Number.isInteger(y)) {
-      throw new Error('Incorrect attribute');
-    }
     if (y < 0 || y >= this.#height) {
       return undefined;
     }
     return this.#occupiedByRow[y];
   }
 
+  deleteRows(rows: number[]) {
+    if (rows.some(row => row < 0 || row >= this.#height)) {
+      throw new Error('Incorrect attribute');
+    }
+    const rowsToDelete: number[] = [];
+    [...rows].sort((a, b) => b - a).forEach((value) => {
+      if (rowsToDelete.length === 0 || value !== rowsToDelete[-1]) {
+        rowsToDelete.push(value);
+      }
+    });
+    rowsToDelete.map((value, index, array) => {
+      const last = index === array.length - 1;
+      const start = last ? 0 : (array[index + 1] + 1);
+      return {
+        target: start + index + 1,
+        start,
+        end: value,
+        last,
+      };
+    }).forEach(({target, start, end, last}) => {
+      this.#grid.copyWithin(target, start, end);
+      this.#occupiedByRow.copyWithin(target, start, end);
+      if (last) {
+        for (let i=0; i < target; i++) {
+          this.#grid[i] = new Array(this.#width).fill(0);
+          this.#occupiedByRow[i] = 0;
+        }
+      }
+    });
+  }
+
   clearSpace = (x: number, y: number): void => {
-    if (!Number.isInteger(x) || !Number.isInteger(y) || x < 0 || x >= this.#width || y >= this.#height) {
+    if (x < 0 || x >= this.#width || y >= this.#height) {
       throw new Error('Incorrect attribute');
     }
     if (y >= 0 && this.#grid[y][x]) {

@@ -379,12 +379,8 @@ Then when the rows are removed, and the other rows move down, it will animate!
 
 Steps to take -
 
-1) add logic into Grid to store totals of rows
-
-Add unit tests for Grid NOW.
-
-Also, how is this info going to be public?
-Will need to return value for row.
+1) Add logic after piece moved.
+Think you now need functionality inside the grid class to remove certain rows.
 
 2) rearrange functionality so that timeouts instead of intervals are used to set next game loop,
 this means you can add delays, etc.

@@ -192,6 +192,12 @@ class GameGridElement extends HTMLElement {
 
     if (this.block !== null) {
       if (this.moveBlock('down')) {
+        const rowsOccupied = this.block.coordinates
+          .map(coordinate => this.block.y + coordinate.y)
+          .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
+        if (rowsOccupied.length) {
+          
+        }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
         if (gameEnd) {
           // Game End mechanic here. For now just clear the interval.
