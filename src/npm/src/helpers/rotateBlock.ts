@@ -1,6 +1,6 @@
 import Block from 'models/Block';
 import Rotation from 'models/Rotation';
-import Grid from 'classes/Grid';
+import { Grid } from 'classes/Grid';
 import { offsetCoordinateGenerators } from './CoordinateGenerators';
 import getBlockOffsetWithNoOverlap from './getBlockOffsetWithNoOverlap';
 

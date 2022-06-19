@@ -1,4 +1,4 @@
-import Grid from '../classes/Grid';
+import { Grid } from '../classes/Grid';
 import { testData } from './rotateBlock.testdata';
 import rotateBlock from './rotateBlock';
 

@@ -1,3 +1,10 @@
+import Coordinate from 'models/Coordinate';
+
+interface DeleteRowsResult {
+  delete: Coordinate[],
+  update: Coordinate[],
+};
+
 class Grid {
 
   #width: number;
@@ -134,4 +141,8 @@ class Grid {
   };
 };
 
-export default Grid;
+export {
+  Grid,
+  DeleteRowsResult,
+};
+

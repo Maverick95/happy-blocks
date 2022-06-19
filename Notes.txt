@@ -379,8 +379,18 @@ Then when the rows are removed, and the other rows move down, it will animate!
 
 Steps to take -
 
-1) Add logic after piece moved.
-Think you now need functionality inside the grid class to remove certain rows.
+1) this method internally will alter the Grid object,
+but what else needs updating?
+
+block     maybe
+pieces    definitely
+
+What I think you need to return is two sets of Coordinates.
+
+update and delete
+
+update contains ids and updated coordinates
+deleted contains ids and the coordinates they were deleted from
 
 2) rearrange functionality so that timeouts instead of intervals are used to set next game loop,
 this means you can add delays, etc.

@@ -1,6 +1,6 @@
 import Direction from 'models/Direction';
 import Block from 'models/Block';
-import Grid from 'classes/Grid';
+import { Grid } from 'classes/Grid';
 
 const moveBlock = (
   block: Block,

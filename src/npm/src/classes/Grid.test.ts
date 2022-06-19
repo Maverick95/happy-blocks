@@ -1,5 +1,4 @@
-import { getRandomizerDefault } from '../helpers/Randomizers';
-import Grid from './Grid';
+import { Grid } from './Grid';
 
 describe('Grid', () => {
   test('initialization leaves empty grid', () => {

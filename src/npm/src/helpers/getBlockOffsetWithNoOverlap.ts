@@ -1,5 +1,5 @@
 import Block from 'models/Block';
-import Grid from 'classes/Grid';
+import { Grid } from 'classes/Grid';
 import CoordinateGenerator from 'models/CoordinateGenerator';
 import Coordinate from 'models/Coordinate';
 import { getNextOffsetCoordinateDefault } from './CoordinateGenerators';

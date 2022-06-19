@@ -1,4 +1,4 @@
-import Grid from 'classes/Grid';
+import { Grid } from 'classes/Grid';
 import getTetromino from 'data/getTetromino';
 import TetrominoType from 'models/TetrominoType';
 import Block from 'models/Block';

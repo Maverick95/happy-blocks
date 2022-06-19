@@ -1,4 +1,4 @@
-import Grid from 'classes/Grid';
+import { Grid } from 'classes/Grid';
 import moveBlock from 'helpers/moveBlock';
 import newBlock from 'helpers/newBlock';
 import { randomizers } from 'helpers/Randomizers';
