@@ -6,6 +6,7 @@
     <script defer src="./src/vanilla/casino-score/casino-digit.js"></script>
     <script defer src="./src/vanilla/casino-score/casino-score.js"></script>
     <script defer src="./src/vanilla/game-grid/game-grid.js"></script>
+    <script defer src="./src/vanilla/happy-blocks/happy-blocks.js"></script>
   </head>
   <body>
 
@@ -24,6 +25,11 @@
       </div>
     </template>
 
+    <template id="happy-blocks">
+      <game-grid width="10" height="20" period="600"></game-grid>
+      <casino-score score="0" max-power="4"></casino-score>
+    </template>
+
     <template id="casino-score">
       <div id="score-container"></div>
     </template>
@@ -31,6 +37,8 @@
     <template id="game-grid">
       <div id="grid-container"></div>
     </template>
+
+    <!--
     
     <div id="test-area-1">
       <player-score id="my-first-player-score"></player-score>
@@ -48,6 +56,12 @@
 
     <div id="test-area-4">
       <game-grid width="10" height="20" period="600"></game-grid>
+    </div>
+
+    -->
+
+    <div id="test-area-5">
+      <happy-blocks></happy-blocks>
     </div>
 
   </body>
