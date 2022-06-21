@@ -344,6 +344,12 @@ This web component will basically hold all the real parent data for the game
 The key part is, you need to get this component to handle events fired up
 by the game.
 
+Now we're set up to handle some sort of event structure.
+
+https://stackoverflow.com/questions/43836886/failed-to-construct-customelement-error-when-javascript-file-is-placed-in-head
+
+
+
 
 
 

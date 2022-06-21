@@ -15,7 +15,7 @@ class GameGridElement extends HTMLElement {
     this.pieces = {};
     this.delete = [];
     this.grid = happyblocks.grid();
-    this.id = this.period = this.interval = 0;
+    this.pieceId = this.period = this.interval = 0;
     this.randomizer = happyblocks.randomizers['default']();
 
     this.attachShadow({ mode: 'open' });
@@ -24,7 +24,9 @@ class GameGridElement extends HTMLElement {
     styles.setAttribute('rel', 'stylesheet');
     styles.setAttribute('href', './src/vanilla/game-grid/game-grid.css');
     this.shadowRoot.appendChild(styles);
+  }
 
+  connectedCallback() {
     const content = document.getElementById('game-grid').content.cloneNode(true);
     this.shadowRoot.appendChild(content);
 
@@ -46,6 +48,8 @@ class GameGridElement extends HTMLElement {
     this.shadowRoot.appendChild(input_left);
     this.shadowRoot.appendChild(input_rotate);
     this.shadowRoot.appendChild(input_right);
+
+    this.drawGrid();
   }
 
   rotateBlock() {
@@ -70,7 +74,7 @@ class GameGridElement extends HTMLElement {
     const block = happyblocks.new(type, this.grid);
     block.coordinates.forEach(coordinate => {
       // Set new id.
-      coordinate.id = ++this.id;
+      coordinate.id = ++this.pieceId;
       // Create new piece.
       const piece = {
         type,
@@ -149,7 +153,7 @@ class GameGridElement extends HTMLElement {
       }
     }
 
-    this.drawGrid();
+    this.isConnected && this.drawGrid();
 
     if (this.period > 0 && this.grid.getWidth() > 0 && this.grid.getHeight() > 0) {
       if (attrName === 'period') {
