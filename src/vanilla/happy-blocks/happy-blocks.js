@@ -19,16 +19,25 @@ class HappyBlocksElement extends HTMLElement {
     const container = this.shadowRoot.getElementById('happy-blocks-container');
     
     const casinoScore = document.createElement('casino-score');
-    casinoScore.setAttribute('score', '0');
+    casinoScore.setAttribute('score', `${this.score}`);
     casinoScore.setAttribute('max-power', '4');
 
     const gameGrid = document.createElement('game-grid');
     gameGrid.setAttribute('width', '10');
     gameGrid.setAttribute('height', '20');
-    gameGrid.setAttribute('period', '600');
+    gameGrid.setAttribute('period', '150');
     
     container.appendChild(casinoScore);
     container.appendChild(gameGrid);
+
+    container.addEventListener('rowscompleted', (e) => {
+      const rows = parseInt(e.detail?.rows);
+      if (isNaN(rows) || !Number.isInteger(rows) || rows <= 0) {
+        throw new Error('incorrect scoreIncrease');
+      }
+      this.score += rows * 20;
+      casinoScore.setAttribute('score', `${this.score}`);
+    });
   }
 
 }

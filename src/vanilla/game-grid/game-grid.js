@@ -223,6 +223,14 @@ class GameGridElement extends HTMLElement {
             return coordinate;
           });
           this.delete = result.delete.map(value => value.id);
+          const evtScoreIncrease = new CustomEvent('rowscompleted', {
+            detail: { rows: rowsOccupied.length },
+            bubbles: true,
+            composed: true,
+            cancelable: true,
+          });
+          const container = this.shadowRoot.getElementById('grid-container');
+          container.dispatchEvent(evtScoreIncrease);
         }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
         if (gameEnd) {
