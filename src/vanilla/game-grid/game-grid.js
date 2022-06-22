@@ -29,28 +29,27 @@ class GameGridElement extends HTMLElement {
   connectedCallback() {
     const content = document.getElementById('game-grid').content.cloneNode(true);
     this.shadowRoot.appendChild(content);
-
-    const input_left = document.createElement('input');
-    input_left.setAttribute('type', 'button');
-    input_left.setAttribute('value', '<');
-    input_left.addEventListener('click', () => this.moveBlock('left'));
-    
-    const input_rotate = document.createElement('input');
-    input_rotate.setAttribute('type', 'button');
-    input_rotate.setAttribute('value', 'R');
-    input_rotate.addEventListener('click', () => this.rotateBlock());
-
-    const input_right = document.createElement('input');
-    input_right.setAttribute('type', 'button');
-    input_right.setAttribute('value', '>');
-    input_right.addEventListener('click', () => this.moveBlock('right'))
-    
-    this.shadowRoot.appendChild(input_left);
-    this.shadowRoot.appendChild(input_rotate);
-    this.shadowRoot.appendChild(input_right);
-
+    window.addEventListener('keydown', (event) => this.processKeyDown(event.code));
     this.drawGrid();
   }
+
+  disconnectedCallBack() {
+    window.removeEventListener('keydown', (event) => this.processKeyDown(event.code));
+  }
+
+  processKeyDown(code) {
+    switch (code) {
+      case 'ArrowLeft': case 'KeyA':
+        this.moveBlock('left');
+        break;
+      case 'ArrowRight': case 'KeyD':
+        this.moveBlock('right');
+        break;
+      case 'KeyR':
+        this.rotateBlock();
+        break;
+    }
+  };
 
   rotateBlock() {
     if (this.block !== null) {
