@@ -1,7 +1,7 @@
 #grid-container {
   position: relative;
   background-color: black;
-  border-style: none solid solid;
+  border-style: none double double;
   border-color: white;
   border-width: 5px;
 }
