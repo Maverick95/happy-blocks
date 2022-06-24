@@ -14,29 +14,36 @@
 }
 
 .tetromino-o {
-  background-color: #00ff00;
+  background-image: repeating-linear-gradient(45deg, #00cf00, #00cf00 7px, #00ff00 7px, #00ff00 14px, #afffaf 14px, #afffaf 21px);
+  border: 1px solid #2faf2f;
 }
 
 .tetromino-s {
-  background-color: #00ffff;
+  background-image: radial-gradient(#00cfcf, #00ffff 90%);
+  border: 1px solid #2fafaf;
 }
 
 .tetromino-z {
-  background-color: #ff3f00;
+  background-image: radial-gradient(#cf0000, #ff3f00 90%);
+  border: 1px solid #af7f2f;
 }
 
 .tetromino-t {
-  background-color: #7f1fff;
+  background-image: repeating-linear-gradient(45deg, #3f00cf, #3f00cf 7px, #7f1fff 7px, #7f1fff 14px, #ff00ff 14px, #ff00ff 21px);
+  border: 1px solid #2f00af;
 }
 
 .tetromino-l {
-  background-color: #1f1fff;
+  background-image: radial-gradient(#00cfcf, #1f1fff);
+  border: 1px dashed #cfcfff;
 }
 
 .tetromino-j {
-  background-color: #ff00ff;
+  background-image: radial-gradient(#ffafff, #ffafff 35%, #ff00ff 35%);
+  border: 1px solid #ff7fff;
 }
 
 .tetromino-i {
   background-color: #ffff00;
+  border: 1px solid #ff7f00;
 }
