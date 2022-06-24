@@ -22,7 +22,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.Z]: {
-      color: '#400000',
+      color: '#ff3f00',
       coordinates: [
         {x: -1, y:  0},
         {x:  0, y:  0},
@@ -31,7 +31,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.T]: {
-      color: '#8000ff',
+      color: '#7f1fff',
       coordinates: [
         {x: -1, y:  0},
         {x:  0, y:  0},
@@ -40,7 +40,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.L]: {
-      color: '#0000ff',
+      color: '#1f1fff',
       coordinates: [
         {x: -1, y:  0},
         {x: -1, y:  1},
