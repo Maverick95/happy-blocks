@@ -12,3 +12,31 @@
   height: 25px;
   box-sizing: border-box;
 }
+
+.tetromino-o {
+  background-color: #00ff00;
+}
+
+.tetromino-s {
+  background-color: #00ffff;
+}
+
+.tetromino-z {
+  background-color: #ff3f00;
+}
+
+.tetromino-t {
+  background-color: #7f1fff;
+}
+
+.tetromino-l {
+  background-color: #1f1fff;
+}
+
+.tetromino-j {
+  background-color: #ff00ff;
+}
+
+.tetromino-i {
+  background-color: #ffff00;
+}

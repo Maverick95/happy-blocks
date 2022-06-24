@@ -342,7 +342,13 @@ a) display of the pieces
 Something about the clear-chunky style I like, except that the pieces
 just look like you've drawn a block square. Which you have.
 
-First, the brown needs to be a more distinctive colour.
+Could try choosing a 2nd colour for each tetromino and experimenting with radial gradients?
+
+I think instead of COLOR, I am going to supply CLASS NAME.
+
+Remember, DEFER DECISIONS. Make the decision on the architecture as LATE as possible!
+
+
 
 
 

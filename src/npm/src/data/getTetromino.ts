@@ -4,6 +4,7 @@ import Tetromino from 'models/Tetromino';
 const tetrominos = (): Record<TetrominoType, Tetromino> => ({
   
   [TetrominoType.O]: {
+      classNames: ['tetromino-o'],
       color: '#00ff00',
       coordinates: [
         {x:  0, y:  0},
@@ -13,6 +14,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.S] : {
+      classNames: ['tetromino-s'],
       color: '#00ffff',
       coordinates: [
         {x: -1, y:  1},
@@ -22,6 +24,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.Z]: {
+      classNames: ['tetromino-z'],
       color: '#ff3f00',
       coordinates: [
         {x: -1, y:  0},
@@ -31,6 +34,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.T]: {
+      classNames: ['tetromino-t'],
       color: '#7f1fff',
       coordinates: [
         {x: -1, y:  0},
@@ -40,6 +44,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.L]: {
+      classNames: ['tetromino-l'],
       color: '#1f1fff',
       coordinates: [
         {x: -1, y:  0},
@@ -49,6 +54,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.J]: {
+      classNames: ['tetromino-j'],
       color: '#ff00ff',
       coordinates: [
         {x: -1, y: -1},
@@ -58,6 +64,7 @@ const tetrominos = (): Record<TetrominoType, Tetromino> => ({
       ],
     },
     [TetrominoType.I]: {
+      classNames: ['tetromino-i'],
       color: '#ffff00',
       coordinates: [
         {x: -1, y:  0},

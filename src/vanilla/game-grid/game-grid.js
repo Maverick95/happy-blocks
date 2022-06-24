@@ -103,18 +103,18 @@ class GameGridElement extends HTMLElement {
     this.delete = [];
     for (var id of Object.keys(this.pieces)) {
       const piece = this.pieces[id];
-      let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
+      let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`); 
       if (grid_piece) {
-        grid_piece.style.backgroundColor = happyblocks.tetromino(piece.type).color;
         grid_piece.style.left = `${piece.x * 25}px`;
         grid_piece.style.top = `${piece.y * 25}px`;
         grid_piece.style.visibility = piece.y >= 0 ? 'visible' : 'hidden';
       }
       else {
+        const classNames = happyblocks.tetromino(piece.type).classNames;
         grid_piece = document.createElement('div');
         grid_piece.id = `game-piece-${id}`;
         grid_piece.classList.add('game-piece');
-        grid_piece.style.backgroundColor = happyblocks.tetromino(piece.type).color;
+        classNames.forEach(name => grid_piece.classList.add(name));
         grid_piece.style.left = `${piece.x * 25}px`;
         grid_piece.style.top = `${piece.y * 25}px`;
         grid_piece.style.visibility = piece.y >= 0 ? 'visible' : 'hidden';
