@@ -155,19 +155,10 @@ class GameGridElement extends HTMLElement {
     this.isConnected && this.drawGrid();
 
     if (this.period > 0 && this.grid.getWidth() > 0 && this.grid.getHeight() > 0) {
-      if (attrName === 'period') {
-        if (this.interval !== 0) {
-          clearInterval(this.interval);
-        }
-        this.interval = setInterval(() => this.gameEvent(), this.period);
-      }
-      else if (this.interval === 0) {
-        this.interval = setInterval(() => this.gameEvent(), this.period);
-      }
+      this.setGameEventInterval(this.period);
     }
-    else if (this.interval !== 0) {
-      clearInterval(this.interval);
-      this.interval = 0;
+    else {
+      this.removeGameEventInterval();
     }
 
   }
@@ -225,9 +216,7 @@ class GameGridElement extends HTMLElement {
 
     const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
     if (gameEnd) {
-      // Game End mechanic here. For now just clear the interval.
-      clearInterval(this.interval);
-      this.interval = 0;
+      this.removeGameEventInterval();
       console.log('GaMe oVeR!');
     }
     this.block = null;
@@ -235,6 +224,26 @@ class GameGridElement extends HTMLElement {
     this.drawGrid();
 
     return this.period;
+  }
+
+  removeGameEventInterval() {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = 0;
+    }
+  }
+
+  setGameEventInterval(period, delay = 0) {
+    this.removeGameEventInterval();
+    if (delay) {
+      setTimeout(() => {
+        this.gameEvent();
+        this.interval = setInterval(() => this.gameEvent(), period);
+      }, delay);
+    }
+    else {
+      this.interval = setInterval(() => this.gameEvent(), period);
+    }
   }
 
   gameEvent() {
@@ -245,22 +254,15 @@ class GameGridElement extends HTMLElement {
           .map(coordinate => this.block.y + coordinate.y)
           .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
         if (rowsOccupied.length) {
-          clearInterval(this.interval);
-          this.interval = 0;
+          this.removeGameEventInterval();
           const result = this.grid.deleteRows(rowsOccupied);
           const delay = this.clearRows(result);
-          setTimeout(() => {
-            this.gameEvent();
-            this.interval = setInterval(() => this.gameEvent(), this.period);
-          }, delay);
-
+          this.setGameEventInterval(this.period, delay);
           return;
         }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
         if (gameEnd) {
-          // Game End mechanic here. For now just clear the interval.
-          clearInterval(this.interval);
-          this.interval = 0;
+          this.removeGameEventInterval();
           console.log('GaMe oVeR!');
         }
         this.block = null;

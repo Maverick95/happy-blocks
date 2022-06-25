@@ -104,7 +104,33 @@ running another method, and then SETTING THE NEW INTERVAL FOR THE NEXT EVENT LOO
 So all the logic behind starting / ending event loop is in here.
 Just so as long as, in the parts of code you are hijacking, when the next event loop begins,
 everything is configured properly.
- 
+
+No offence, but actually thinking about it, the whole thing WOULD be much easier if you did setTimeout()
+instead.
+
+The only part I don't like is that in the cut-off, you have to "fake" the rest of the event loop logic.
+This is kind of prone to error, because now you're continuing the flow of a set of events, that may be
+quite complex.
+
+Okay, so this is a case for why you SHOULD explicitly carve out the game loop into discrete entire blocks of events.
+
+
+
+
+The game event loop is starting to feel, like, really buggy.
+
+So, that suggests...?
+
+Well it suggests YOU SHOULD CHANGE SOMETHING.
+
+Or maybe its not worth it.
+
+Remember your training. Don't bother manoveuring, chopping up code, unless it makes sense to.
+
+It does make sense to functionalize a couple of things for safeguarding.
+
+e.g. resetting the interval.
+
 
 
 
