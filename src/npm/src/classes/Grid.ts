@@ -1,8 +1,13 @@
 import Coordinate from 'models/Coordinate';
 
+interface UpdatePieceResult {
+  from: Coordinate,
+  to: Coordinate,
+};
+
 interface DeleteRowsResult {
   delete: Coordinate[],
-  update: Coordinate[],
+  update: UpdatePieceResult[],
 };
 
 class Grid {
@@ -93,13 +98,17 @@ class Grid {
       };
     }).filter(value => value.end > value.start);
 
-    const result_update: Coordinate[] = rowsToUpdate.map(rows =>
+    const result_update: UpdatePieceResult[] = rowsToUpdate.map(rows =>
       new Array(rows.end - rows.start)
         .fill(0)
         .map((_, index) => rows.start + index)
         .map(y => this.#grid[y]
-          .map((id, x) => ({ x, y: y + rows.target - rows.start, id}))
-          .filter(coordinate => coordinate.id > 0)
+          .map((id, x) => (
+            {
+              from: { x, y, id },
+              to: { x, y: y + rows.target - rows.start, id }
+            }))
+          .filter(coordinate => coordinate.from.id > 0)
       )
     ).flat(2)
     

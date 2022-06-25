@@ -249,23 +249,22 @@ class GameGridElement extends HTMLElement {
             delete this.pieces[value.id];
           });
           result.update.forEach(value => {
-            this.pieces[value.id].x = value.x;
-            this.pieces[value.id].y = value.y;
+            this.pieces[value.to.id].x = value.to.x;
+            this.pieces[value.to.id].y = value.to.y;
           });
           this.block.coordinates = this.block.coordinates.filter(coordinate =>
             !result.delete.includes(coordinate.id)
           ).map(coordinate => {
-            const update = result.update.find(value => value.id === coordinate.id);
+            const update = result.update.find(value => value.to.id === coordinate.id);
             if (update) {
-              coordinate.x = update.x;
-              coordinate.y = update.y; 
+              coordinate.x = update.to.x;
+              coordinate.y = update.to.y; 
             }
             return coordinate;
           });
           this.delete = result.delete.map(value => value.id);
           
           this.animateDeleteRows(result);
-
           return;
         }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
@@ -277,6 +276,7 @@ class GameGridElement extends HTMLElement {
       }
     }
     else {
+      // Can we check the game end in here instead???
       const next = this.randomizer.next();
       this.setNewBlock(next);
     }

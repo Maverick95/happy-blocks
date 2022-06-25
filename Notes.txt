@@ -114,20 +114,26 @@ quite complex.
 
 Okay, so this is a case for why you SHOULD explicitly carve out the game loop into discrete entire blocks of events.
 
+Carry on as normal for now.
 
+What's my goal?
 
+We want to apply different easing functions and transitions based on the row.
 
-The game event loop is starting to feel, like, really buggy.
+This is easy enough to model out, but what is the result?
 
-So, that suggests...?
+What should we return?
 
-Well it suggests YOU SHOULD CHANGE SOMETHING.
+This is different from the tetromino approach.
 
-Or maybe its not worth it.
+How about function factories instead?
 
-Remember your training. Don't bother manoveuring, chopping up code, unless it makes sense to.
+Try it, and then compare the two approaches.
 
-Also, why 
+Right, so the problem here is, we have a list of pieces to apply the transitions to.
+
+Need the deleteRows method in Grid to give more information in the update.
+
 
 
 
