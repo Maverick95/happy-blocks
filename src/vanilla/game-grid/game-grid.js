@@ -195,6 +195,48 @@ class GameGridElement extends HTMLElement {
     }
   }
 
+  clearRows(result) {
+    result.delete.forEach(value => {
+      delete this.pieces[value.id];
+    });
+    result.update.forEach(value => {
+      this.pieces[value.id].x = value.x;
+      this.pieces[value.id].y = value.y;
+    });
+    this.block.coordinates = this.block.coordinates.filter(coordinate =>
+      !result.delete.includes(coordinate.id)
+    ).map(coordinate => {
+      const update = result.update.find(value => value.id === coordinate.id);
+      if (update) {
+        coordinate.x = update.x;
+        coordinate.y = update.y; 
+      }
+      return coordinate;
+    });
+    this.delete = result.delete.map(value => value.id);
+    const evtScoreIncrease = new CustomEvent('rowscompleted', {
+      detail: { pieces: result.delete.length },
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    });
+    const container = this.shadowRoot.getElementById('grid-container');
+    container.dispatchEvent(evtScoreIncrease);
+
+    const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
+    if (gameEnd) {
+      // Game End mechanic here. For now just clear the interval.
+      clearInterval(this.interval);
+      this.interval = 0;
+      console.log('GaMe oVeR!');
+    }
+    this.block = null;
+
+    this.drawGrid();
+
+    return this.period;
+  }
+
   gameEvent() {
 
     if (this.block !== null) {
@@ -203,33 +245,16 @@ class GameGridElement extends HTMLElement {
           .map(coordinate => this.block.y + coordinate.y)
           .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
         if (rowsOccupied.length) {
+          clearInterval(this.interval);
+          this.interval = 0;
           const result = this.grid.deleteRows(rowsOccupied);
-          result.delete.forEach(value => {
-            delete this.pieces[value.id];
-          });
-          result.update.forEach(value => {
-            this.pieces[value.id].x = value.x;
-            this.pieces[value.id].y = value.y;
-          });
-          this.block.coordinates = this.block.coordinates.filter(coordinate =>
-            !result.delete.includes(coordinate.id)
-          ).map(coordinate => {
-            const update = result.update.find(value => value.id === coordinate.id);
-            if (update) {
-              coordinate.x = update.x;
-              coordinate.y = update.y; 
-            }
-            return coordinate;
-          });
-          this.delete = result.delete.map(value => value.id);
-          const evtScoreIncrease = new CustomEvent('rowscompleted', {
-            detail: { rows: rowsOccupied.length },
-            bubbles: true,
-            composed: true,
-            cancelable: true,
-          });
-          const container = this.shadowRoot.getElementById('grid-container');
-          container.dispatchEvent(evtScoreIncrease);
+          const delay = this.clearRows(result);
+          setTimeout(() => {
+            this.gameEvent();
+            this.interval = setInterval(() => this.gameEvent(), this.period);
+          }, delay);
+
+          return;
         }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
         if (gameEnd) {

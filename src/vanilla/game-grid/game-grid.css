@@ -13,6 +13,8 @@
   box-sizing: border-box;
 }
 
+
+
 .tetromino-o {
   background-image: repeating-linear-gradient(45deg, #00cf00, #00cf00 7px, #00ff00 7px, #00ff00 14px, #afffaf 14px, #afffaf 21px);
   border: 1px solid #2faf2f;
@@ -39,7 +41,7 @@
 }
 
 .tetromino-j {
-  background-image: radial-gradient(#ffafff, #ffafff 35%, #ff00ff 35%);
+  background-image: radial-gradient(#ffcfff, #ffcfff 35%, #ff00ff 35%);
   border: 1px solid #ff7fff;
 }
 

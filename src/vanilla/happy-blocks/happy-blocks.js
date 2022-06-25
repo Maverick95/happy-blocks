@@ -31,11 +31,11 @@ class HappyBlocksElement extends HTMLElement {
     container.appendChild(gameGrid);
 
     container.addEventListener('rowscompleted', (e) => {
-      const rows = parseInt(e.detail?.rows);
-      if (isNaN(rows) || !Number.isInteger(rows) || rows <= 0) {
+      const pieces = parseInt(e.detail?.pieces);
+      if (isNaN(pieces) || !Number.isInteger(pieces) || pieces <= 0) {
         throw new Error('incorrect scoreIncrease');
       }
-      this.score += rows * 20;
+      this.score += pieces;
       casinoScore.setAttribute('score', `${this.score}`);
     });
   }

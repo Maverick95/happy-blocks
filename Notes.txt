@@ -50,6 +50,63 @@ To get thinnest slice, need to...
 ## 25/06/2022
 Goal for this sesh -
 c) Complete rows mean rows disappear with cool animation, adjusts overall score.
+So when this happens, you want to -
+1) break the overall game flow.
+i.e. stop the current interval from executing the next game loop.
+2) identify the rows that are to be removed.
+Easy enough, these are returned from npm.
+3) identify the rows that will be altered
+Again, from npm.
+4) apply a cool "pre-removal" animation HTML element representing each of the rows to be removed.
+Most likely just a div with some good animations.
+5) once the animation has finished, either remove these elements (eventually) or make them invisible.
+6) apply a transition prop to the rows to be moved, so that the "drop" appears like a gravitational fall.
+7) alter the top values of each element to be updated, and watch the magic!
+8) when the entire thing has finished, be sure to run the same checks on game end, and ensure that the game
+interval is properly recreated if required.
+
+Thinnest slice I would say is to just apply the gravitational drop on the pieces, BUT also
+add functionality for suspending / enabling game-flow.
+
+First thing is, the gravitational drop itself is just adding an extra CSS class onto elements that have
+landed.
+
+Problem I can see with transition easing functions is, this won't allow the simulation of gravity
+I require. Because each row will change by different amounts!
+
+There are probably many funky ways of doing this.
+
+I would DEFER any decision (lol, again).
+
+And enclose any functionality that affects classes, styles, into one function.
+
+Now anything in here is separate.
+One clever thing you could do is, use the row difference as a way of obtaining style props to apply
+to the piece.
+
+I think I need to sketch out the process in code, because certain parts of the flow don't make sense.
+
+It's basically steps 4) to 8) and how they actually occur in code, and how they sit within the event loop.
+Because you need to trigger a series of intermediate events, and then resume.
+
+Ah but I can use intervals and timeouts in this function.
+
+At this point I would defer the decision to draw the grid in the event loop.
+
+You're not considering how the event flow works here.
+
+What you really WANT to happen, is for the game event flow to pause at this point in the code,
+execute some other stuff, and then resume.
+But this doesn't happen.
+So in that case, keep this simple and consistent.
+In the event loop, for this case, EXPLICITLY DEFINE that you are deleting the current interval,
+running another method, and then SETTING THE NEW INTERVAL FOR THE NEXT EVENT LOOP.
+So all the logic behind starting / ending event loop is in here.
+Just so as long as, in the parts of code you are hijacking, when the next event loop begins,
+everything is configured properly.
+ 
+
+
 
 
 
