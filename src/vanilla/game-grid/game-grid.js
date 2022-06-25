@@ -188,6 +188,12 @@ class GameGridElement extends HTMLElement {
   }
 
   animateDeleteRows(result) {
+    
+    result.update.forEach(value => {
+      const transition = happyblocks.transitions['gravity-falls'](value, this.grid);
+      const grid_piece = this.shadowRoot.getElementById(`game-piece-${value.to.id}`);
+      transition(grid_piece);
+    });
 
     const evtScoreIncrease = new CustomEvent('rowscompleted', {
       detail: { pieces: result.delete.length },

@@ -134,6 +134,20 @@ Right, so the problem here is, we have a list of pieces to apply the transitions
 
 Need the deleteRows method in Grid to give more information in the update.
 
+Now the animation method. This is something I'm a little unsure of.
+
+Remember... defer decision. Allow yourself the maximum wiggle room.
+
+Right so what you want is a function generator in npm.
+
+It takes in an UpdatePieceResult, a Grid, and gives you a function denoting how to update the HTML Element,
+or whatever the lowest element is that uses classes and style object.
+
+Yep HTMLElement
+
+Get my maths head out.
+
+
 
 
 

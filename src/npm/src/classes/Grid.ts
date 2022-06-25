@@ -172,6 +172,7 @@ class Grid {
 
 export {
   Grid,
+  UpdatePieceResult,
   DeleteRowsResult,
 };
 
