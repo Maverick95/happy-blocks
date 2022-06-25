@@ -127,9 +127,8 @@ Or maybe its not worth it.
 
 Remember your training. Don't bother manoveuring, chopping up code, unless it makes sense to.
 
-It does make sense to functionalize a couple of things for safeguarding.
+Also, why 
 
-e.g. resetting the interval.
 
 
 

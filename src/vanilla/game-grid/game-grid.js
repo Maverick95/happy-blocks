@@ -15,7 +15,7 @@ class GameGridElement extends HTMLElement {
     this.pieces = {};
     this.delete = [];
     this.grid = happyblocks.grid();
-    this.pieceId = this.period = this.interval = 0;
+    this.pieceId = this.period = this.interval = this.timeout = 0;
     this.randomizer = happyblocks.randomizers['default']();
 
     this.attachShadow({ mode: 'open' });
@@ -187,25 +187,8 @@ class GameGridElement extends HTMLElement {
     }
   }
 
-  clearRows(result) {
-    result.delete.forEach(value => {
-      delete this.pieces[value.id];
-    });
-    result.update.forEach(value => {
-      this.pieces[value.id].x = value.x;
-      this.pieces[value.id].y = value.y;
-    });
-    this.block.coordinates = this.block.coordinates.filter(coordinate =>
-      !result.delete.includes(coordinate.id)
-    ).map(coordinate => {
-      const update = result.update.find(value => value.id === coordinate.id);
-      if (update) {
-        coordinate.x = update.x;
-        coordinate.y = update.y; 
-      }
-      return coordinate;
-    });
-    this.delete = result.delete.map(value => value.id);
+  animateDeleteRows(result) {
+
     const evtScoreIncrease = new CustomEvent('rowscompleted', {
       detail: { pieces: result.delete.length },
       bubbles: true,
@@ -214,7 +197,7 @@ class GameGridElement extends HTMLElement {
     });
     const container = this.shadowRoot.getElementById('grid-container');
     container.dispatchEvent(evtScoreIncrease);
-
+   
     const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
     if (gameEnd) {
       this.removeGameEventInterval();
@@ -224,7 +207,8 @@ class GameGridElement extends HTMLElement {
 
     this.drawGrid();
 
-    return 5000;
+    this.setGameEventInterval(this.period, 5000);
+    
   }
 
   removeGameEventInterval() {
@@ -232,12 +216,16 @@ class GameGridElement extends HTMLElement {
       clearInterval(this.interval);
       this.interval = 0;
     }
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = 0;
+    }
   }
 
   setGameEventInterval(period, delay = 0) {
     this.removeGameEventInterval();
     if (delay) {
-      setTimeout(() => {
+      this.timeout = setTimeout(() => {
         this.gameEvent();
         this.interval = setInterval(() => this.gameEvent(), period);
       }, delay);
@@ -257,8 +245,27 @@ class GameGridElement extends HTMLElement {
         if (rowsOccupied.length) {
           this.removeGameEventInterval();
           const result = this.grid.deleteRows(rowsOccupied);
-          const delay = this.clearRows(result);
-          this.setGameEventInterval(this.period, delay);
+          result.delete.forEach(value => {
+            delete this.pieces[value.id];
+          });
+          result.update.forEach(value => {
+            this.pieces[value.id].x = value.x;
+            this.pieces[value.id].y = value.y;
+          });
+          this.block.coordinates = this.block.coordinates.filter(coordinate =>
+            !result.delete.includes(coordinate.id)
+          ).map(coordinate => {
+            const update = result.update.find(value => value.id === coordinate.id);
+            if (update) {
+              coordinate.x = update.x;
+              coordinate.y = update.y; 
+            }
+            return coordinate;
+          });
+          this.delete = result.delete.map(value => value.id);
+          
+          this.animateDeleteRows(result);
+
           return;
         }
         const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
