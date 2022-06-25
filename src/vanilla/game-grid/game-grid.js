@@ -34,6 +34,7 @@ class GameGridElement extends HTMLElement {
   }
 
   disconnectedCallBack() {
+    this.removeGameEventInterval();
     window.removeEventListener('keydown', (event) => this.processKeyDown(event.code));
   }
 
@@ -223,7 +224,7 @@ class GameGridElement extends HTMLElement {
 
     this.drawGrid();
 
-    return this.period;
+    return 5000;
   }
 
   removeGameEventInterval() {
