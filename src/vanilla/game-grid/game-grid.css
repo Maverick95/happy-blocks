@@ -20,7 +20,7 @@
 
 .tetromino-s {
   background-image: radial-gradient(#00cfcf, #00ffff 90%);
-  border: 1px solid #2fafaf;
+  border: 1px solid #00cf00;
 }
 
 .tetromino-z {
@@ -44,6 +44,6 @@
 }
 
 .tetromino-i {
-  background-color: #ffff00;
+  background-image: linear-gradient(135deg, #ffff00, #ffff00 65%, #ffaf3f);
   border: 1px solid #ff7f00;
 }
