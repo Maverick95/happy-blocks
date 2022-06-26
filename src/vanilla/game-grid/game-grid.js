@@ -53,7 +53,7 @@ class GameGridElement extends HTMLElement {
   };
 
   rotateBlock() {
-    if (this.block !== null) {
+    if (this.block !== null && !this.block.finished) {
       const rotated = happyblocks.rotate(this.block, this.grid);
       // update this.grid
       this.block.coordinates.forEach(coordinate =>
@@ -165,7 +165,7 @@ class GameGridElement extends HTMLElement {
   }
 
   moveBlock(direction) {
-    if (this.block !== null) {
+    if (this.block !== null && !this.block.finished) {
       const moved = happyblocks.move(this.block, this.grid, direction);
       if (moved !== null) {
         // update this.grid
@@ -301,7 +301,6 @@ class GameGridElement extends HTMLElement {
     }
 
     this.drawGrid();
-
   }
 
 }
