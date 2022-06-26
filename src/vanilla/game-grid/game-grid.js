@@ -66,9 +66,16 @@ class GameGridElement extends HTMLElement {
         }
         break;
       case 'ArrowRight': case 'KeyD':
-        if (!this.intervals['moveright']) {
-          this.moveBlock('right');
-          this.intervals['moveright'] = setInterval(() => this.moveBlock('right'), 150);  
+        {
+          if (!this.intervals['moveright']) {
+            this.moveBlock('right');
+            this.intervals['moveright'] = setInterval(() => this.moveBlock('right'), 150);  
+          }
+        }
+        break;
+      case 'ArrowDown': case 'KeyS':
+        {
+          this.pushBlock();
         }
         break;
       case 'KeyR':
@@ -187,6 +194,24 @@ class GameGridElement extends HTMLElement {
       this.removeIntervals('gameevent');
     }
 
+  }
+
+  pushBlock() {
+    if (this.block !== null && !this.block.finished) {
+      const pushed = happyblocks.push(this.block, this.grid);
+      // update this.grid
+      this.block.coordinates.forEach(coordinate =>
+        this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
+      pushed.coordinates.forEach(coordinate => {
+        this.grid.setSpace(coordinate.id, pushed.x + coordinate.x, pushed.y + coordinate.y);
+      // update this.pieces
+      this.pieces[coordinate.id].x = pushed.x + coordinate.x;
+      this.pieces[coordinate.id].y = pushed.y + coordinate.y;
+      });
+      // set this.block
+      this.block = pushed;
+      this.drawGrid();
+    }
   }
 
   moveBlock(direction) {
