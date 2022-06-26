@@ -31,21 +31,45 @@ class GameGridElement extends HTMLElement {
     const content = document.getElementById('game-grid').content.cloneNode(true);
     this.shadowRoot.appendChild(content);
     window.addEventListener('keydown', (event) => this.processKeyDown(event.code));
+    window.addEventListener('keyup', (event) => this.processKeyUp(event.code));
     this.drawGrid();
   }
 
   disconnectedCallBack() {
-    this.removeGameEventInterval();
+    this.removeIntervals('moveleft', 'moveright', 'gameevent');
     window.removeEventListener('keydown', (event) => this.processKeyDown(event.code));
+    window.removeEventListener('keyup', (event) => this.processKeyUp(event.code));
+  }
+
+  processKeyUp(code) {
+    switch (code) {
+      case 'ArrowLeft': case 'KeyA':
+      {
+        this.removeIntervals('moveleft');
+      }
+      break;
+      case 'ArrowRight': case 'KeyD':
+      {
+        this.removeIntervals('moveright');
+      }
+    }
   }
 
   processKeyDown(code) {
     switch (code) {
       case 'ArrowLeft': case 'KeyA':
-        this.moveBlock('left');
+        {
+          if (!this.intervals['moveleft']) {
+            this.moveBlock('left');
+            this.intervals['moveleft'] = setInterval(() => this.moveBlock('left'), 150);  
+          }
+        }
         break;
       case 'ArrowRight': case 'KeyD':
-        this.moveBlock('right');
+        if (!this.intervals['moveright']) {
+          this.moveBlock('right');
+          this.intervals['moveright'] = setInterval(() => this.moveBlock('right'), 150);  
+        }
         break;
       case 'KeyR':
         this.rotateBlock();
@@ -160,7 +184,7 @@ class GameGridElement extends HTMLElement {
       this.setGameEventInterval(this.period);
     }
     else {
-      this.removeGameEventInterval();
+      this.removeIntervals('gameevent');
     }
 
   }
@@ -234,19 +258,21 @@ class GameGridElement extends HTMLElement {
     container.dispatchEvent(evtScoreIncrease);
   }
 
-  removeGameEventInterval() {
-    if (this.intervals['gameevent']) {
-      clearInterval(this.intervals['gameevent']);
-      this.intervals['gameevent'] = 0;
-    }
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = 0;
-    }
+  removeIntervals(...intervals) {
+    intervals.forEach(i => {
+      if (this.intervals[i]) {
+        clearInterval(this.intervals[i]);
+        this.intervals[i] = 0;
+      }
+      if (i === 'gameevent' && this.timeout) {
+        clearTimeout(this.timeout);
+        this.timeout = 0;
+      }
+    });
   }
 
   setGameEventInterval(period, delay = 0) {
-    this.removeGameEventInterval();
+    this.removeIntervals('gameevent');
     if (delay) {
       this.timeout = setTimeout(() => {
         this.gameEvent();
@@ -267,7 +293,7 @@ class GameGridElement extends HTMLElement {
     else if (this.block.finished) {
       const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
       if (gameEnd) {
-        this.removeGameEventInterval();
+        this.removeIntervals('gameevent');
         this.dispatchEvent('gameover')
       }
       else {
@@ -276,12 +302,13 @@ class GameGridElement extends HTMLElement {
       }
     }
     else if (this.moveBlock('down')) {
+      this.removeIntervals('moveleft', 'moveright');
       this.block.finished = true;
       const rowsOccupied = this.block.coordinates
         .map(coordinate => this.block.y + coordinate.y)
         .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
       if (rowsOccupied.length) {
-        this.removeGameEventInterval();
+        this.removeIntervals('gameevent');
         const result = this.grid.deleteRows(rowsOccupied);
         result.delete.forEach(value => {
           delete this.pieces[value.id];
