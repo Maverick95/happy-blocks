@@ -42,111 +42,20 @@ The happyblocks global object is like a SERVICE.
 For example, in your rotate method, this didn't alter the input objects, it just returned a result.
 
 TODO : add loads of tests for moveBlock! and randomizer!
-TODO : something something clear Intervals when web components detached
-
-To get thinnest slice, need to...
-
-
-## 25/06/2022
-Goal for this sesh -
-c) Complete rows mean rows disappear with cool animation, adjusts overall score.
-So when this happens, you want to -
-1) break the overall game flow.
-i.e. stop the current interval from executing the next game loop.
-2) identify the rows that are to be removed.
-Easy enough, these are returned from npm.
-3) identify the rows that will be altered
-Again, from npm.
-4) apply a cool "pre-removal" animation HTML element representing each of the rows to be removed.
-Most likely just a div with some good animations.
-5) once the animation has finished, either remove these elements (eventually) or make them invisible.
-6) apply a transition prop to the rows to be moved, so that the "drop" appears like a gravitational fall.
-7) alter the top values of each element to be updated, and watch the magic!
-8) when the entire thing has finished, be sure to run the same checks on game end, and ensure that the game
-interval is properly recreated if required.
-
-Thinnest slice I would say is to just apply the gravitational drop on the pieces, BUT also
-add functionality for suspending / enabling game-flow.
-
-First thing is, the gravitational drop itself is just adding an extra CSS class onto elements that have
-landed.
-
-Problem I can see with transition easing functions is, this won't allow the simulation of gravity
-I require. Because each row will change by different amounts!
-
-There are probably many funky ways of doing this.
-
-I would DEFER any decision (lol, again).
-
-And enclose any functionality that affects classes, styles, into one function.
-
-Now anything in here is separate.
-One clever thing you could do is, use the row difference as a way of obtaining style props to apply
-to the piece.
-
-I think I need to sketch out the process in code, because certain parts of the flow don't make sense.
-
-It's basically steps 4) to 8) and how they actually occur in code, and how they sit within the event loop.
-Because you need to trigger a series of intermediate events, and then resume.
-
-Ah but I can use intervals and timeouts in this function.
-
-At this point I would defer the decision to draw the grid in the event loop.
-
-You're not considering how the event flow works here.
-
-What you really WANT to happen, is for the game event flow to pause at this point in the code,
-execute some other stuff, and then resume.
-But this doesn't happen.
-So in that case, keep this simple and consistent.
-In the event loop, for this case, EXPLICITLY DEFINE that you are deleting the current interval,
-running another method, and then SETTING THE NEW INTERVAL FOR THE NEXT EVENT LOOP.
-So all the logic behind starting / ending event loop is in here.
-Just so as long as, in the parts of code you are hijacking, when the next event loop begins,
-everything is configured properly.
-
-No offence, but actually thinking about it, the whole thing WOULD be much easier if you did setTimeout()
-instead.
-
-The only part I don't like is that in the cut-off, you have to "fake" the rest of the event loop logic.
-This is kind of prone to error, because now you're continuing the flow of a set of events, that may be
-quite complex.
-
-Carry on as normal for now.
-
-Now, how do you add in fake div elements to do the rows?
-
-
-
-
-
-
-
-
-
-
-
-
+TODO : something something clear Intervals when web components detached and timeouts
 
 It has limitations, mind. But it is some sort of complete Tetris-like solution.
 
 TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators
 
-c) Complete rows mean rows disappear with cool animation, adjusts overall score.
+#26/06
+Goal - improve controls
 
-b)
-This may be the fiddliest one.
-Also because it feeds into another idea that I'm yet to incorporate.
-Currently all the game loops are the same interval apart.
-I think instead, you need to set a timeout for the next event loop?
-What needs to happen when rows are deleted?
-We need to trigger the delete animation, and the delete steps.
-There are a few ways to handle the delete animation, and a few good ideas for display.
-First, I think I should go with for now, is the classic old style "flashing bars" approach,
-followed by the rows disappearing, and the above rows moving downwards slowly.
-There's a fairly good way to simulate this that I didn't consider yet.
-When pieces land, attach a class for css that sets transition for top.
-Then when the rows are removed, and the other rows move down, it will animate!
+1) Left and right keydown / keyup controls consistently move the piece in that direction until you can't move
+anymore.
 
-2) rearrange functionality so that timeouts instead of intervals are used to set next game loop,
-this means you can add delays, etc.
+For this, you'll have to use setIntervals on BOTH directions.
+So this makes sense now to have an object to hold all the intervals, because you'll need to identify
+each interval.
+
+

@@ -15,7 +15,8 @@ class GameGridElement extends HTMLElement {
     this.pieces = {};
     this.delete = [];
     this.grid = happyblocks.grid();
-    this.pieceId = this.period = this.interval = this.timeout = 0;
+    this.pieceId = this.period = this.timeout = 0;
+    this.intervals = {};
     this.randomizer = happyblocks.randomizers['default']();
 
     this.attachShadow({ mode: 'open' });
@@ -234,9 +235,9 @@ class GameGridElement extends HTMLElement {
   }
 
   removeGameEventInterval() {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = 0;
+    if (this.intervals['gameevent']) {
+      clearInterval(this.intervals['gameevent']);
+      this.intervals['gameevent'] = 0;
     }
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -249,11 +250,11 @@ class GameGridElement extends HTMLElement {
     if (delay) {
       this.timeout = setTimeout(() => {
         this.gameEvent();
-        this.interval = setInterval(() => this.gameEvent(), period);
+        this.intervals['gameevent'] = setInterval(() => this.gameEvent(), period);
       }, delay);
     }
     else {
-      this.interval = setInterval(() => this.gameEvent(), period);
+      this.intervals['gameevent'] = setInterval(() => this.gameEvent(), period);
     }
   }
 
