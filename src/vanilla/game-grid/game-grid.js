@@ -222,12 +222,6 @@ class GameGridElement extends HTMLElement {
         cancelable: true,
       });
       container.dispatchEvent(evtScoreIncrease);
-      const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
-      if (gameEnd) {
-        this.removeGameEventInterval();
-        console.log('GaMe oVeR!');
-      }
-      this.block = null;
       this.drawGrid();
       this.setGameEventInterval(this.period);
     }, animationDurationMs + additionalWaitMs);
@@ -260,48 +254,50 @@ class GameGridElement extends HTMLElement {
 
   gameEvent() {
 
-    if (this.block !== null) {
-      if (this.moveBlock('down')) {
-        const rowsOccupied = this.block.coordinates
-          .map(coordinate => this.block.y + coordinate.y)
-          .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
-        if (rowsOccupied.length) {
-          this.removeGameEventInterval();
-          const result = this.grid.deleteRows(rowsOccupied);
-          result.delete.forEach(value => {
-            delete this.pieces[value.id];
-          });
-          result.update.forEach(value => {
-            this.pieces[value.to.id].x = value.to.x;
-            this.pieces[value.to.id].y = value.to.y;
-          });
-          this.block.coordinates = this.block.coordinates.filter(coordinate =>
-            !result.delete.includes(coordinate.id)
-          ).map(coordinate => {
-            const update = result.update.find(value => value.to.id === coordinate.id);
-            if (update) {
-              coordinate.x = update.to.x;
-              coordinate.y = update.to.y;
-            }
-            return coordinate;
-          });
-          this.delete = result.delete.map(value => value.id);
-
-          this.animateDeleteRows(result);
-          return;
-        }
-        const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
-        if (gameEnd) {
-          this.removeGameEventInterval();
-          console.log('GaMe oVeR!');
-        }
-        this.block = null;
-      }
-    }
-    else {
-      // Can we check the game end in here instead???
+    if (this.block === null) {
       const next = this.randomizer.next();
       this.setNewBlock(next);
+    }
+    else if (this.block.finished) {
+      const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
+      if (gameEnd) {
+        this.removeGameEventInterval();
+        console.log('GaMe oVeR!');
+      }
+      else {
+        const next = this.randomizer.next();
+        this.setNewBlock(next);
+      }
+    }
+    else if (this.moveBlock('down')) {
+      this.block.finished = true;
+      const rowsOccupied = this.block.coordinates
+        .map(coordinate => this.block.y + coordinate.y)
+        .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
+      if (rowsOccupied.length) {
+        this.removeGameEventInterval();
+        const result = this.grid.deleteRows(rowsOccupied);
+        result.delete.forEach(value => {
+          delete this.pieces[value.id];
+        });
+        result.update.forEach(value => {
+          this.pieces[value.to.id].x = value.to.x;
+          this.pieces[value.to.id].y = value.to.y;
+        });
+        this.block.coordinates = this.block.coordinates.filter(coordinate =>
+          !result.delete.includes(coordinate.id)
+        ).map(coordinate => {
+          const update = result.update.find(value => value.to.id === coordinate.id);
+          if (update) {
+            coordinate.x = update.to.x;
+            coordinate.y = update.to.y;
+          }
+          return coordinate;
+        });
+        this.delete = result.delete.map(value => value.id);
+        this.animateDeleteRows(result);
+        return;
+      }
     }
 
     this.drawGrid();
