@@ -54,8 +54,10 @@ Goal - improve controls
 1) Left and right keydown / keyup controls consistently move the piece in that direction until you can't move
 anymore.
 
-For this, you'll have to use setIntervals on BOTH directions.
-So this makes sense now to have an object to hold all the intervals, because you'll need to identify
-each interval.
+2) Down key instantly moves block down as far as possible.
 
-Try 
+Use a separate npm method for this, include unit tests.
+
+
+
+TODO - move dedupe numeric array to helper?

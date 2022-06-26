@@ -1,5 +1,5 @@
 import { Grid } from 'classes/Grid';
-import moveBlock from 'helpers/moveBlock';
+import { moveBlock, pushBlock } from 'helpers/moveBlock';
 import newBlock from 'helpers/newBlock';
 import { randomizers } from 'helpers/Randomizers';
 import { transitions } from 'helpers/TransitionGenerators';
@@ -12,6 +12,7 @@ export {
   grid,
   moveBlock as move,
   newBlock as new,
+  pushBlock as push,
   randomizers,
   transitions,
   rotateBlock as rotate,

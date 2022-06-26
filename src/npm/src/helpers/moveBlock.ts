@@ -1,6 +1,7 @@
 import Direction from 'models/Direction';
 import Block from 'models/Block';
 import { Grid } from 'classes/Grid';
+import getBlockOffsetWithNoOverlap from './getBlockOffsetWithNoOverlap';
 
 const moveBlock = (
   block: Block,
@@ -51,4 +52,54 @@ const moveBlock = (
 
 };
 
-export default moveBlock;
+const pushBlock = (
+  block: Block,
+  grid: Grid,
+): Block => {
+
+  /* List of ids from block required to do lookups without altering grid */
+
+  const ids = [0, ...block.coordinates.map(coordinate => coordinate.id)];
+
+  /* Returned Block object needs to be deep-copy of original */
+
+  const result: Block = {
+    x: block.x,
+    y: block.y,
+    coordinates: block.coordinates.map(coordinate => ({...coordinate})),
+  };
+
+  /* Group yMax by x for block. */
+
+  const columns = {};
+  block.coordinates.forEach(coordinate => {
+    if (typeof columns[coordinate.x] === 'undefined') {
+      columns[coordinate.x] = coordinate.y;
+    }
+    else if (coordinate.y > columns[coordinate.x]) {
+      columns[coordinate.x] = coordinate.y;
+    }
+  });
+
+  let yDiff = 0;
+  let continueCheck = true;
+
+  while (continueCheck) {
+    Object.keys(columns).forEach(x => {
+      const xGrid = block.x + parseInt(x);
+      const yGrid = block.y + columns[x] + yDiff + 1;
+      if (yGrid >= grid.getHeight() || !ids.includes(grid.getSpace(xGrid, yGrid))) {
+        continueCheck = false;
+      }
+    });
+    if (continueCheck) { yDiff++; }
+  }
+
+  result.y += yDiff;
+  return result;
+};
+
+export {
+  moveBlock,
+  pushBlock,
+};
