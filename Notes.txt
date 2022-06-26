@@ -112,40 +112,11 @@ The only part I don't like is that in the cut-off, you have to "fake" the rest o
 This is kind of prone to error, because now you're continuing the flow of a set of events, that may be
 quite complex.
 
-Okay, so this is a case for why you SHOULD explicitly carve out the game loop into discrete entire blocks of events.
-
 Carry on as normal for now.
 
-What's my goal?
+Now, how do you add in fake div elements to do the rows?
 
-We want to apply different easing functions and transitions based on the row.
 
-This is easy enough to model out, but what is the result?
-
-What should we return?
-
-This is different from the tetromino approach.
-
-How about function factories instead?
-
-Try it, and then compare the two approaches.
-
-Right, so the problem here is, we have a list of pieces to apply the transitions to.
-
-Need the deleteRows method in Grid to give more information in the update.
-
-Now the animation method. This is something I'm a little unsure of.
-
-Remember... defer decision. Allow yourself the maximum wiggle room.
-
-Right so what you want is a function generator in npm.
-
-It takes in an UpdatePieceResult, a Grid, and gives you a function denoting how to update the HTML Element,
-or whatever the lowest element is that uses classes and style object.
-
-Yep HTMLElement
-
-Get my maths head out.
 
 
 

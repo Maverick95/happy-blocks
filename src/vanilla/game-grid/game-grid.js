@@ -104,7 +104,7 @@ class GameGridElement extends HTMLElement {
     this.delete = [];
     for (var id of Object.keys(this.pieces)) {
       const piece = this.pieces[id];
-      let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`); 
+      let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
       if (grid_piece) {
         grid_piece.style.left = `${piece.x * 25}px`;
         grid_piece.style.top = `${piece.y * 25}px`;
@@ -171,7 +171,7 @@ class GameGridElement extends HTMLElement {
         // update this.grid
         this.block.coordinates.forEach(coordinate =>
           this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
-          moved.coordinates.forEach(coordinate => {
+        moved.coordinates.forEach(coordinate => {
           this.grid.setSpace(coordinate.id, moved.x + coordinate.x, moved.y + coordinate.y);
           // update this.pieces
           this.pieces[coordinate.id].x = moved.x + coordinate.x;
@@ -188,33 +188,50 @@ class GameGridElement extends HTMLElement {
   }
 
   animateDeleteRows(result) {
-    
     result.update.forEach(value => {
       const transition = happyblocks.transitions['gravity-falls'](value, this.grid);
       const grid_piece = this.shadowRoot.getElementById(`game-piece-${value.to.id}`);
       transition(grid_piece);
     });
+    const animationDurationMs = 1000, additionalWaitMs = 500;
+    const animationRows = result.delete.map(value => value.y)
+      .sort((a, b) => b - a)
+      .filter((value, index, array) => index === 0 || value !== array[index - 1]);
 
-    const evtScoreIncrease = new CustomEvent('rowscompleted', {
-      detail: { pieces: result.delete.length },
-      bubbles: true,
-      composed: true,
-      cancelable: true,
-    });
     const container = this.shadowRoot.getElementById('grid-container');
-    container.dispatchEvent(evtScoreIncrease);
-   
-    const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
-    if (gameEnd) {
-      this.removeGameEventInterval();
-      console.log('GaMe oVeR!');
-    }
-    this.block = null;
 
-    this.drawGrid();
+    const animations = animationRows.map(row => {
+      const element = document.createElement('div');
+      element.style.position = 'absolute';
+      element.style.top = `${row * 25}px`;
+      element.style.width = `${this.grid.getWidth() * 25}px`;
+      element.style.height = '25px';
+      element.style.animation = `${animationDurationMs / 7}ms linear 0s 7 alternate forwards running bomberguy`;
+      element.style.zIndex = '5';
+      element.style.backgroundColor = 'black';
+      container.appendChild(element);
+      return element;
+    });
 
-    this.setGameEventInterval(this.period, 5000);
-    
+    setTimeout(() => {
+      animations.forEach(element => element.remove());
+      const evtScoreIncrease = new CustomEvent('rowscompleted', {
+        detail: { pieces: result.delete.length },
+        bubbles: true,
+        composed: true,
+        cancelable: true,
+      });
+      container.dispatchEvent(evtScoreIncrease);
+      const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
+      if (gameEnd) {
+        this.removeGameEventInterval();
+        console.log('GaMe oVeR!');
+      }
+      this.block = null;
+      this.drawGrid();
+      this.setGameEventInterval(this.period);
+    }, animationDurationMs + additionalWaitMs);
+
   }
 
   removeGameEventInterval() {
@@ -264,12 +281,12 @@ class GameGridElement extends HTMLElement {
             const update = result.update.find(value => value.to.id === coordinate.id);
             if (update) {
               coordinate.x = update.to.x;
-              coordinate.y = update.to.y; 
+              coordinate.y = update.to.y;
             }
             return coordinate;
           });
           this.delete = result.delete.map(value => value.id);
-          
+
           this.animateDeleteRows(result);
           return;
         }
