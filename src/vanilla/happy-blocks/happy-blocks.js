@@ -38,6 +38,10 @@ class HappyBlocksElement extends HTMLElement {
       this.score += pieces;
       casinoScore.setAttribute('score', `${this.score}`);
     });
+
+    container.addEventListener('gameover', (e) => {
+      console.log('GaMe oVeR');
+    });
   }
 
 }

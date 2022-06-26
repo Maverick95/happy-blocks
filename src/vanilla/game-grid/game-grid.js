@@ -146,7 +146,7 @@ class GameGridElement extends HTMLElement {
         break;
       case 'period': {
         const period = parseInt(newVal);
-        if (isNaN(period) || period < 100) {
+        if (isNaN(period) || period < 50) {
           throw new Error('Incorrect attribute');
         }
         this.period = period;
@@ -215,17 +215,22 @@ class GameGridElement extends HTMLElement {
 
     setTimeout(() => {
       animations.forEach(element => element.remove());
-      const evtScoreIncrease = new CustomEvent('rowscompleted', {
-        detail: { pieces: result.delete.length },
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      });
-      container.dispatchEvent(evtScoreIncrease);
+      this.dispatchEvent('rowscompleted', { pieces: result.delete.length });
       this.drawGrid();
       this.setGameEventInterval(this.period);
     }, animationDurationMs + additionalWaitMs);
 
+  }
+
+  dispatchEvent(type, detail) {
+    const container = this.shadowRoot.getElementById('grid-container');
+    const evtScoreIncrease = new CustomEvent(type, {
+      detail,
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    });
+    container.dispatchEvent(evtScoreIncrease);
   }
 
   removeGameEventInterval() {
@@ -262,7 +267,7 @@ class GameGridElement extends HTMLElement {
       const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
       if (gameEnd) {
         this.removeGameEventInterval();
-        console.log('GaMe oVeR!');
+        this.dispatchEvent('gameover')
       }
       else {
         const next = this.randomizer.next();
