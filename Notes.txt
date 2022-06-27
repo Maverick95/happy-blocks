@@ -2,29 +2,6 @@ Aim of this project is to create a Tetris knock-off using web components.
 
 Beginning notes - (as there will be a lot to do)
 
-KEY POINT - could you make this cumulative, i.e. parts will move downwards as
-far as possible in their column space?
-This btw isn't the behaviour in standard Tetris, everything just moves down by 1.
-
-At start-up, choose a random piece from the list of pieces allowed.
-This is the 'next' piece.
-At points, a new piece is required.
-When this happens, 
-a) return the piece in the 'next' place,
-b) generate a new random piece, and put this in the 'next' place.
-
-The score.
-This will need resetting on game start, incrementing by a value whenever rows are
-removed.
-
-Playing the game
-There are a maximum of 5 controls in the game,
-left
-right
-down
-spin left
-spin right
-
 Remember learnings from React, truth flows downward.
 i.e. information is stored in the main Game class, the happy-blocks component.
 So the solution would be to move common logic down to a happyblocks general object,
@@ -48,16 +25,8 @@ It has limitations, mind. But it is some sort of complete Tetris-like solution.
 
 TODO : add test for getBlockOffsetWithNoOverlap, createBlock, CoordinateGenerators
 
-#26/06
-Goal - improve controls
-
-1) Left and right keydown / keyup controls consistently move the piece in that direction until you can't move
-anymore.
-
-2) Down key instantly moves block down as far as possible.
-
-Use a separate npm method for this, include unit tests.
-
-
-
 TODO - move dedupe numeric array to helper?
+
+What's next?
+
+1) Complete game flow.
