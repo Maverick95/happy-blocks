@@ -29,4 +29,5 @@ TODO - move dedupe numeric array to helper?
 
 What's next?
 
-1) Complete game flow.
+1) The Next Piece component. And how this piece will operate, will it be separate
+from the game-grid? Or a sub-component?
