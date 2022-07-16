@@ -8,4 +8,17 @@ enum TetrominoType {
   I = "I",
 }
 
-export default TetrominoType;
+const tetrominos = (): TetrominoType[] => ([
+  TetrominoType.I,
+  TetrominoType.J,
+  TetrominoType.L,
+  TetrominoType.O,
+  TetrominoType.S,
+  TetrominoType.T,
+  TetrominoType.Z,
+]);
+
+export {
+  TetrominoType,
+  tetrominos,
+};

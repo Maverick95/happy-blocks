@@ -1,7 +1,7 @@
 import { Grid } from 'classes/Grid';
 import Coordinate from 'models/Coordinate';
 import CoordinateGenerator from 'models/CoordinateGenerator';
-import TetrominoType from 'models/TetrominoType';
+import { TetrominoType } from 'models/TetrominoType';
 import random from './random';
 
 const getNextOffsetCoordinateDefault = (): CoordinateGenerator => {

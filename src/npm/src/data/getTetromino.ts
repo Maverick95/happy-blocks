@@ -1,4 +1,4 @@
-import TetrominoType from 'models/TetrominoType';
+import { TetrominoType } from 'models/TetrominoType';
 import Tetromino from 'models/Tetromino';
 
 const tetrominos = (): Record<TetrominoType, Tetromino> => ({

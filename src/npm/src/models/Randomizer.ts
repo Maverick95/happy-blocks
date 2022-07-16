@@ -1,4 +1,4 @@
-import TetrominoType from './TetrominoType';
+import { TetrominoType } from './TetrominoType';
 
 interface Randomizer {
   next: () => TetrominoType,

@@ -1,4 +1,4 @@
-import TetrominoType from '../models/TetrominoType';
+import { TetrominoType } from '../models/TetrominoType';
 import random from './random';
 import { getRandomizerDefault } from './Randomizers';
 
