@@ -2,7 +2,7 @@
   box-sizing: content-box;
   padding: 15px;
   background-color: black;
-  border-radius: 5px;
+  border-radius: 15px;
   transition-property: width, height;
   transition-duration: 1s;
   transition-timing-function: ease-in-out;
