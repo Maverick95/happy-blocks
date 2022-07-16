@@ -3,5 +3,7 @@
   padding: 15px;
   background-color: black;
   border-radius: 5px;
-  transition: width 1s ease-in-out 0s;
+  transition-property: width, height;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
 }

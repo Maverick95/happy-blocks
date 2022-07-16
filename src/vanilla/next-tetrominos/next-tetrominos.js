@@ -40,24 +40,21 @@ class NextTetrominosElement extends HTMLElement {
     this.height = 1 + maxY - minY;
   }
 
-  updateContainerSize() {
-    const container = this.shadowRoot.getElementById('next-tetrominos-container');
+  getSize() {
     const sizePerPiece = 25, widthGap = 25;
     const tetrominos = Math.max(this.nextTetrominos.length, 1);
     const width = (sizePerPiece * this.width * tetrominos) + (widthGap * (tetrominos - 1));
     const height = (sizePerPiece * this.height);
-    container.style.width = `${width}px`;
-    container.style.height = `${height}px`;
-    
+    return [width, height];
   }
 
   connectedCallback() {
     const container = document.createElement('div');
     container.id = 'next-tetrominos-container';
-    container.width = '0px';
-    container.height = '0px';
+    const [width, height] = this.getSize();
+    container.style.width = `${width}px`;
+    container.style.height = `${height}px`;
     this.shadowRoot.appendChild(container);
-    this.updateContainerSize();
   }
 
   disconnectedCallback() {
@@ -74,7 +71,10 @@ class NextTetrominosElement extends HTMLElement {
         }
         // Crude assignment for now.
         this.nextTetrominos = nextTetrominos;
-        this.updateContainerSize();
+        const container = this.shadowRoot.getElementById('next-tetrominos-container');
+        const [width, height] = this.getSize();
+        container.style.width = `${width}px`;
+        container.style.height = `${height}px`;
       }
     }
   }
