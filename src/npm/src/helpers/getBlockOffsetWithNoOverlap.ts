@@ -22,7 +22,7 @@ const getBlockOffsetWithNoOverlap = (
   while (offset === null) {
     const next = getNextOffsetCoordinate.next();
     let isValid = true;
-    for (var coordinate of block.coordinates) {
+    for (let coordinate of block.coordinates) {
       const
         x = block.x + next.x + coordinate.x,
         y = block.y + next.y + coordinate.y;

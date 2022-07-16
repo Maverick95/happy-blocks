@@ -34,7 +34,7 @@ const moveBlock = (
   }
 
   let isValid = true;
-  for (var coordinate of result.coordinates) {
+  for (let coordinate of result.coordinates) {
     const
       x = result.x + coordinate.x,
       y = result.y + coordinate.y;

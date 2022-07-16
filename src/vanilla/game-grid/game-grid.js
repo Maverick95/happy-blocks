@@ -132,12 +132,12 @@ class GameGridElement extends HTMLElement {
     const container = this.shadowRoot.getElementById('grid-container');
     container.style.width = `${this.grid.getWidth() * 25}px`;
     container.style.height = `${this.grid.getHeight() * 25}px`;
-    for (var id of this.delete) {
+    for (let id of this.delete) {
       const grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
       grid_piece.remove();
     };
     this.delete = [];
-    for (var id of Object.keys(this.pieces)) {
+    for (let id of Object.keys(this.pieces)) {
       const piece = this.pieces[id];
       let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
       if (grid_piece) {
@@ -212,19 +212,19 @@ class GameGridElement extends HTMLElement {
   }
 
   getNextTetromino() {
-    var next = this.nextTetrominos.length > 0 ? this.nextTetrominos.shift() : this.randomizer.next();
+    let next = this.nextTetrominos.length > 0 ? this.nextTetrominos.shift() : this.randomizer.next();
     this.updateNextTetrominos();
     return next;
   }
 
   updateNextTetrominos() {
-    var diff = this.nextTetrominoCount - this.nextTetrominos.length;
+    let diff = this.nextTetrominoCount - this.nextTetrominos.length;
     if (diff > 0) {
-      for (var _=0; _ < diff; _++) {
+      for (let _=0; _ < diff; _++) {
         this.nextTetrominos.push(this.randomizer.next());
       }
     }
-    var nextTetrominos = this.nextTetrominos.join('');
+    let nextTetrominos = this.nextTetrominos.join('');
     this.dispatchEvent('nexttetrominos', { nextTetrominos });
   }
 
