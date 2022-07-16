@@ -225,7 +225,7 @@ class GameGridElement extends HTMLElement {
       }
     }
     let nextTetrominos = this.nextTetrominos.join('');
-    this.dispatchEvent('nexttetrominos', { nextTetrominos });
+    this.dispatchEvent('nexttetrominos', { tetrominos: nextTetrominos });
   }
 
   pushBlock() {

@@ -1,0 +1,7 @@
+#next-tetrominos-container {
+  box-sizing: content-box;
+  padding: 15px;
+  background-color: black;
+  border-radius: 5px;
+  transition: width 1s ease-in-out 0s;
+}

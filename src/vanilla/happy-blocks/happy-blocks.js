@@ -27,9 +27,12 @@ class HappyBlocksElement extends HTMLElement {
     gameGrid.setAttribute('height', '20');
     gameGrid.setAttribute('period', '150');
     gameGrid.setAttribute('next-tetromino-count', 5);
+
+    const nextTetrominos = document.createElement('next-tetrominos');
     
     container.appendChild(casinoScore);
     container.appendChild(gameGrid);
+    container.appendChild(nextTetrominos);
 
     container.addEventListener('rowscompleted', (e) => {
       const pieces = parseInt(e.detail?.pieces);
@@ -45,7 +48,7 @@ class HappyBlocksElement extends HTMLElement {
     });
 
     container.addEventListener('nexttetrominos', (e) => {
-      console.log(e.detail.nextTetrominos);
+      nextTetrominos.setAttribute('tetrominos', e.detail?.tetrominos);
     });
   }
 

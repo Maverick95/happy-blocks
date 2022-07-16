@@ -29,5 +29,50 @@ TODO - move dedupe numeric array to helper?
 
 What's next?
 
-1) The Next Piece component. And how this piece will operate, will it be separate
-from the game-grid? Or a sub-component?
+1) The Next Piece component. 
+
+I think you need max-width, max-height, but also, some measure of what the smallest x/y are.
+So you can convert coordinates into relative x/y for your display.
+
+Take a break. Need to break down how to tackle this component in more detail later.
+
+How will this be displayed? Should there realistically be a maximum?
+
+No I don't think there should be a maximum.
+
+In which case, you have a flexible-size container?
+
+I would stick with the "conveyor belt" option to be honest.
+
+Just because a game component tells you to do something, doesn't mean you have to do it.
+
+For example, there will be 10 pieces generated, but that doesn't mean you have to display them all.
+
+Look just keep it simple for now.
+
+Work off the attribute you are given.
+
+Unfortunately grid properties aren't animatable. Even if you added/removed elements, the movement wouldn't flow
+and be pretty.
+Therefore you'll have to go with top/left? Yup.
+
+So, how to start this?
+
+By default, create a container element with the correct width.
+
+Then have this respond to the new attribute by changing it's width. Make this animatable.
+
+
+
+
+
+
+
+
+
+There is one attribute passed down here, a string containing the characters
+of the pieces.
+
+But you will also have an existing array of pieces.
+
+When you get a new array, 
