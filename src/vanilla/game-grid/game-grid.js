@@ -5,6 +5,7 @@ class GameGridElement extends HTMLElement {
       'width',
       'height',
       'period',
+      'next-tetromino-count',
     ];
   }
 
@@ -18,6 +19,8 @@ class GameGridElement extends HTMLElement {
     this.pieceId = this.period = this.timeout = 0;
     this.intervals = {};
     this.randomizer = happyblocks.randomizers['default']();
+    this.nextTetrominos = [];
+    this.nextTetrominoCount = 0;
 
     this.attachShadow({ mode: 'open' });
 
@@ -158,6 +161,8 @@ class GameGridElement extends HTMLElement {
 
   attributeChangedCallback(attrName, _, newVal) {
 
+    const keyEventAttributes = ['width', 'height', 'period'];
+
     switch (attrName) {
       case 'width': {
         // If width increases, expand. If width decreases, shrink.
@@ -183,17 +188,44 @@ class GameGridElement extends HTMLElement {
         }
         this.period = period;
       }
+        break;
+      case 'next-tetromino-count': {
+        const nextTetrominoCount = parseInt(newVal);
+        if (isNaN(nextTetrominoCount) || nextTetrominoCount < 1) {
+          throw new Error('Incorrect attribute');
+        }
+        this.nextTetrominoCount = nextTetrominoCount;
+      }
+        break;
     }
 
-    this.isConnected && this.drawGrid();
-
-    if (this.period > 0 && this.grid.getWidth() > 0 && this.grid.getHeight() > 0) {
-      this.setGameEventInterval(this.period);
+    if (keyEventAttributes.some(attr => attr === attrName)) {
+      this.isConnected && this.drawGrid();
+      if (this.period > 0 && this.grid.getWidth() > 0 && this.grid.getHeight() > 0) {
+        this.setGameEventInterval(this.period);
+      }
+      else {
+        this.removeIntervals('gameevent');
+      }
     }
-    else {
-      this.removeIntervals('gameevent');
-    }
 
+  }
+
+  getNextTetromino() {
+    var next = this.nextTetrominos.length > 0 ? this.nextTetrominos.shift() : this.randomizer.next();
+    this.updateNextTetrominos();
+    return next;
+  }
+
+  updateNextTetrominos() {
+    var diff = this.nextTetrominoCount - this.nextTetrominos.length;
+    if (diff > 0) {
+      for (var _=0; _ < diff; _++) {
+        this.nextTetrominos.push(this.randomizer.next());
+      }
+    }
+    var nextTetrominos = this.nextTetrominos.join('');
+    this.dispatchEvent('nexttetrominos', { nextTetrominos });
   }
 
   pushBlock() {
@@ -312,7 +344,7 @@ class GameGridElement extends HTMLElement {
   gameEvent() {
 
     if (this.block === null) {
-      const next = this.randomizer.next();
+      const next = this.getNextTetromino();
       this.setNewBlock(next);
     }
     else if (this.block.finished) {
@@ -322,7 +354,7 @@ class GameGridElement extends HTMLElement {
         this.dispatchEvent('gameover')
       }
       else {
-        const next = this.randomizer.next();
+        const next = this.getNextTetromino();
         this.setNewBlock(next);
       }
     }

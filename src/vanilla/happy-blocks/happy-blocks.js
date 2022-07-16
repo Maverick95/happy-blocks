@@ -26,6 +26,7 @@ class HappyBlocksElement extends HTMLElement {
     gameGrid.setAttribute('width', '10');
     gameGrid.setAttribute('height', '20');
     gameGrid.setAttribute('period', '150');
+    gameGrid.setAttribute('next-tetromino-count', 5);
     
     container.appendChild(casinoScore);
     container.appendChild(gameGrid);
@@ -41,6 +42,10 @@ class HappyBlocksElement extends HTMLElement {
 
     container.addEventListener('gameover', (e) => {
       console.log('GaMe oVeR');
+    });
+
+    container.addEventListener('nexttetrominos', (e) => {
+      console.log(e.detail.nextTetrominos);
     });
   }
 
