@@ -16,7 +16,7 @@ class GameGridElement extends HTMLElement {
     this.pieces = {};
     this.delete = [];
     this.grid = happyblocks.grid();
-    this.pieceId = this.period = this.timeout = 0;
+    this.pieceId = this.tetrominoId = this.period = this.timeout = 0;
     this.intervals = {};
     this.randomizer = happyblocks.randomizers['default']();
     this.nextTetrominos = [];
@@ -212,7 +212,7 @@ class GameGridElement extends HTMLElement {
   }
 
   getNextTetromino() {
-    let next = this.nextTetrominos.length > 0 ? this.nextTetrominos.shift() : this.randomizer.next();
+    let next = this.nextTetrominos.length > 0 ? this.nextTetrominos.shift().type : this.randomizer.next();
     this.updateNextTetrominos();
     return next;
   }
@@ -221,10 +221,13 @@ class GameGridElement extends HTMLElement {
     let diff = this.nextTetrominoCount - this.nextTetrominos.length;
     if (diff > 0) {
       for (let _=0; _ < diff; _++) {
-        this.nextTetrominos.push(this.randomizer.next());
+        this.nextTetrominos.push({
+          id: ++this.tetrominoId,
+          type: this.randomizer.next()
+        });
       }
     }
-    let nextTetrominos = this.nextTetrominos.join('');
+    let nextTetrominos = happyblocks.translator.encode(this.nextTetrominos);
     this.dispatchEvent('nexttetrominos', { tetrominos: nextTetrominos });
   }
 
