@@ -48,8 +48,7 @@ class HappyBlocksElement extends HTMLElement {
     });
 
     container.addEventListener('nexttetrominos', (e) => {
-      console.log(e.detail?.tetrominos);
-      //nextTetrominos.setAttribute('tetrominos', e.detail?.tetrominos);
+      nextTetrominos.setAttribute('tetrominos', e.detail?.tetrominos);
     });
   }
 

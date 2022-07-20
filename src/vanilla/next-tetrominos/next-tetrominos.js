@@ -64,13 +64,8 @@ class NextTetrominosElement extends HTMLElement {
   attributeChangedCallback(name, _, newValue) {
     switch (name) {
       case 'tetrominos': {
-        const tetrominos = happyblocks.tetrominos();
-        const nextTetrominos = newValue.split('');
-        if (nextTetrominos.some(t => !tetrominos.includes(t))) {
-          throw new Error('Invalid attribute');
-        }
-        // Crude assignment for now.
-        this.nextTetrominos = nextTetrominos;
+        const queue = happyblocks.translator.decode(newValue);
+        this.nextTetrominos = queue.map(q => q.type);
         const container = this.shadowRoot.getElementById('next-tetrominos-container');
         const [width, height] = this.getSize();
         container.style.width = `${width}px`;
