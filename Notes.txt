@@ -64,62 +64,13 @@ Then have this respond to the new attribute by changing it's width. Make this an
 
 Now we just have to display the tetrominos.
 
-Reason I'm stalling to think here is,
-you have code doing this already. But they are kind of for different things.
-So I don't think I should replicate code.
-So you wanted to do something cool here, and animate the movements down the changing
-of the pieces.
-This will involve using an interesting method that you can probably NPM as well.
-It involves taking the old array, the new array, and working out what needs to happen
-to the old array to replicate the new array.
-Subject to some basic rules.
 You see, part of me understands why you went with the idea of firing more events.
 But then you'd have to somehow translate these events into attributes to give to the wc.
 So no.
 The simple answer to this is that controlling something through attributes alone
 is a poor way of handling it.
 
-I think I've reached a point where I can't be bothered with this project any more.
+The next session should be fairly easy. Just a matter of checking old to new, 
 
-Like, I want to do something different.
+Let's put this to bed now.
 
-Yeah, but you have to finish.
-
-So the algorithm. What do?
-
-It's a tricky one, because what do you want?
-
-New array, e.g.     T Z S J O T J
-Old array, e.g.     Z S J T J O O
-
-and somehow work out the differences
-
-Note the arrays won't necessarily be the same length, so you can't make this assumption.
-
-Something tells me you need more info in this.
-
-Aha! Is this more info you can give??
-
-Like, for example, some sort of id??
-
-This would actually clear up a lot.
-
-Can you do this?
-
-Y'know, a GOOD programmer would have a coder / decoder and use this via npm.
-
-
-
-
-
-
-
-
-
-
-There is one attribute passed down here, a string containing the characters
-of the pieces.
-
-But you will also have an existing array of pieces.
-
-When you get a new array, 

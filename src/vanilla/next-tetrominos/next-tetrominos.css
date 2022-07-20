@@ -6,4 +6,11 @@
   transition-property: width, height;
   transition-duration: 1s;
   transition-timing-function: ease-in-out;
+  position: relative;
+}
+
+.next-tetromino {
+  transition-property: left;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
 }
