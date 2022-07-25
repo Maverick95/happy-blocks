@@ -12,10 +12,14 @@ class NextTetrominosElement extends HTMLElement {
     this.getTetrominoBoundaries();
 
     this.attachShadow({ mode: 'open' });
-    const styles = document.createElement('link');
-    styles.setAttribute('rel', 'stylesheet');
-    styles.setAttribute('href', './src/vanilla/next-tetrominos/next-tetrominos.css');
-    this.shadowRoot.appendChild(styles);  
+    const stylesNextTetromino = document.createElement('link');
+    stylesNextTetromino.setAttribute('rel', 'stylesheet');
+    stylesNextTetromino.setAttribute('href', './src/vanilla/next-tetrominos/next-tetrominos.css');
+    this.shadowRoot.appendChild(stylesNextTetromino);
+    const stylesGameGrid = document.createElement('link');
+    stylesGameGrid.setAttribute('rel', 'stylesheet');
+    stylesGameGrid.setAttribute('href', './src/vanilla/game-grid/game-grid.css');
+    this.shadowRoot.appendChild(stylesGameGrid); 
   }
 
   updateNextTetrominos(queue) {
@@ -49,13 +53,12 @@ class NextTetrominosElement extends HTMLElement {
 
     // If new queue has not been found, id and index need storing for insertion.
     const ids_insert = queue.filter(({exists}) => !exists)
-      .map((value) => ({ id: value.id, index: value.index }));
+      .map((value) => ({ id: value.id, index: value.index, type: value.type }));
 
     // Insert all insertions.
-    ids_insert.forEach(({id, index}) => {
+    ids_insert.forEach(({id, index, type}) => {
       const next_insert = document.createElement('div');
       next_insert.id = `next-tetromino-${id}`;
-      next_insert.style.backgroundColor = "#ff0000";
       const sizePerPiece = 25, widthGap = 25;
       const left = (sizePerPiece * this.width * index) + (widthGap * index);
       next_insert.style.left = `${15 + left}px`;
@@ -63,7 +66,15 @@ class NextTetrominosElement extends HTMLElement {
       next_insert.style.position = 'absolute';
       next_insert.style.width = `${sizePerPiece * this.width}px`;
       next_insert.style.height = `${sizePerPiece * this.height}px`;
-      next_insert.textContent = `${id}`;
+      // Append the pieces.
+      const tetromino = happyblocks.tetromino(type);
+      tetromino.coordinates.forEach(({x, y}) => {
+        const next_piece = document.createElement('div');
+        next_piece.classList.add('game-piece', ...tetromino.classNames);
+        next_piece.style.left = `${(x - this.minX) * 25}px`;
+        next_piece.style.top = `${(y - this.minY) * 25}px`;
+        next_insert.appendChild(next_piece);
+      });
       container.appendChild(next_insert);
     });
 
