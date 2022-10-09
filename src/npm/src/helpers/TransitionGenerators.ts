@@ -2,7 +2,7 @@ import { Grid, UpdatePieceResult } from 'classes/Grid';
 
 type TransitionGenerator = (result: UpdatePieceResult, grid: Grid) => (element: HTMLElement) => void
 
-const transitionGeneratorGravityFalls: TransitionGenerator = (result, grid) => {
+const transitionGeneratorGravityFalls: TransitionGenerator = (result, _) => {
   const delayMsPerX = 50, durationMsPerY = 200;
   const durationMs = Math.floor(durationMsPerY * (result.to.y - result.from.y));
   const delayMs = Math.floor(delayMsPerX * result.from.x);

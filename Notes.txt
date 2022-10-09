@@ -74,3 +74,74 @@ The next session should be fairly easy. Just a matter of checking old to new,
 
 Let's put this to bed now.
 
+
+
+
+
+
+Picking this back up again after an extended period of rest.
+
+I wanted to separate out a lot of computational elements from the display elements.
+
+Does it make sense for the game computations to be tied to the game grid display?
+
+Depends what it is responsible for really.
+
+Yeah I think it makes sense for parts of it.
+
+This will be an interesting task. There's a lot to do!
+
+The biggest questions to answer really are...
+
+1) How the graphics part connects to the game management part
+(a.k.a. attribute changes, connection, disconnection)
+Can you interface the game management part?
+What doth a javascript interface?
+Nope, and if you thought about it for a moment, you'd realise you can't do it.
+This is JAVASCRIPT!
+
+It would connect straight through a private member variable.
+
+2) How the game management part communicates with the graphics part
+My idea was to have the game management part hold a reference to an HTML element,
+and fire events at it.
+WHY this way?
+a) The game management can communicate more than the graphics part chooses to handle.
+b) Less strict direct coupling.
+Give it a try why not.
+
+What does this.intervals do?
+
+gameevent
+moveleft
+moveright
+
+The game brain should contain the intervals objects, and the methods that respond to them.
+this.moveBlock('left' | 'right')
+This means as well the game brain should be hooked up to the key inputs on construction / destruction.
+Hmm Javascript doesn't have destructors.
+So you'll have to have separate methods to hook up / disconnect from the events?
+Hmm. Basically yes.
+This might not be a bad thing. You can call these methods via the connect / disconnect
+callbacks from the html element.
+This does directly bind the html to the game brain 1-1 though.
+So the html connecting / disconnecting indicates the events are hooked up. Needs to be the same.
+Once all of the attributes are set correctly, the game begins.
+So actually... the event hook-ups should happen here as well?
+Yeah it's more like a "begin-game" method.
+So all of the attribute-changed events should pass on the logic to the game brain.
+A lot of the code will just be copied-and-pasted.
+
+Okay, so each game MUST only begin and end once.
+That's fine. So connect the attribute logic.
+
+Question - should ALL instructions for changing the graphics, come straight from the game brain?
+I would prefer this.
+
+We will need width and height props in the drawing component, right?
+
+Technically I'll be honest, I don't think we need an id for each piece.
+What was the purpose of it? 
+
+
+
