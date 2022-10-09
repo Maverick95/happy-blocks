@@ -28,9 +28,113 @@ class GameCenter {
 
   #startGame() {
     if (this.#started) return;
-    if (this.#period > 0 && this.grid.getWidth() > 0 && this.grid.getHeight() > 0) {
+    if (this.#period > 0 && this.#grid.getWidth() > 0 && this.#grid.getHeight() > 0) {
       this.#setGameEventInterval(this.#period);
+      this.#addKeyEvents();
       this.#started = true;
+    }
+  }
+
+  #addKeyEvents() {
+    window.addEventListener('keydown', (event) => this.#processKeyDown(event.code));
+    window.addEventListener('keyup', (event) => this.#processKeyUp(event.code));
+  }
+
+  #removeKeyEvents() {
+    window.removeEventListener('keydown', (event) => this.#processKeyDown(event.code));
+    window.removeEventListener('keyup', (event) => this.#processKeyUp(event.code));
+  }
+
+  #processKeyDown(code) {
+    switch (code) {
+      case 'ArrowLeft': case 'KeyA':
+        {
+          if (!this.#intervals['moveleft']) {
+            this.#moveBlock('left');
+            this.#intervals['moveleft'] = setInterval(() => this.#moveBlock('left'), 150);  
+          }
+        }
+        break;
+      case 'ArrowRight': case 'KeyD':
+        {
+          if (!this.#intervals['moveright']) {
+            this.#moveBlock('right');
+            this.#intervals['moveright'] = setInterval(() => this.#moveBlock('right'), 150);  
+          }
+        }
+        break;
+      case 'ArrowDown': case 'KeyS':
+        {
+          this.#pushBlock();
+        }
+        break;
+      case 'KeyR':
+        this.#rotateBlock();
+        break;
+    }
+  };
+
+  #processKeyUp(code) {
+    switch (code) {
+      case 'ArrowLeft': case 'KeyA':
+      {
+        this.#removeIntervals('moveleft');
+      }
+      break;
+      case 'ArrowRight': case 'KeyD':
+      {
+        this.#removeIntervals('moveright');
+      }
+    }
+  }
+
+  #rotateBlock() {
+    if (this.#block !== null && !this.#block.finished) {
+      const rotated = happyblocks.rotate(this.#block, this.#grid);
+      // update this.grid
+      this.#block.coordinates.forEach(coordinate =>
+        this.#grid.clearSpace(this.#block.x + coordinate.x, this.#block.y + coordinate.y));
+      rotated.coordinates.forEach(coordinate =>
+        this.#grid.setSpace(coordinate.id, rotated.x + coordinate.x, rotated.y + coordinate.y));
+      this.#block = rotated;
+      const detail = rotated.coordinates.map(coordinate => ({
+        id: coordinate.id,
+        x: rotated.x + coordinate.x,
+        y: rotated.y + coordinate.y,
+      }));
+      const event = new CustomEvent('movepieces',
+      {
+        detail,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      this.#target.dispatchEvent(event);
+    }
+  }
+
+  #pushBlock() {
+    if (this.#block !== null && !this.#block.finished) {
+      const pushed = happyblocks.push(this.#block, this.#grid);
+      // update this.grid
+      this.#block.coordinates.forEach(coordinate =>
+        this.#grid.clearSpace(this.#block.x + coordinate.x, this.#block.y + coordinate.y));
+      pushed.coordinates.forEach(coordinate =>
+        this.#grid.setSpace(coordinate.id, pushed.x + coordinate.x, pushed.y + coordinate.y));
+      this.#block = pushed;
+      const detail = pushed.coordinates.map(coordinate => ({
+        id: coordinate.id,
+        x: pushed.x + coordinate.x,
+        y: pushed.y + coordinate.y,
+      }));
+      const event = new CustomEvent('movepieces',
+      {
+        detail,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      this.#target.dispatchEvent(event);
     }
   }
 
@@ -45,10 +149,16 @@ class GameCenter {
       }
     }
     let nextTetrominos = happyblocks.translator.encode(this.#nextTetrominos);
-    this.#target.dispatchEvent('nexttetrominos', { tetrominos: nextTetrominos });
+    const event = new CustomEvent('nexttetrominos',
+    {
+      detail: { tetrominos: nextTetrominos },
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    });
+    this.#target.dispatchEvent(event);
   }
 
-  
   #getNextTetromino() {
     let next = this.#nextTetrominos.length > 0 ? this.#nextTetrominos.shift().type : this.#randomizer.next();
     this.#updateNextTetrominos();
@@ -133,7 +243,8 @@ class GameCenter {
     }
     else if (this.#block.finished) {
       const gameEnd = this.#block.coordinates.some(coordinate => this.#block.y + coordinate.y < 0);
-      if (gameEnd) {
+      if (gameEnd) { 
+        this.#removeKeyEvents();
         this.#removeIntervals('gameevent');
         const event = new CustomEvent('gameover',
         {
@@ -186,7 +297,7 @@ class GameCenter {
   }
 
   #removeRowsEvent(result) {
-    const animationDurationMs = 1000, additionalWaitMs = 500;
+    const animationDurationMs = 2000, additionalWaitMs = 500;
     const gameEventTimeoutMs = animationDurationMs + additionalWaitMs;
     const detail_completeRows = result.delete.map(value => value.y)
           .sort((a, b) => b - a)
@@ -194,7 +305,7 @@ class GameCenter {
     const detail = {
       completeRows: detail_completeRows, 
       delete: result.delete.map(coordinate => coordinate.id),
-      update: result.update.map(update => update.to),
+      update: result.update,
     };
     
     setTimeout(() => {
@@ -217,7 +328,7 @@ class GameCenter {
     this.#removeIntervals('gameevent');
     if (delay) {
       this.#timeout = setTimeout(() => {
-        this.#gameEvent(); // Required
+        this.#gameEvent();
         this.#intervals['gameevent'] = setInterval(() => this.#gameEvent(), period);
       }, delay);
     }
@@ -298,7 +409,7 @@ class GameCenter {
 
 }
 
-class GameGridElement extends HTMLElement {
+class GameGridProposedElement extends HTMLElement {
 
   static get observedAttributes() {
     return [
@@ -314,6 +425,7 @@ class GameGridElement extends HTMLElement {
   #pieces;
   #delete;
   #rows_complete;
+  #center;
 
   constructor() {
 
@@ -325,12 +437,7 @@ class GameGridElement extends HTMLElement {
     this.#delete = [];
     this.#rows_complete = [];
 
-    this.tetrominoId = this.period = this.timeout = 0;
-    this.intervals = {};
-    this.nextTetrominos = [];
-    this.nextTetrominoCount = 0;
-
-    this.center = new GameCenter(this);
+    this.#center = new GameCenter(this);
 
     this.attachShadow({ mode: 'open' });
 
@@ -342,13 +449,13 @@ class GameGridElement extends HTMLElement {
     this.addEventListener('setwidth', ({detail}) => {
       this.#width = detail;
       // Remove pieces outside the width?
-      this.isConnected && this.drawGrid();
+      this.isConnected && this.#drawGrid();
     });
 
     this.addEventListener('setheight', ({detail}) => {
       this.#height = detail;
       // Remove pieces outside the height?
-      this.isConnected && this.drawGrid();
+      this.isConnected && this.#drawGrid();
     });
 
     this.addEventListener('addpieces', ({detail}) => {
@@ -367,7 +474,7 @@ class GameGridElement extends HTMLElement {
         this.#pieces[piece.id].x = piece.x;
         this.#pieces[piece.id].y = piece.y;
       });
-      this.isConnected && this.drawGrid();
+      this.isConnected && this.#drawGrid();
     });
 
     this.addEventListener('completerows', ({detail}) => {
@@ -377,9 +484,9 @@ class GameGridElement extends HTMLElement {
         element.id = `row-complete-${row}`;
         element.style.position = 'absolute';
         element.style.top = `${row * 25}px`;
-        element.style.width = `${this.grid.getWidth() * 25}px`;
+        element.style.width = `${this.#width * 25}px`;
         element.style.height = '25px';
-        element.style.animation = `${animationDurationMs / 7}ms linear 0s infinite alternate forwards running bomberguy`;
+        element.style.animation = `200ms linear 0s infinite alternate forwards running bomberguy`;
         element.style.zIndex = '5';
         element.style.backgroundColor = 'black';
         container.appendChild(element);
@@ -396,104 +503,44 @@ class GameGridElement extends HTMLElement {
       }
       // Delete pieces.
       this.#delete.push(...detail.delete);
+      detail.delete.forEach(id => delete this.#pieces[id]);
       // Update pieces.
       detail.update.forEach(value => {
         const transition = happyblocks.transitions['gravity-falls'](value);
         const grid_piece = this.shadowRoot.getElementById(`game-piece-${value.to.id}`);
         transition(grid_piece);
+        this.#pieces[value.to.id].x = value.to.x;
+        this.#pieces[value.to.id].y = value.to.y;
       });
-      this.dispatchEvent('rowscompleted', { pieces: result.completeRows.length });
+      this.#processEvent('rowscompleted', { pieces: detail.completeRows.length });
+      this.#drawGrid();
     });
 
   }
 
   connectedCallback() {
-    const content = document.getElementById('game-grid').content.cloneNode(true);
+    const content = document.getElementById('game-grid-proposed').content.cloneNode(true);
     this.shadowRoot.appendChild(content);
-    window.addEventListener('keydown', (event) => this.processKeyDown(event.code));
-    window.addEventListener('keyup', (event) => this.processKeyUp(event.code));
-    this.drawGrid();
+    this.#drawGrid();
   }
 
   disconnectedCallBack() {
-    this.removeIntervals('moveleft', 'moveright', 'gameevent');
-    window.removeEventListener('keydown', (event) => this.processKeyDown(event.code));
-    window.removeEventListener('keyup', (event) => this.processKeyUp(event.code));
+    // These need to filter down into the game brain.
+    // this.removeIntervals('moveleft', 'moveright', 'gameevent');
+    // Probably should also disconnect events from the game brain class.
   }
 
-  processKeyUp(code) {
-    switch (code) {
-      case 'ArrowLeft': case 'KeyA':
-      {
-        this.removeIntervals('moveleft');
-      }
-      break;
-      case 'ArrowRight': case 'KeyD':
-      {
-        this.removeIntervals('moveright');
-      }
-    }
-  }
-
-  processKeyDown(code) {
-    switch (code) {
-      case 'ArrowLeft': case 'KeyA':
-        {
-          if (!this.intervals['moveleft']) {
-            this.moveBlock('left');
-            this.intervals['moveleft'] = setInterval(() => this.moveBlock('left'), 150);  
-          }
-        }
-        break;
-      case 'ArrowRight': case 'KeyD':
-        {
-          if (!this.intervals['moveright']) {
-            this.moveBlock('right');
-            this.intervals['moveright'] = setInterval(() => this.moveBlock('right'), 150);  
-          }
-        }
-        break;
-      case 'ArrowDown': case 'KeyS':
-        {
-          this.pushBlock();
-        }
-        break;
-      case 'KeyR':
-        this.rotateBlock();
-        break;
-    }
-  };
-
-  rotateBlock() {
-    if (this.block !== null && !this.block.finished) {
-      const rotated = happyblocks.rotate(this.block, this.grid);
-      // update this.grid
-      this.block.coordinates.forEach(coordinate =>
-        this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
-      rotated.coordinates.forEach(coordinate => {
-        this.grid.setSpace(coordinate.id, rotated.x + coordinate.x, rotated.y + coordinate.y);
-        // update this.pieces
-        this.pieces[coordinate.id].x = rotated.x + coordinate.x;
-        this.pieces[coordinate.id].y = rotated.y + coordinate.y;
-      });
-      // set this.block
-      this.block = rotated;
-      this.drawGrid();
-    }
-  }
-
-
-  drawGrid() {
+  #drawGrid() {
     const container = this.shadowRoot.getElementById('grid-container');
     container.style.width = `${this.#width * 25}px`;
     container.style.height = `${this.#height * 25}px`;
-    for (let id of this.delete) {
+    for (let id of this.#delete) {
       const grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
       grid_piece.remove();
     };
-    this.delete = [];
-    for (let id of Object.keys(this.pieces)) {
-      const piece = this.pieces[id];
+    this.#delete = [];
+    for (let id of Object.keys(this.#pieces)) {
+      const piece = this.#pieces[id];
       let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
       if (grid_piece) {
         grid_piece.style.left = `${piece.x * 25}px`;
@@ -515,72 +562,25 @@ class GameGridElement extends HTMLElement {
   }
 
   attributeChangedCallback(attrName, _, newVal) {
-    this.center.updateAttribute(attrName, newVal);
-  }
-
-  getNextTetromino() {
-    let next = this.nextTetrominos.length > 0 ? this.nextTetrominos.shift().type : this.randomizer.next();
-    this.updateNextTetrominos();
-    return next;
-  }
-
-
-  pushBlock() {
-    if (this.block !== null && !this.block.finished) {
-      const pushed = happyblocks.push(this.block, this.grid);
-      // update this.grid
-      this.block.coordinates.forEach(coordinate =>
-        this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
-      pushed.coordinates.forEach(coordinate => {
-        this.grid.setSpace(coordinate.id, pushed.x + coordinate.x, pushed.y + coordinate.y);
-      // update this.pieces
-      this.pieces[coordinate.id].x = pushed.x + coordinate.x;
-      this.pieces[coordinate.id].y = pushed.y + coordinate.y;
-      });
-      // set this.block
-      this.block = pushed;
-      this.drawGrid();
+    switch (attrName) {
+      case 'width':
+        this.#center.updateWidth(newVal);
+        break;
+      case 'height':
+        this.#center.updateHeight(newVal);
+        break;
+      case 'period':
+        this.#center.updatePeriod(newVal);
+        break;
+      case 'next-tetromino-count':
+        this.#center.updateNextTetrominoCount(newVal);
+        break;
+      default:
+        throw new Error('Invalid attribute');
     }
   }
 
-  moveBlock(direction) {
-    if (this.block !== null && !this.block.finished) {
-      const moved = happyblocks.move(this.block, this.grid, direction);
-      if (moved !== null) {
-        // update this.grid
-        this.block.coordinates.forEach(coordinate =>
-          this.grid.clearSpace(this.block.x + coordinate.x, this.block.y + coordinate.y));
-        moved.coordinates.forEach(coordinate => {
-          this.grid.setSpace(coordinate.id, moved.x + coordinate.x, moved.y + coordinate.y);
-          // update this.pieces
-          this.pieces[coordinate.id].x = moved.x + coordinate.x;
-          this.pieces[coordinate.id].y = moved.y + coordinate.y;
-        });
-        // set this.block
-        this.block = moved;
-        this.drawGrid();
-      }
-      else {
-        return true;
-      }
-    }
-  }
-
-  animateDeleteRows(result) {
-    
-    
-
-    /*
-      // This is the previous code, need to retain / translate across to the graphics display.
-      animations.forEach(element => element.remove());
-      this.dispatchEvent('rowscompleted', { pieces: result.delete.length });
-      this.drawGrid();
-      this.setGameEventInterval(this.period);
-      */
-
-  }
-
-  dispatchEvent(type, detail) {
+  #processEvent(type, detail) {
     const container = this.shadowRoot.getElementById('grid-container');
     const evtScoreIncrease = new CustomEvent(type, {
       detail,
@@ -591,84 +591,6 @@ class GameGridElement extends HTMLElement {
     container.dispatchEvent(evtScoreIncrease);
   }
 
-  removeIntervals(...intervals) {
-    intervals.forEach(i => {
-      if (this.intervals[i]) {
-        clearInterval(this.intervals[i]);
-        this.intervals[i] = 0;
-      }
-      if (i === 'gameevent' && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = 0;
-      }
-    });
-  }
-
-  setGameEventInterval(period, delay = 0) {
-    this.removeIntervals('gameevent');
-    if (delay) {
-      this.timeout = setTimeout(() => {
-        this.gameEvent();
-        this.intervals['gameevent'] = setInterval(() => this.gameEvent(), period);
-      }, delay);
-    }
-    else {
-      this.intervals['gameevent'] = setInterval(() => this.gameEvent(), period);
-    }
-  }
-
-  gameEvent() {
-
-    if (this.block === null) {
-      const next = this.getNextTetromino();
-      this.setNewBlock(next);
-    }
-    else if (this.block.finished) {
-      const gameEnd = this.block.coordinates.some(coordinate => this.block.y + coordinate.y < 0);
-      if (gameEnd) {
-        this.removeIntervals('gameevent');
-        this.dispatchEvent('gameover')
-      }
-      else {
-        const next = this.getNextTetromino();
-        this.setNewBlock(next);
-      }
-    }
-    else if (this.moveBlock('down')) {
-      this.removeIntervals('moveleft', 'moveright');
-      this.block.finished = true;
-      const rowsOccupied = this.block.coordinates
-        .map(coordinate => this.block.y + coordinate.y)
-        .filter(row => this.grid.getOccupiedForRow(row) === this.grid.getWidth());
-      if (rowsOccupied.length) {
-        this.removeIntervals('gameevent');
-        const result = this.grid.deleteRows(rowsOccupied);
-        result.delete.forEach(value => {
-          delete this.pieces[value.id];
-        });
-        result.update.forEach(value => {
-          this.pieces[value.to.id].x = value.to.x;
-          this.pieces[value.to.id].y = value.to.y;
-        });
-        this.block.coordinates = this.block.coordinates.filter(coordinate =>
-          !result.delete.includes(coordinate.id)
-        ).map(coordinate => {
-          const update = result.update.find(value => value.to.id === coordinate.id);
-          if (update) {
-            coordinate.x = update.to.x;
-            coordinate.y = update.to.y;
-          }
-          return coordinate;
-        });
-        this.delete = result.delete.map(value => value.id);
-        this.animateDeleteRows(result);
-        return;
-      }
-    }
-
-    this.drawGrid();
-  }
-
 }
 
-window.customElements.define('game-grid', GameGridElement);
+window.customElements.define('game-grid-proposed', GameGridProposedElement);

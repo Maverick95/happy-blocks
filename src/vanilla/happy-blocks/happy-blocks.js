@@ -22,7 +22,7 @@ class HappyBlocksElement extends HTMLElement {
     casinoScore.setAttribute('score', `${this.score}`);
     casinoScore.setAttribute('max-power', '4');
 
-    const gameGrid = document.createElement('game-grid');
+    const gameGrid = document.createElement('game-grid-proposed');
     gameGrid.setAttribute('width', '10');
     gameGrid.setAttribute('height', '20');
     gameGrid.setAttribute('period', '150');
