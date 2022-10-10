@@ -143,5 +143,5 @@ We will need width and height props in the drawing component, right?
 Technically I'll be honest, I don't think we need an id for each piece.
 What was the purpose of it? 
 
-
-
+Can add in an extra feature now quite easily... the pause functionality.
+Couple of bugs in here.

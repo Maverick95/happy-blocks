@@ -12,6 +12,7 @@ class GameCenter {
   #intervals;
   #timeout;
   #block;
+  #paused;
 
   constructor(target) {
     this.#target = target;
@@ -24,6 +25,7 @@ class GameCenter {
     this.#intervals = {};
     this.#timeout = 0;
     this.#block = null;
+    this.#paused = false;
   }
 
   #startGame() {
@@ -33,6 +35,11 @@ class GameCenter {
       this.#addKeyEvents();
       this.#started = true;
     }
+  }
+
+  #togglePause() {
+    this.#paused = !this.#paused;
+    console.log(`Paused status - ${this.#paused}`);
   }
 
   #addKeyEvents() {
@@ -49,7 +56,7 @@ class GameCenter {
     switch (code) {
       case 'ArrowLeft': case 'KeyA':
         {
-          if (!this.#intervals['moveleft']) {
+          if (!this.#paused && !this.#intervals['moveleft']) {
             this.#moveBlock('left');
             this.#intervals['moveleft'] = setInterval(() => this.#moveBlock('left'), 150);  
           }
@@ -57,19 +64,20 @@ class GameCenter {
         break;
       case 'ArrowRight': case 'KeyD':
         {
-          if (!this.#intervals['moveright']) {
+          if (!this.#paused && !this.#intervals['moveright']) {
             this.#moveBlock('right');
             this.#intervals['moveright'] = setInterval(() => this.#moveBlock('right'), 150);  
           }
         }
         break;
       case 'ArrowDown': case 'KeyS':
-        {
-          this.#pushBlock();
-        }
+        !this.#paused && this.#pushBlock();
         break;
       case 'KeyR':
-        this.#rotateBlock();
+        !this.#paused && this.#rotateBlock();
+        break;
+      case 'KeyP':
+        this.#togglePause();
         break;
     }
   };
@@ -236,7 +244,7 @@ class GameCenter {
   }
 
   #gameEvent() {
-
+    if (this.#paused) { return; }
     if (this.#block === null) {
       const next = this.#getNextTetromino();
       this.#setNewBlock(next);
