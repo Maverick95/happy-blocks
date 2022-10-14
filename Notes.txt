@@ -145,3 +145,4 @@ What was the purpose of it?
 
 Can add in an extra feature now quite easily... the pause functionality.
 Couple of bugs in here.
+You've gone for the simplest approach... is there a more efficient way?

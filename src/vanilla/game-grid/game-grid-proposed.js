@@ -37,10 +37,7 @@ class GameCenter {
     }
   }
 
-  #togglePause() {
-    this.#paused = !this.#paused;
-    console.log(`Paused status - ${this.#paused}`);
-  }
+  #togglePause() { this.#paused = !this.#paused; }
 
   #addKeyEvents() {
     window.addEventListener('keydown', (event) => this.#processKeyDown(event.code));
