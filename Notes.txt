@@ -135,14 +135,30 @@ A lot of the code will just be copied-and-pasted.
 Okay, so each game MUST only begin and end once.
 That's fine. So connect the attribute logic.
 
-Question - should ALL instructions for changing the graphics, come straight from the game brain?
-I would prefer this.
+What feature / improvement next?
 
-We will need width and height props in the drawing component, right?
+At the very start, the display pieces shift their position along with the black box.
 
-Technically I'll be honest, I don't think we need an id for each piece.
-What was the purpose of it? 
+Looks to me like a transform on the whole thing.
 
-Can add in an extra feature now quite easily... the pause functionality.
-Couple of bugs in here.
-You've gone for the simplest approach... is there a more efficient way?
+Issue is, because you have absolutes on the piece elements (because you want the
+nice slide effect), this means simply putting a transform on a container element won't work.
+
+You need an individual transformation on each individual sub-element.
+You also only need to place this on the 1st set of pieces displayed.
+Can the 2nd part be done?
+
+I forgot that absolute elements can have their left/top set as %s.
+Hmm.
+Might this be better?
+It would be a better general fix.
+So how can we do this?
+
+Only problem would be... EVERYTHING would have to be in %s.
+
+TODO : put another element around this one to give the border and padding.
+Otherwise calculating %s gets waaay too confusing.
+
+
+
+

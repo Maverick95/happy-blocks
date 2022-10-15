@@ -1,6 +1,6 @@
 #next-tetrominos-container {
   box-sizing: content-box;
-  padding: 15px;
+  /*padding: 15px;*/
   background-color: black;
   border-radius: 15px;
   transition-property: width, height;
@@ -10,6 +10,7 @@
 }
 
 .next-tetromino {
+  position: absolute;
   transition-property: left;
   transition-duration: 1s;
   transition-timing-function: ease-in-out;

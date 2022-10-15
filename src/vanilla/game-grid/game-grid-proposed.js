@@ -471,7 +471,7 @@ class GameGridProposedElement extends HTMLElement {
           y: piece.y,
         };
       });
-      // Do we draw grid now??
+      this.isConnected && this.#drawGrid();
     });
 
     this.addEventListener('movepieces', ({detail}) => {
