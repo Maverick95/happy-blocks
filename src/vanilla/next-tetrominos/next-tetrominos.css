@@ -13,4 +13,14 @@
   transition-property: left;
   transition-duration: 1s;
   transition-timing-function: ease-in-out;
+  animation: 500ms ease-in-out 1s 1 normal backwards running next-tetromino-appearance;
+}
+
+@keyframes next-tetromino-appearance {
+  from {
+    transform: scaleX(0) scaleY(0);
+  }
+  to {
+    transform: scaleX(1) scaleY(1);
+  }
 }
