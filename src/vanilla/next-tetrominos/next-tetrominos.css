@@ -18,9 +18,9 @@
 
 @keyframes next-tetromino-appearance {
   from {
-    transform: scaleX(0) scaleY(0);
+    transform: scale(0, 0);
   }
   to {
-    transform: scaleX(1) scaleY(1);
+    transform: scale(1, 1);
   }
 }

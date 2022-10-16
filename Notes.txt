@@ -137,7 +137,12 @@ That's fine. So connect the attribute logic.
 
 What feature / improvement next?
 
-When a piece appears on next-tetrominos, it expands out from a central square.
+The projection of the current piece onto the "bottom" of the grid.
+
+The information for this should be supplied via the game brain.
+
+At the very least, the "bottom" is just a y-offset (could be 0).
+
 
 
 
