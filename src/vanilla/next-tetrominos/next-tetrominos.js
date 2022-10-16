@@ -14,6 +14,7 @@ class NextTetrominosElement extends HTMLElement {
     // TODO - display settings.
     this.sizePerPiece = 25;
     this.widthGap = 25;
+    this.padding = 15;
 
     this.attachShadow({ mode: 'open' });
     const stylesNextTetromino = document.createElement('link');
@@ -159,20 +160,21 @@ class NextTetrominosElement extends HTMLElement {
 
   #getTetrominoDimensions(index) {
     
-    const leftOffset = 0;
-    const pxLeft = leftOffset + (this.sizePerPiece * this.width * index) + (this.widthGap * index);
+    const pxLeft = this.padding + (this.sizePerPiece * this.width * index) + (this.widthGap * index);
+    const pxTop = this.padding;
     const pxWidth = this.sizePerPiece * this.width;
     const pxHeight = this.sizePerPiece * this.height;
 
     const [width, height] = this.getSize();
 
     const percLeft = width === 0 ? 0 : Math.round(100 * pxLeft / width);
+    const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
     const percWidth = width === 0 ? 0 : Math.round(100 * pxWidth / width);
     const percHeight = height === 0 ? 0 : Math.round(100 * pxHeight / height);
     
     return ({
       left: `${percLeft}%`,
-      top: '0%',
+      top: `${percTop}%`,
       width: `${percWidth}%`,
       height: `${percHeight}%`,
     });
@@ -180,8 +182,8 @@ class NextTetrominosElement extends HTMLElement {
 
   getSize() {
     const tetrominos = Math.max(this.nextTetrominos.length, 1);
-    const width = (this.sizePerPiece * this.width * tetrominos) + (this.widthGap * (tetrominos - 1));
-    const height = (this.sizePerPiece * this.height);
+    const width = (2 * this.padding) + (this.sizePerPiece * this.width * tetrominos) + (this.widthGap * (tetrominos - 1));
+    const height = (2 * this.padding) + (this.sizePerPiece * this.height);
     return [width, height];
   }
 
@@ -191,6 +193,7 @@ class NextTetrominosElement extends HTMLElement {
     const [width, height] = this.getSize();
     container.style.width = `${width}px`;
     container.style.height = `${height}px`;
+    container.style.padding = `${this.padding}px`;
     this.shadowRoot.appendChild(container);
   }
 
