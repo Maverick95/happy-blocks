@@ -253,17 +253,24 @@ class GameCenter {
       this.#setNewBlock(next);
     }
     else if (this.#block.finished) {
+      const eventStopPieces = new CustomEvent('stoppieces',
+      {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      this.#target.dispatchEvent(eventStopPieces);
       const gameEnd = this.#block.coordinates.some(coordinate => this.#block.y + coordinate.y < 0);
       if (gameEnd) { 
         this.#removeKeyEvents();
         this.#removeIntervals('gameevent');
-        const event = new CustomEvent('gameover',
+        const eventGameOver = new CustomEvent('gameover',
         {
           bubbles: true,
           cancelable: true,
           composed: true,
         });
-        this.#target.dispatchEvent(event);
+        this.#target.dispatchEvent(eventGameOver);
       }
       else {
         const next = this.#getNextTetromino();
