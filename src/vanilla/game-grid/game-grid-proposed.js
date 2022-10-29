@@ -96,20 +96,22 @@ class GameCenter {
   #rotateBlock() {
     if (this.#block !== null && !this.#block.finished) {
       const rotated = happyblocks.rotate(this.#block, this.#grid);
+      const rotated_stabilizers = happyblocks.push(rotated, this.#grid);
+      const stablizers_offset = rotated_stabilizers.y - rotated.y;
       // update this.grid
       this.#block.coordinates.forEach(coordinate =>
         this.#grid.clearSpace(this.#block.x + coordinate.x, this.#block.y + coordinate.y));
       rotated.coordinates.forEach(coordinate =>
         this.#grid.setSpace(coordinate.id, rotated.x + coordinate.x, rotated.y + coordinate.y));
       this.#block = rotated;
-      const detail = rotated.coordinates.map(coordinate => ({
+      const pieces = rotated.coordinates.map(coordinate => ({
         id: coordinate.id,
         x: rotated.x + coordinate.x,
         y: rotated.y + coordinate.y,
       }));
       const event = new CustomEvent('movepieces',
       {
-        detail,
+        detail: { pieces, stabilizers: { offset: stablizers_offset } },
         bubbles: true,
         cancelable: true,
         composed: true,
@@ -127,14 +129,14 @@ class GameCenter {
       pushed.coordinates.forEach(coordinate =>
         this.#grid.setSpace(coordinate.id, pushed.x + coordinate.x, pushed.y + coordinate.y));
       this.#block = pushed;
-      const detail = pushed.coordinates.map(coordinate => ({
+      const pieces = pushed.coordinates.map(coordinate => ({
         id: coordinate.id,
         x: pushed.x + coordinate.x,
         y: pushed.y + coordinate.y,
       }));
       const event = new CustomEvent('movepieces',
       {
-        detail,
+        detail: { pieces, stabilizers: { offset: 0 } },
         bubbles: true,
         cancelable: true,
         composed: true,
@@ -172,6 +174,8 @@ class GameCenter {
 
   #setNewBlock(type) {
     const block = happyblocks.new(type, this.#grid);
+    const block_stabilizers = happyblocks.push(block, this.#grid);
+    const stabilizers_offset = block_stabilizers.y - block.y;
     const pieces = [];
     block.coordinates.forEach(coordinate => {
       // Set new id.
@@ -198,7 +202,7 @@ class GameCenter {
     const event = new CustomEvent(
       'addpieces',
       {
-        detail: pieces,
+        detail: { pieces, stabilizers: { offset: stabilizers_offset } },
         bubbles: true,
         cancelable: true,
         composed: true,
@@ -212,6 +216,8 @@ class GameCenter {
       const moved = happyblocks.move(this.#block, this.#grid, direction);
       const pieces = [];
       if (moved !== null) {
+        const moved_stabilizers = happyblocks.push(moved, this.#grid);
+        const stablilizers_offset = moved_stabilizers.y - moved.y;
         // update this.grid
         this.#block.coordinates.forEach(coordinate =>
           this.#grid.clearSpace(this.#block.x + coordinate.x, this.#block.y + coordinate.y));
@@ -226,7 +232,7 @@ class GameCenter {
         const event = new CustomEvent(
           'movepieces',
           {
-            detail: pieces,
+            detail: { pieces, stabilizers: { offset: stablilizers_offset } },
             bubbles: true,
             cancelable: true,
             composed: true,
@@ -464,21 +470,25 @@ class GameGridProposedElement extends HTMLElement {
     });
 
     this.addEventListener('addpieces', ({detail}) => {
-      detail.forEach(piece => {
+      const { pieces, stabilizers } = detail;
+      pieces.forEach(piece => {
         this.#pieces[piece.id] = {
           type: piece.type,
           x: piece.x,
           y: piece.y,
         };
       });
+      console.log(`Offset found! ${stabilizers.offset}`);
       this.isConnected && this.#drawGrid();
     });
 
     this.addEventListener('movepieces', ({detail}) => {
-      detail.forEach(piece => {
+      const { pieces, stabilizers } = detail;
+      pieces.forEach(piece => {
         this.#pieces[piece.id].x = piece.x;
         this.#pieces[piece.id].y = piece.y;
       });
+      console.log(`Offset found! ${stabilizers.offset}`);
       this.isConnected && this.#drawGrid();
     });
 
