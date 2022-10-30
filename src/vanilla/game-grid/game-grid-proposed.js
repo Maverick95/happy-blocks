@@ -483,14 +483,24 @@ class GameGridProposedElement extends HTMLElement {
     this.addEventListener('addpieces', ({detail}) => {
       const { pieces, stabilizers } = detail;
       pieces.forEach(piece => {
-        this.#pieces[piece.id] = {
+        const pieceCurrent = this.#pieces[piece.id];
+        const pieceNew = {
           type: piece.type,
           x: piece.x,
           y: piece.y,
         };
-        this.#pieces_stabilizers[piece.id] = {
+        this.#pieces[piece.id] = {
+          ...pieceCurrent,
+          ...pieceNew,
+        };
+        const stabilizerCurrent = this.#pieces_stabilizers[piece.id];
+        const stabilizerNew = {
           x: piece.x,
           y: piece.y + stabilizers.offset,
+        };
+        this.#pieces_stabilizers[piece.id] = {
+          ...stabilizerCurrent,
+          ...stabilizerNew,
         };
       });
       this.isConnected && this.#drawGrid();
@@ -499,18 +509,32 @@ class GameGridProposedElement extends HTMLElement {
     this.addEventListener('movepieces', ({detail}) => {
       const { pieces, stabilizers } = detail;
       pieces.forEach(piece => {
-        this.#pieces[piece.id].x = piece.x;
-        this.#pieces[piece.id].y = piece.y;
-        this.#pieces_stabilizers[piece.id].x = piece.x;
-        this.#pieces_stabilizers[piece.id].y = piece.y + stabilizers.offset;
+        const pieceCurrent = this.#pieces[piece.id];
+        const pieceNew = {
+          x: piece.x,
+          y: piece.y,
+        };
+        this.#pieces[piece.id] = {
+          ...pieceCurrent,
+          ...pieceNew,
+        };
+        const stabilizerCurrent = this.#pieces_stabilizers[piece.id];
+        const stabilizerNew = {
+          x: piece.x,
+          y: piece.y + stabilizers.offset,
+        };
+        this.#pieces_stabilizers[piece.id] = {
+          ...stabilizerCurrent,
+          ...stabilizerNew,
+        };
       });
       this.isConnected && this.#drawGrid();
     });
 
     this.addEventListener('stoppieces', () => {
-      for (let id of Object.keys(this.#pieces_stabilizers)) {
-        this.#delete_stabilizers.push(parseInt(id));
-      }
+      this.#delete_stabilizers.push(
+        ...Object.keys(this.#pieces_stabilizers).map(id => parseInt(id))
+      );
       this.#pieces_stabilizers = {};
       this.isConnected && this.#drawGrid();
     });
