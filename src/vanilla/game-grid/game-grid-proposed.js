@@ -493,16 +493,19 @@ class GameGridProposedElement extends HTMLElement {
           ...pieceCurrent,
           ...pieceNew,
         };
-        const stabilizerCurrent = this.#pieces_stabilizers[piece.id];
-        const stabilizerNew = {
-          x: piece.x,
-          y: piece.y + stabilizers.offset,
-        };
-        this.#pieces_stabilizers[piece.id] = {
-          ...stabilizerCurrent,
-          ...stabilizerNew,
-        };
       });
+      pieces.filter(piece => piece.y + stabilizers.offset >= 0)
+        .forEach(piece => {
+          const stabilizerCurrent = this.#pieces_stabilizers[piece.id];
+          const stabilizerNew = {
+            x: piece.x,
+            y: piece.y + stabilizers.offset,
+          };
+          this.#pieces_stabilizers[piece.id] = {
+            ...stabilizerCurrent,
+            ...stabilizerNew,
+          };
+        });
       this.isConnected && this.#drawGrid();
     });
 
@@ -518,16 +521,19 @@ class GameGridProposedElement extends HTMLElement {
           ...pieceCurrent,
           ...pieceNew,
         };
-        const stabilizerCurrent = this.#pieces_stabilizers[piece.id];
-        const stabilizerNew = {
-          x: piece.x,
-          y: piece.y + stabilizers.offset,
-        };
-        this.#pieces_stabilizers[piece.id] = {
-          ...stabilizerCurrent,
-          ...stabilizerNew,
-        };
       });
+      pieces.filter(piece => piece.y + stabilizers.offset >= 0)
+        .forEach(piece => {
+          const stabilizerCurrent = this.#pieces_stabilizers[piece.id];
+          const stabilizerNew = {
+            x: piece.x,
+            y: piece.y + stabilizers.offset,
+          };
+          this.#pieces_stabilizers[piece.id] = {
+            ...stabilizerCurrent,
+            ...stabilizerNew,
+          };
+        });
       this.isConnected && this.#drawGrid();
     });
 
