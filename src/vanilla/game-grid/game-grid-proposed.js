@@ -13,6 +13,8 @@ class GameCenter {
   #timeout;
   #block;
   #paused;
+  #support_count;
+  #support_count_limit;
 
   constructor(target) {
     this.#target = target;
@@ -26,6 +28,8 @@ class GameCenter {
     this.#timeout = 0;
     this.#block = null;
     this.#paused = false;
+    this.#support_count = 0;
+    this.#support_count_limit = 5;
   }
 
   #startGame() {
@@ -142,6 +146,7 @@ class GameCenter {
         composed: true,
       });
       this.#target.dispatchEvent(event);
+      this.#support_count = this.#support_count_limit;
     }
   }
 
@@ -268,49 +273,55 @@ class GameCenter {
       else {
         const next = this.#getNextTetromino();
         this.#setNewBlock(next);
+        this.#support_count = 0;
       }
     }
     else if (this.#moveBlock('down')) {
-      this.#removeIntervals('moveleft', 'moveright');
-      this.#block.finished = true;
-      const eventStopPieces = new CustomEvent('stoppieces',
-      {
-        bubbles: true,
-        cancelable: true,
-        composed: true,
-      });
-      this.#target.dispatchEvent(eventStopPieces);
-      const rowsOccupied = this.#block.coordinates
-        .map(coordinate => this.#block.y + coordinate.y)
-        .filter(row => this.#grid.getOccupiedForRow(row) === this.#grid.getWidth());
-      if (rowsOccupied.length) {
-        this.#removeIntervals('gameevent');
-        const result = this.#grid.deleteRows(rowsOccupied);
-        // 'completerows' event required.
-        const detail_completerows = result.delete.map(value => value.y)
-          .sort((a, b) => b - a)
-          .filter((value, index, array) => index === 0 || value !== array[index - 1]);
-        const event_completerows = new CustomEvent('completerows',
+      if (++this.#support_count >= this.#support_count_limit) {
+        this.#removeIntervals('moveleft', 'moveright');
+        this.#block.finished = true;
+        const eventStopPieces = new CustomEvent('stoppieces',
         {
-          detail: detail_completerows,
           bubbles: true,
           cancelable: true,
           composed: true,
         });
-        this.#target.dispatchEvent(event_completerows);
-        this.#block.coordinates = this.#block.coordinates.filter(coordinate =>
-          !result.delete.includes(coordinate.id)
-        ).map(coordinate => {
-          const update = result.update.find(value => value.to.id === coordinate.id);
-          if (update) {
-            coordinate.x = update.to.x;
-            coordinate.y = update.to.y;
-          }
-          return coordinate;
-        });
-        this.#removeRowsEvent(result);
-        return;
+        this.#target.dispatchEvent(eventStopPieces);
+        const rowsOccupied = this.#block.coordinates
+          .map(coordinate => this.#block.y + coordinate.y)
+          .filter(row => this.#grid.getOccupiedForRow(row) === this.#grid.getWidth());
+        if (rowsOccupied.length) {
+          this.#removeIntervals('gameevent');
+          const result = this.#grid.deleteRows(rowsOccupied);
+          // 'completerows' event required.
+          const detail_completerows = result.delete.map(value => value.y)
+            .sort((a, b) => b - a)
+            .filter((value, index, array) => index === 0 || value !== array[index - 1]);
+          const event_completerows = new CustomEvent('completerows',
+          {
+            detail: detail_completerows,
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+          });
+          this.#target.dispatchEvent(event_completerows);
+          this.#block.coordinates = this.#block.coordinates.filter(coordinate =>
+            !result.delete.includes(coordinate.id)
+          ).map(coordinate => {
+            const update = result.update.find(value => value.to.id === coordinate.id);
+            if (update) {
+              coordinate.x = update.to.x;
+              coordinate.y = update.to.y;
+            }
+            return coordinate;
+          });
+          this.#removeRowsEvent(result);
+          return;
+        }
       }
+    }
+    else {
+      this.#support_count = 0;
     }
   }
 
