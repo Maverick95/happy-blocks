@@ -253,13 +253,6 @@ class GameCenter {
       this.#setNewBlock(next);
     }
     else if (this.#block.finished) {
-      const eventStopPieces = new CustomEvent('stoppieces',
-      {
-        bubbles: true,
-        cancelable: true,
-        composed: true,
-      });
-      this.#target.dispatchEvent(eventStopPieces);
       const gameEnd = this.#block.coordinates.some(coordinate => this.#block.y + coordinate.y < 0);
       if (gameEnd) { 
         this.#removeKeyEvents();
@@ -280,6 +273,13 @@ class GameCenter {
     else if (this.#moveBlock('down')) {
       this.#removeIntervals('moveleft', 'moveright');
       this.#block.finished = true;
+      const eventStopPieces = new CustomEvent('stoppieces',
+      {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      this.#target.dispatchEvent(eventStopPieces);
       const rowsOccupied = this.#block.coordinates
         .map(coordinate => this.#block.y + coordinate.y)
         .filter(row => this.#grid.getOccupiedForRow(row) === this.#grid.getWidth());
@@ -441,7 +441,9 @@ class GameGridProposedElement extends HTMLElement {
   #width;
   #height;
   #pieces;
+  #pieces_stabilizers;
   #delete;
+  #delete_stabilizers;
   #rows_complete;
   #center;
 
@@ -452,7 +454,9 @@ class GameGridProposedElement extends HTMLElement {
     this.#width = 0;
     this.#height = 0;
     this.#pieces = {};
+    this.#pieces_stabilizers = {};
     this.#delete = [];
+    this.#delete_stabilizers = [];
     this.#rows_complete = [];
 
     this.#center = new GameCenter(this);
@@ -484,8 +488,11 @@ class GameGridProposedElement extends HTMLElement {
           x: piece.x,
           y: piece.y,
         };
+        this.#pieces_stabilizers[piece.id] = {
+          x: piece.x,
+          y: piece.y + stabilizers.offset,
+        };
       });
-      console.log(`Offset found! ${stabilizers.offset}`);
       this.isConnected && this.#drawGrid();
     });
 
@@ -494,8 +501,17 @@ class GameGridProposedElement extends HTMLElement {
       pieces.forEach(piece => {
         this.#pieces[piece.id].x = piece.x;
         this.#pieces[piece.id].y = piece.y;
+        this.#pieces_stabilizers[piece.id].x = piece.x;
+        this.#pieces_stabilizers[piece.id].y = piece.y + stabilizers.offset;
       });
-      console.log(`Offset found! ${stabilizers.offset}`);
+      this.isConnected && this.#drawGrid();
+    });
+
+    this.addEventListener('stoppieces', () => {
+      for (let id of Object.keys(this.#pieces_stabilizers)) {
+        this.#delete_stabilizers.push(parseInt(id));
+      }
+      this.#pieces_stabilizers = {};
       this.isConnected && this.#drawGrid();
     });
 
@@ -561,6 +577,11 @@ class GameGridProposedElement extends HTMLElement {
       grid_piece.remove();
     };
     this.#delete = [];
+    for (let id of this.#delete_stabilizers) {
+      const grid_piece = this.shadowRoot.getElementById(`game-piece-stabilizers-${id}`);
+      grid_piece.remove();
+    };
+    this.#delete_stabilizers = [];
     for (let id of Object.keys(this.#pieces)) {
       const piece = this.#pieces[id];
       let grid_piece = this.shadowRoot.getElementById(`game-piece-${id}`);
@@ -580,6 +601,23 @@ class GameGridProposedElement extends HTMLElement {
         grid_piece.style.visibility = piece.y >= 0 ? 'visible' : 'hidden';
         container.appendChild(grid_piece);
       }
+    }
+    for (let id of Object.keys(this.#pieces_stabilizers)) {
+      const piece = this.#pieces_stabilizers[id];
+      let grid_piece = this.shadowRoot.getElementById(`game-piece-stabilizers-${id}`);
+      if (grid_piece) {
+        grid_piece.style.left = `${piece.x * 25}px`;
+        grid_piece.style.top = `${piece.y * 25}px`;
+      }
+      else {
+        grid_piece = document.createElement('div');
+        grid_piece.id = `game-piece-stabilizers-${id}`;
+        grid_piece.classList.add('game-piece', 'stabilizer');
+        grid_piece.style.left = `${piece.x * 25}px`;
+        grid_piece.style.top = `${piece.y * 25}px`;
+        container.appendChild(grid_piece);
+      }
+
     }
   }
 

@@ -292,7 +292,7 @@ class GameGridElement extends HTMLElement {
       element.style.width = `${this.grid.getWidth() * 25}px`;
       element.style.height = '25px';
       element.style.animation = `${animationDurationMs / 7}ms linear 0s 7 alternate forwards running bomberguy`;
-      element.style.zIndex = '5';
+      element.style.zIndex = '50';
       element.style.backgroundColor = 'black';
       container.appendChild(element);
       return element;

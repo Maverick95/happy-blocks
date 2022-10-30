@@ -11,6 +11,13 @@
   width: 25px;
   height: 25px;
   box-sizing: border-box;
+  z-index: 3;
+}
+
+.stabilizer {
+  background-color: #333333;
+  border-radius: 10px;
+  z-index: 1;
 }
 
 .tetromino-o {
