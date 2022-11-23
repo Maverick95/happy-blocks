@@ -10,7 +10,8 @@ class HappyBlocksCenter {
     this.#score = 0;
   }
 
-  #updateScore(pieces) {
+  #updateScore(rows, pieces) {
+    this.#rowscompleted += rows;
     this.#score += pieces;
     const event = new CustomEvent(
       'updatescore',
@@ -42,8 +43,8 @@ class HappyBlocksCenter {
         break;
       case 'rowscompleted':
         {
-          const { pieces } = detail;
-          this.#updateScore(pieces);
+          const { rows, pieces } = detail;
+          this.#updateScore(rows, pieces);
         }
         break;
       case 'nexttetrominos':
