@@ -69,7 +69,7 @@ class NextTetrominosElement extends HTMLElement {
     ids_insert.forEach(({ id, index, type }) => {
       const next_insert = document.createElement('div');
       next_insert.id = `next-tetromino-${id}`;
-      const { left, top, width, height } = this.#getTetrominoDimensionsNew(index, type);
+      const { left, top, width, height } = this.#getTetrominoDimensions(index, type);
       next_insert.style.left = left;
       next_insert.style.top = top;
       next_insert.style.width = width;
@@ -80,7 +80,7 @@ class NextTetrominosElement extends HTMLElement {
       tetromino.coordinates.forEach((coordinate) => {
         const next_piece = document.createElement('div');
         next_piece.classList.add('game-piece', ...tetromino.classNames);
-        const { left, top, width, height } = this.#getPieceDimensionsNew(coordinate, type);
+        const { left, top, width, height } = this.#getPieceDimensions(coordinate, type);
         next_piece.style.left = left;
         next_piece.style.top = top;
         next_piece.style.width = width;
@@ -99,7 +99,7 @@ class NextTetrominosElement extends HTMLElement {
     // Update all updates.
     ids_update.forEach(({ id, index, type }) => {
       const next_update = this.shadowRoot.getElementById(`next-tetromino-${id}`);
-      const { left, top, width, height } = this.#getTetrominoDimensionsNew(index, type);
+      const { left, top, width, height } = this.#getTetrominoDimensions(index, type);
       next_update.style.left = left;
       next_update.style.top = top;
       next_update.style.width = width;
@@ -140,7 +140,7 @@ class NextTetrominosElement extends HTMLElement {
     this.height = Math.max(...tetrominos.map(t => this.#tetrominos[t].height));
   }
 
-  #getPieceDimensionsNew(coordinate, type) {
+  #getPieceDimensions(coordinate, type) {
     const pxLeft = (coordinate.x - this.minX) * this.sizePerPiece;
     const pxTop = (coordinate.y - this.minY) * this.sizePerPiece;
     const pxWidth = this.sizePerPiece;
@@ -162,7 +162,7 @@ class NextTetrominosElement extends HTMLElement {
     });
   }
 
-  #getTetrominoDimensionsNew(index, type) {
+  #getTetrominoDimensions(index, type) {
     const diffWidth = this.width - this.#tetrominos[type].width;
     const diffHeight = this.height - this.#tetrominos[type].height; 
 
