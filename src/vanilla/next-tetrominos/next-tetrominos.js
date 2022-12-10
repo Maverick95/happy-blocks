@@ -115,25 +115,31 @@ class NextTetrominosElement extends HTMLElement {
   }
 
   getTetrominoBoundaries() {
-    let minX, minY, maxX, maxY;
-    const tetrominos = happyblocks.tetrominos();
-    tetrominos.forEach(t => {
-      const tetromino = happyblocks.tetromino(t);
-      tetromino.coordinates.forEach(coordinate => {
-        minX = minX ?? coordinate.x;
-        if (coordinate.x < minX) { minX = coordinate.x; }
-        maxX = maxX ?? coordinate.x;
-        if (coordinate.x > maxX) { maxX = coordinate.x; }
-        minY = minY ?? coordinate.y;
-        if (coordinate.y < minY) { minY = coordinate.y; }
-        maxY = maxY ?? coordinate.y;
-        if (coordinate.y > maxY) { maxY = coordinate.y; }
+    const centrePieces = happyblocks.toggle('next-tetrominos.centre-pieces') ?? false;
+    if (centrePieces) {
+      
+    }
+    else {
+      let minX, minY, maxX, maxY;
+      const tetrominos = happyblocks.tetrominos();
+      tetrominos.forEach(t => {
+        const tetromino = happyblocks.tetromino(t);
+        tetromino.coordinates.forEach(coordinate => {
+          minX = minX ?? coordinate.x;
+          if (coordinate.x < minX) { minX = coordinate.x; }
+          maxX = maxX ?? coordinate.x;
+          if (coordinate.x > maxX) { maxX = coordinate.x; }
+          minY = minY ?? coordinate.y;
+          if (coordinate.y < minY) { minY = coordinate.y; }
+          maxY = maxY ?? coordinate.y;
+          if (coordinate.y > maxY) { maxY = coordinate.y; }
+        });
       });
-    });
-    this.minX = minX;
-    this.minY = minY;
-    this.width = 1 + maxX - minX;
-    this.height = 1 + maxY - minY;
+      this.minX = minX;
+      this.minY = minY;
+      this.width = 1 + maxX - minX;
+      this.height = 1 + maxY - minY;
+    }
   }
 
   #getPieceDimensions(coordinate) {

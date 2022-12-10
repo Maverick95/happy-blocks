@@ -135,21 +135,64 @@ A lot of the code will just be copied-and-pasted.
 Okay, so each game MUST only begin and end once.
 That's fine. So connect the attribute logic.
 
-What feature / improvement next?
+New feature?
 
-The projection of the current piece onto the "bottom" of the grid.
+I think we're at the point to begin thinking about the bigger picture of the game.
 
-The information for this should be supplied via the game brain.
+The game event flow in total.
 
-At the very least, the "bottom" is just a y-offset (could be 0).
+Like what?
 
+There are a lot of things you could do, BUT you definitely need to think about
+the overall manager of the app.
 
+I like the idea of a Center (brain) for a component that separates the logic
+from the graphical implementation.
+The only boilerplate is that the event setup needs doing.
 
+Settings - customization for the game as a whole.
 
+You can't establish anything until you have an entire event flow.
 
+What is the simplest event flow?
 
+1) Game begins.
+2) On game over, button appears to say "Play Again?" (also maybe displays your score / leaderboard etc.)
 
+This is just 2 states, GamePlaying and GameOver.
 
+Remember the idea of Brain vs Display.
 
+The happy-blocks master web component has no attributes! It is the complete game.
+Everything is managed within here.
 
+This happy-blocks master needs to therefore only respond to events coming up from below?
+Duh, this will always be the case.
+
+Any event that comes up from below needs passing on to the Brain as is!
+Couple the brain and display as little as possible. So just pass the event on.
+NOTE - tbh I would also do this with attribute changes. Just pass it on.
+
+How does the whole thing begin?
+Well, how did you do this in the game grid?
+I remember, once an attribute changed, the game brain detected it had everything it required
+and began the game.
+This is different because technically there is nothing to tell it to start. No attribute changes etc.
+So, at what point does it have everything it needs?
+
+As soon as it is created. But this is in the constructor.
+
+You don't want to interfere with the web component lifecycle.
+
+Well then. Don't.
+
+If there are no attributes, then kick off on connection.
+
+Remember the distinction between EVENTS and COMMANDS.
+
+An event is SOMETHING HAPPENED. A command is DO SOMETHING.
+
+Where in a web component should you add event listeners?
+
+I think when connected? So then on disconnect you can remove them.
 
