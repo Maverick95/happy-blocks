@@ -1,12 +1,15 @@
 class NextTetrominosElement extends HTMLElement {
-  
+
   static get observedAttributes() {
-    return [ 'tetrominos' ];
+    return ['tetrominos'];
   }
-  
+
+  #tetrominos;
+
   constructor() {
     super();
 
+    this.#tetrominos = undefined;
     this.minX = this.minY = this.width = this.height = undefined;
     this.nextTetrominos = [];
     this.getTetrominoBoundaries();
@@ -24,7 +27,7 @@ class NextTetrominosElement extends HTMLElement {
     const stylesGameGrid = document.createElement('link');
     stylesGameGrid.setAttribute('rel', 'stylesheet');
     stylesGameGrid.setAttribute('href', './src/vanilla/game-grid/game-grid.css');
-    this.shadowRoot.appendChild(stylesGameGrid); 
+    this.shadowRoot.appendChild(stylesGameGrid);
   }
 
   updateNextTetrominos(queue) {
@@ -38,7 +41,7 @@ class NextTetrominosElement extends HTMLElement {
     const ids_update = [];
 
     const container = this.shadowRoot.getElementById('next-tetrominos-container');
-    
+
     this.nextTetrominos.forEach((t_value, t_index) => {
 
       const exists = queue.find(q => q.id === t_value.id);
@@ -50,7 +53,7 @@ class NextTetrominosElement extends HTMLElement {
         exists.exists = true;
         if (exists.index !== t_index) {
           // If in new queue, but index is different, id and index need storing for update.
-          ids_update.push({ id: t_value.id, index: exists.index });
+          ids_update.push({ id: t_value.id, index: exists.index, type: exists.type, });
         }
       }
 
@@ -59,50 +62,73 @@ class NextTetrominosElement extends HTMLElement {
     this.nextTetrominos = queue.map(q => ({ id: q.id, type: q.type }));
 
     // If new queue has not been found, id and index need storing for insertion.
-    const ids_insert = queue.filter(({exists}) => !exists)
+    const ids_insert = queue.filter(({ exists }) => !exists)
       .map((value) => ({ id: value.id, index: value.index, type: value.type }));
 
     // Insert all insertions.
-    ids_insert.forEach(({id, index, type}) => {
+    ids_insert.forEach(({ id, index, type }) => {
       const next_insert = document.createElement('div');
       next_insert.id = `next-tetromino-${id}`;
-      //const left = (this.sizePerPiece * this.width * index) + (this.widthGap * index);
-      //next_insert.style.left = `${15 + left}px`;
-      //next_insert.style.width = `${this.sizePerPiece * this.width}px`;
-      //next_insert.style.height = `${this.sizePerPiece * this.height}px`;
-      const {left, width, height } = this.#getTetrominoDimensions(index);
+      const centrePieces = happyblocks.toggle('next-tetrominos.centre-pieces') ?? false;
+      const { left, top, width, height } = centrePieces ?
+        this.#getTetrominoDimensionsNew(index, type) : 
+        this.#getTetrominoDimensions(index);
       next_insert.style.left = left;
+      next_insert.style.top = top;
       next_insert.style.width = width;
       next_insert.style.height = height;
       next_insert.classList.add('next-tetromino');
       // Append the pieces.
-      const tetromino = happyblocks.tetromino(type);
-      tetromino.coordinates.forEach((/*{x, y}*/coordinate) => {
-        const next_piece = document.createElement('div');
-        next_piece.classList.add('game-piece', ...tetromino.classNames);
-        //next_piece.style.left = `${(x - this.minX) * 25}px`;
-        //next_piece.style.top = `${(y - this.minY) * 25}px`;
-        const { left, top, width, height } = this.#getPieceDimensions(coordinate);
-        next_piece.style.left = left;
-        next_piece.style.top = top;
-        next_piece.style.width = width;
-        next_piece.style.height = height;
-        next_insert.appendChild(next_piece);
-      });
+      if (centrePieces) {
+        const tetromino = this.#tetrominos[type];
+        tetromino.coordinates.forEach((coordinate) => {
+          const next_piece = document.createElement('div');
+          next_piece.classList.add('game-piece', ...tetromino.classNames);
+          const { left, top, width, height } = centrePieces ?
+            this.#getPieceDimensionsNew(coordinate, type) :
+            this.#getPieceDimensions(coordinate);
+          next_piece.style.left = left;
+          next_piece.style.top = top;
+          next_piece.style.width = width;
+          next_piece.style.height = height;
+          next_insert.appendChild(next_piece);
+        });
+      }
+      else {
+        const tetromino = happyblocks.tetromino(type);
+        tetromino.coordinates.forEach((/*{x, y}*/coordinate) => {
+          const next_piece = document.createElement('div');
+          next_piece.classList.add('game-piece', ...tetromino.classNames);
+          //next_piece.style.left = `${(x - this.minX) * 25}px`;
+          //next_piece.style.top = `${(y - this.minY) * 25}px`;
+          const { left, top, width, height } = centrePieces ?
+            this.#getPieceDimensionsNew(coordinate, type) :
+            this.#getPieceDimensions(coordinate);
+          next_piece.style.left = left;
+          next_piece.style.top = top;
+          next_piece.style.width = width;
+          next_piece.style.height = height;
+          next_insert.appendChild(next_piece);
+        });
+      }
       container.appendChild(next_insert);
     });
 
     // Delete all deletions.
-    ids_delete.forEach(({id}) => {
+    ids_delete.forEach(({ id }) => {
       const next_delete = this.shadowRoot.getElementById(`next-tetromino-${id}`);
       next_delete.remove();
     });
 
     // Update all updates.
-    ids_update.forEach(({id, index}) => {
+    ids_update.forEach(({ id, index, type }) => {
+      const centrePieces = happyblocks.toggle('next-tetrominos.centre-pieces') ?? false;
       const next_update = this.shadowRoot.getElementById(`next-tetromino-${id}`);
-      const {left, width, height } = this.#getTetrominoDimensions(index);
+      const { left, top, width, height } = centrePieces ?
+        this.#getTetrominoDimensionsNew(index, type) : 
+        this.#getTetrominoDimensions(index);
       next_update.style.left = left;
+      next_update.style.top = top;
       next_update.style.width = width;
       next_update.style.height = height;
       //const left = (this.sizePerPiece * this.width * index) + (this.widthGap * index);
@@ -117,7 +143,32 @@ class NextTetrominosElement extends HTMLElement {
   getTetrominoBoundaries() {
     const centrePieces = happyblocks.toggle('next-tetrominos.centre-pieces') ?? false;
     if (centrePieces) {
-      
+      // Here we'll populate the #tetrominos property.
+      // Also width and height, but not minX and minY (we won't use these).
+      this.#tetrominos = {};
+      const tetrominos = happyblocks.tetrominos();
+      tetrominos.forEach(t => {
+        const tetromino = happyblocks.tetromino(t);
+        const minX = Math.min(...tetromino.coordinates.map(c => c.x));
+        const minY = Math.min(...tetromino.coordinates.map(c => c.y));
+        const maxX = Math.max(...tetromino.coordinates.map(c => c.x));
+        const maxY = Math.max(...tetromino.coordinates.map(c => c.y));
+        const width = 1 + maxX - minX;
+        const height = 1 + maxY - minY;
+        this.#tetrominos[t] = {
+          width,
+          height,
+          coordinates: tetromino.coordinates.map(c => ({
+            x: c.x - minX,
+            y: c.y - minY,
+          })),
+          classNames: tetromino.classNames,
+        };
+      });
+      this.minX = 0;
+      this.minY = 0;
+      this.width = Math.max(...tetrominos.map(t => this.#tetrominos[t].width));
+      this.height = Math.max(...tetrominos.map(t => this.#tetrominos[t].height));
     }
     else {
       let minX, minY, maxX, maxY;
@@ -142,6 +193,28 @@ class NextTetrominosElement extends HTMLElement {
     }
   }
 
+  #getPieceDimensionsNew(coordinate, type) {
+    const pxLeft = (coordinate.x - this.minX) * this.sizePerPiece;
+    const pxTop = (coordinate.y - this.minY) * this.sizePerPiece;
+    const pxWidth = this.sizePerPiece;
+    const pxHeight = this.sizePerPiece;
+
+    const width = this.#tetrominos[type].width * this.sizePerPiece;
+    const height = this.#tetrominos[type].height * this.sizePerPiece;
+
+    const percLeft = width === 0 ? 0 : Math.round(100 * pxLeft / width);
+    const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
+    const percWidth = width === 0 ? 0 : Math.round(100 * pxWidth / width);
+    const percHeight = height === 0 ? 0 : Math.round(100 * pxHeight / height);
+
+    return ({
+      left: `${percLeft}%`,
+      top: `${percTop}%`,
+      width: `${percWidth}%`,
+      height: `${percHeight}%`,
+    });
+  }
+
   #getPieceDimensions(coordinate) {
     const pxLeft = (coordinate.x - this.minX) * this.sizePerPiece;
     const pxTop = (coordinate.y - this.minY) * this.sizePerPiece;
@@ -155,7 +228,7 @@ class NextTetrominosElement extends HTMLElement {
     const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
     const percWidth = width === 0 ? 0 : Math.round(100 * pxWidth / width);
     const percHeight = height === 0 ? 0 : Math.round(100 * pxHeight / height);
-    
+
     return ({
       left: `${percLeft}%`,
       top: `${percTop}%`,
@@ -164,8 +237,34 @@ class NextTetrominosElement extends HTMLElement {
     });
   }
 
+  #getTetrominoDimensionsNew(index, type) {
+    const diffWidth = this.width - this.#tetrominos[type].width;
+    const diffHeight = this.height - this.#tetrominos[type].height; 
+
+    const pxLeft = this.padding + (this.sizePerPiece * this.width * index) + (this.widthGap * index) + (this.sizePerPiece * diffWidth / 2);
+    const pxTop = this.padding + (this.sizePerPiece * diffHeight / 2);
+    const pxWidth = (this.sizePerPiece * this.width) - (this.sizePerPiece * diffWidth);
+    const pxHeight = (this.sizePerPiece * this.height) - (this.sizePerPiece * diffHeight);
+
+    const [width, height] = this.getSize();
+
+    const percLeft = width === 0 ? 0 : Math.round(100 * pxLeft / width);
+    const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
+    const percWidth = width === 0 ? 0 : Math.round(100 * pxWidth / width);
+    const percHeight = height === 0 ? 0 : Math.round(100 * pxHeight / height);
+
+    return ({
+      left: `${percLeft}%`,
+      top: `${percTop}%`,
+      width: `${percWidth}%`,
+      height: `${percHeight}%`,
+    });
+
+  }
+        
+
   #getTetrominoDimensions(index) {
-    
+
     const pxLeft = this.padding + (this.sizePerPiece * this.width * index) + (this.widthGap * index);
     const pxTop = this.padding;
     const pxWidth = this.sizePerPiece * this.width;
@@ -177,7 +276,7 @@ class NextTetrominosElement extends HTMLElement {
     const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
     const percWidth = width === 0 ? 0 : Math.round(100 * pxWidth / width);
     const percHeight = height === 0 ? 0 : Math.round(100 * pxHeight / height);
-    
+
     return ({
       left: `${percLeft}%`,
       top: `${percTop}%`,
