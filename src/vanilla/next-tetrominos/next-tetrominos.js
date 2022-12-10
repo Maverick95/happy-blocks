@@ -69,48 +69,24 @@ class NextTetrominosElement extends HTMLElement {
     ids_insert.forEach(({ id, index, type }) => {
       const next_insert = document.createElement('div');
       next_insert.id = `next-tetromino-${id}`;
-      const centrePieces = happyblocks.toggle('next-tetrominos.centre-pieces') ?? false;
-      const { left, top, width, height } = centrePieces ?
-        this.#getTetrominoDimensionsNew(index, type) : 
-        this.#getTetrominoDimensions(index);
+      const { left, top, width, height } = this.#getTetrominoDimensionsNew(index, type);
       next_insert.style.left = left;
       next_insert.style.top = top;
       next_insert.style.width = width;
       next_insert.style.height = height;
       next_insert.classList.add('next-tetromino');
       // Append the pieces.
-      if (centrePieces) {
-        const tetromino = this.#tetrominos[type];
-        tetromino.coordinates.forEach((coordinate) => {
-          const next_piece = document.createElement('div');
-          next_piece.classList.add('game-piece', ...tetromino.classNames);
-          const { left, top, width, height } = centrePieces ?
-            this.#getPieceDimensionsNew(coordinate, type) :
-            this.#getPieceDimensions(coordinate);
-          next_piece.style.left = left;
-          next_piece.style.top = top;
-          next_piece.style.width = width;
-          next_piece.style.height = height;
-          next_insert.appendChild(next_piece);
-        });
-      }
-      else {
-        const tetromino = happyblocks.tetromino(type);
-        tetromino.coordinates.forEach((/*{x, y}*/coordinate) => {
-          const next_piece = document.createElement('div');
-          next_piece.classList.add('game-piece', ...tetromino.classNames);
-          //next_piece.style.left = `${(x - this.minX) * 25}px`;
-          //next_piece.style.top = `${(y - this.minY) * 25}px`;
-          const { left, top, width, height } = centrePieces ?
-            this.#getPieceDimensionsNew(coordinate, type) :
-            this.#getPieceDimensions(coordinate);
-          next_piece.style.left = left;
-          next_piece.style.top = top;
-          next_piece.style.width = width;
-          next_piece.style.height = height;
-          next_insert.appendChild(next_piece);
-        });
-      }
+      const tetromino = this.#tetrominos[type];
+      tetromino.coordinates.forEach((coordinate) => {
+        const next_piece = document.createElement('div');
+        next_piece.classList.add('game-piece', ...tetromino.classNames);
+        const { left, top, width, height } = this.#getPieceDimensionsNew(coordinate, type);
+        next_piece.style.left = left;
+        next_piece.style.top = top;
+        next_piece.style.width = width;
+        next_piece.style.height = height;
+        next_insert.appendChild(next_piece);
+      });  
       container.appendChild(next_insert);
     });
 
@@ -122,11 +98,8 @@ class NextTetrominosElement extends HTMLElement {
 
     // Update all updates.
     ids_update.forEach(({ id, index, type }) => {
-      const centrePieces = happyblocks.toggle('next-tetrominos.centre-pieces') ?? false;
       const next_update = this.shadowRoot.getElementById(`next-tetromino-${id}`);
-      const { left, top, width, height } = centrePieces ?
-        this.#getTetrominoDimensionsNew(index, type) : 
-        this.#getTetrominoDimensions(index);
+      const { left, top, width, height } = this.#getTetrominoDimensionsNew(index, type);
       next_update.style.left = left;
       next_update.style.top = top;
       next_update.style.width = width;
@@ -141,56 +114,30 @@ class NextTetrominosElement extends HTMLElement {
   }
 
   getTetrominoBoundaries() {
-    const centrePieces = happyblocks.toggle('next-tetrominos.centre-pieces') ?? false;
-    if (centrePieces) {
-      // Here we'll populate the #tetrominos property.
-      // Also width and height, but not minX and minY (we won't use these).
-      this.#tetrominos = {};
-      const tetrominos = happyblocks.tetrominos();
-      tetrominos.forEach(t => {
-        const tetromino = happyblocks.tetromino(t);
-        const minX = Math.min(...tetromino.coordinates.map(c => c.x));
-        const minY = Math.min(...tetromino.coordinates.map(c => c.y));
-        const maxX = Math.max(...tetromino.coordinates.map(c => c.x));
-        const maxY = Math.max(...tetromino.coordinates.map(c => c.y));
-        const width = 1 + maxX - minX;
-        const height = 1 + maxY - minY;
-        this.#tetrominos[t] = {
-          width,
-          height,
-          coordinates: tetromino.coordinates.map(c => ({
-            x: c.x - minX,
-            y: c.y - minY,
-          })),
-          classNames: tetromino.classNames,
-        };
-      });
-      this.minX = 0;
-      this.minY = 0;
-      this.width = Math.max(...tetrominos.map(t => this.#tetrominos[t].width));
-      this.height = Math.max(...tetrominos.map(t => this.#tetrominos[t].height));
-    }
-    else {
-      let minX, minY, maxX, maxY;
-      const tetrominos = happyblocks.tetrominos();
-      tetrominos.forEach(t => {
-        const tetromino = happyblocks.tetromino(t);
-        tetromino.coordinates.forEach(coordinate => {
-          minX = minX ?? coordinate.x;
-          if (coordinate.x < minX) { minX = coordinate.x; }
-          maxX = maxX ?? coordinate.x;
-          if (coordinate.x > maxX) { maxX = coordinate.x; }
-          minY = minY ?? coordinate.y;
-          if (coordinate.y < minY) { minY = coordinate.y; }
-          maxY = maxY ?? coordinate.y;
-          if (coordinate.y > maxY) { maxY = coordinate.y; }
-        });
-      });
-      this.minX = minX;
-      this.minY = minY;
-      this.width = 1 + maxX - minX;
-      this.height = 1 + maxY - minY;
-    }
+    this.#tetrominos = {};
+    const tetrominos = happyblocks.tetrominos();
+    tetrominos.forEach(t => {
+      const tetromino = happyblocks.tetromino(t);
+      const minX = Math.min(...tetromino.coordinates.map(c => c.x));
+      const minY = Math.min(...tetromino.coordinates.map(c => c.y));
+      const maxX = Math.max(...tetromino.coordinates.map(c => c.x));
+      const maxY = Math.max(...tetromino.coordinates.map(c => c.y));
+      const width = 1 + maxX - minX;
+      const height = 1 + maxY - minY;
+      this.#tetrominos[t] = {
+        width,
+        height,
+        coordinates: tetromino.coordinates.map(c => ({
+          x: c.x - minX,
+          y: c.y - minY,
+        })),
+        classNames: tetromino.classNames,
+      };
+    });
+    this.minX = 0;
+    this.minY = 0;
+    this.width = Math.max(...tetrominos.map(t => this.#tetrominos[t].width));
+    this.height = Math.max(...tetrominos.map(t => this.#tetrominos[t].height));
   }
 
   #getPieceDimensionsNew(coordinate, type) {
@@ -201,28 +148,6 @@ class NextTetrominosElement extends HTMLElement {
 
     const width = this.#tetrominos[type].width * this.sizePerPiece;
     const height = this.#tetrominos[type].height * this.sizePerPiece;
-
-    const percLeft = width === 0 ? 0 : Math.round(100 * pxLeft / width);
-    const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
-    const percWidth = width === 0 ? 0 : Math.round(100 * pxWidth / width);
-    const percHeight = height === 0 ? 0 : Math.round(100 * pxHeight / height);
-
-    return ({
-      left: `${percLeft}%`,
-      top: `${percTop}%`,
-      width: `${percWidth}%`,
-      height: `${percHeight}%`,
-    });
-  }
-
-  #getPieceDimensions(coordinate) {
-    const pxLeft = (coordinate.x - this.minX) * this.sizePerPiece;
-    const pxTop = (coordinate.y - this.minY) * this.sizePerPiece;
-    const pxWidth = this.sizePerPiece;
-    const pxHeight = this.sizePerPiece;
-
-    const width = this.width * this.sizePerPiece;
-    const height = this.height * this.sizePerPiece;
 
     const percLeft = width === 0 ? 0 : Math.round(100 * pxLeft / width);
     const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
@@ -260,29 +185,6 @@ class NextTetrominosElement extends HTMLElement {
       height: `${percHeight}%`,
     });
 
-  }
-        
-
-  #getTetrominoDimensions(index) {
-
-    const pxLeft = this.padding + (this.sizePerPiece * this.width * index) + (this.widthGap * index);
-    const pxTop = this.padding;
-    const pxWidth = this.sizePerPiece * this.width;
-    const pxHeight = this.sizePerPiece * this.height;
-
-    const [width, height] = this.getSize();
-
-    const percLeft = width === 0 ? 0 : Math.round(100 * pxLeft / width);
-    const percTop = height === 0 ? 0 : Math.round(100 * pxTop / height);
-    const percWidth = width === 0 ? 0 : Math.round(100 * pxWidth / width);
-    const percHeight = height === 0 ? 0 : Math.round(100 * pxHeight / height);
-
-    return ({
-      left: `${percLeft}%`,
-      top: `${percTop}%`,
-      width: `${percWidth}%`,
-      height: `${percHeight}%`,
-    });
   }
 
   getSize() {
