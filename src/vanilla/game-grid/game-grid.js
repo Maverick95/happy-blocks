@@ -591,7 +591,11 @@ class GameGridElement extends HTMLElement {
         this.#pieces[value.to.id].x = value.to.x;
         this.#pieces[value.to.id].y = value.to.y;
       });
-      this.#processEvent('rowscompleted', { pieces: detail.completeRows.length });
+      this.#processEvent('rowscompleted',
+      {
+        rows: detail.completeRows.length,
+        pieces: detail.delete.length,
+      });
       this.#drawGrid();
     });
 
@@ -663,6 +667,7 @@ class GameGridElement extends HTMLElement {
   }
 
   attributeChangedCallback(attrName, _, newVal) {
+    // TODO - place as custom event and pass rather than coupling directly to public methods.
     switch (attrName) {
       case 'width':
         this.#center.updateWidth(newVal);
