@@ -29,7 +29,7 @@ class GameCenter {
     this.#block = null;
     this.#paused = false;
     this.#support_count = 0;
-    this.#support_count_limit = 5;
+    this.#support_count_limit = 15;
   }
 
   #startGame() {
@@ -72,7 +72,7 @@ class GameCenter {
         }
         break;
       case 'ArrowDown': case 'KeyS':
-        !this.#paused && this.#pushBlock();
+        !this.#paused && this.#support_count == 0 && this.#pushBlock();
         break;
       case 'KeyR':
         !this.#paused && this.#rotateBlock();
